@@ -18,7 +18,7 @@ Alchemy is a lightweight C# library that enables fast and flexible object-to-str
 ### Installation
 
 ```bash
-dotnet add package SeanOne.Alchemy --version 1.1.0
+dotnet add package SeanOne.Alchemy --version 2.0.0
 ```
 
 ### Supported .NET Versions
