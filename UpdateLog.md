@@ -1,5 +1,9 @@
 # Update Log
 
+> ℹ️ This Update Log serves as a consolidated history of the project,  
+> including versions developed in the original repository (now closed)  
+> and all subsequent releases under the new name `SeanOne.Alchemy`.
+
 ## **Release**
 
 ## V2.0.0
