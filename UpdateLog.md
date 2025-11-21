@@ -12,6 +12,30 @@
 
 - Renamed the project to `SeanOne.Alchemy`
 
+### **Why the Rename to `SeanOne.Alchemy`?**
+
+The project originally began as a simple object-to-string DSL formatter.
+However, its long-term vision is broader than a single formatting tool.
+The name **“Alchemy”** better reflects the project’s direction and future potential.
+
+Although the current version focuses on:
+
+* **object → string** formatting
+
+the design philosophy behind the project aims to support a wider concept of **data transformation**, such as:
+
+* object → object (flexible data shaping or mapping)
+* string → object (config-driven parsing or construction)
+* string → string (templating or programmable rewriting)
+
+These future directions are *possibilities*, not promises, but they represent the conceptual scope that the name “Alchemy” is meant to capture.
+
+Just as alchemy historically symbolized **transforming one substance into another**,
+this project adopts the name to express its broader goal:
+a general transformation framework driven by DSL and expressive rules.
+
+`SeanOne.Alchemy` marks the beginning of that expanded vision.
+
 ## V1.1.0
 
 *Focus:Fluent API*
