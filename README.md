@@ -103,26 +103,26 @@ In Fluent API, all parameters are mapped to strongly-typed enums using PascalCas
 
 Each `SelectXx()` method corresponds to a dedicated enum named `XxParam`, which defines all valid parameters for that formatting context.
 
-| DSL Function | Fluent API Entry Point | Enum Container |
-|--------------|------------------------|----------------|
-| `basic`      | `SelectBasic()`        | `BasicParam`   |
-| `fe` / `foreach` (sequence) | `SelectFeSeq()` | `FeSeqParam`   |
-| `fe` / `foreach` (dictionary) | `SelectFeDict()` | `FeDictParam` |
+| DSL Function                  | Fluent API Entry Point | Enum Container |
+|-------------------------------|------------------------|----------------|
+| `basic`                       | `SelectBasic()`        | `BasicParam`   |
+| `fe` / `foreach` (sequence)   | `SelectFeSeq()`        | `FeSeqParam`   |
+| `fe` / `foreach` (dictionary) | `SelectFeDict()`       | `FeDictParam`  |
 
 ### Naming Conversion Examples
 
 > Note: The following table shows naming conversion examples.  
 > Not all parameters may be implemented in the current release.  
 
-| DSL Parameter         | Fluent API Enum Member         |
-|-----------------------|-------------------------------|
-| `padleft`            | `FeSeqParam.PadLeft`          |
-| `upper-case`          | `TextStyle.UpperCase`         |
-| `dict-format`         | `FeDictParam.DictFormat`      |
-| `key-format`          | `FeDictParam.KeyFormat`       |
-| `value-format`        | `FeDictParam.ValueFormat`     |
-| `exclude-last-end`    | `FeSeqParam.ExcludeLastEnd`   |
-| `final-pair-separator`| `FeSeqParam.FinalPairSeparator` |
+| DSL Parameter          | Fluent API Enum Member          |
+|------------------------|---------------------------------|
+| `padleft`              | `FeSeqParam.PadLeft`            |
+| `upper-case`           | `TextStyle.UpperCase`           |
+| `dict-format`          | `FeDictParam.DictFormat`        |
+| `key-format`           | `FeDictParam.KeyFormat`         |
+| `value-format`         | `FeDictParam.ValueFormat`       |
+| `exclude-last-end`     | `FeSeqParam.ExcludeLastEnd`     |
+| `final-pair-separator` | `FeSeqParam.FinalPairSeparator` |
 
 This naming convention ensures consistency, type safety, and a development experience that benefits from IDE tooling and C# language features.
 
@@ -142,32 +142,40 @@ This naming convention ensures consistency, type safety, and a development exper
 
 ### Common Functions
 
-| Function Name | Description |
-|---------------|-------------|
+| Function Name     | Description                                                            |
+|-------------------|------------------------------------------------------------------------|
 | `fe` or `foreach` | Iterates over an `IEnumerable` or `IDictionary` and lists its contents |
-| `basic`       | Default return method for formatting objects |
+| `basic`           | Default return method for formatting objects                           |
 
 ### Common Parameters
 
-| Parameter Name | Example         | Description |
-|----------------|-----------------|-------------|
-| `end`          | `/end:\\n`      | Appends a string after each value. |
-| `tostring`     | `/tostring:F2`  | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
+| Parameter Name | Example        | Description                                                                                                            |
+|----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
+| `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
+| `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
 
-### IEnumerable-Specific Parameters
+### Fe Parameters
 
-| Parameter Name       | Example                         | Description |
-|----------------------|---------------------------------|-------------|
-| `exclude-last-end`   | `/exclude-last-end:true`        | Omits the end string after the last item in the sequence. Applies to all `IEnumerable` types. |
-| `final-pair-separator` | `/final-pair-separator:" and "` | Replaces the separator between the last two items in the sequence. Falls back to `end` if not specified. |
+#### Common Functions With Fe
 
-### IDictionary-Specific Parameters
+| Parameter Name | Example        | Description                                                 |
+|----------------|----------------|-------------------------------------------------------------|
+| `fe-opt`       | `/fe-opt:true` | Enable optimized formatting (may have compatibility issues) |
 
-| Parameter Name | Example               | Description |
-|----------------|-----------------------|-------------|
-| `dict-format`    | `/dict-format:{0}=>{1}` | Format string for dictionary entries: `{0}` represents the key, `{1}` represents the value. |
-| `key-format`    | `/key-format:F2`       | Format string applied to dictionary keys |
-| `value-format`  | `/value-format:F2`     | Format string applied to dictionary values |
+#### IEnumerable-Specific Parameters
+
+| Parameter Name         | Example                           | Description                                                                                              |
+|------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------|
+| `exclude-last-end`     | `/exclude-last-end:true`          | Omits the end string after the last item in the sequence. Applies to all `IEnumerable` types.            |
+| `final-pair-separator` | `/final-pair-separator:" and "`   | Replaces the separator between the last two items in the sequence. Falls back to `end` if not specified. |
+
+#### IDictionary-Specific Parameters
+
+| Parameter Name | Example                 | Description                                                                                 |
+|----------------|-------------------------|---------------------------------------------------------------------------------------------|
+| `dict-format`  | `/dict-format:{0}=>{1}` | Format string for dictionary entries: `{0}` represents the key, `{1}` represents the value. |
+| `key-format`   | `/key-format:F2`        | Format string applied to dictionary keys                                                    |
+| `value-format` | `/value-format:F2`      | Format string applied to dictionary values                                                  |
 
 ---
 
@@ -188,20 +196,20 @@ For developers who prefer a more structured and type-safe approach, the library 
 
 ### Available Functions
 
-| Function | Description |
-|----------|-------------|
-| `SelectBasic()` | Selects the basic formatting function for simple values |
-| `SelectFeDict()` | Selects the foreach function specifically for dictionary types |
-| `SelectFeSeq()` | Selects the foreach function specifically for sequence/enumerable types |
+| Function         | Description                                                             |
+|------------------|-------------------------------------------------------------------------|
+| `SelectBasic()`  | Selects the basic formatting function for simple values                 |
+| `SelectFeDict()` | Selects the foreach function specifically for dictionary types          |
+| `SelectFeSeq()`  | Selects the foreach function specifically for sequence/enumerable types |
 
 ### Builder Methods
 
-| Method | Description |
-|--------|-------------|
-| `With(param, value)` | Configures a formatting parameter |
-| `Build()` | Creates a reusable formatter instance |
-| `Run(obj)` | Executes formatting on the specified object |
-| `BuildRun(obj)` | Combines `Build()` and `Run(obj)` in one call |
+| Method               | Description                                   |
+|----------------------|-----------------------------------------------|
+| `With(param, value)` | Configures a formatting parameter             |
+| `Build()`            | Creates a reusable formatter instance         |
+| `Run(obj)`           | Executes formatting on the specified object   |
+| `BuildRun(obj)`      | Combines `Build()` and `Run(obj)` in one call |
 
 The Fluent API provides dedicated builders for different data types:
 

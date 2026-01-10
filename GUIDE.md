@@ -15,6 +15,7 @@
 
 - [Home](#table-of-contents)
 - [Using `basic` functions](#using-basic-functions)
+- [`Fe` Common](#fe-common)
 - [IEnumerable demonstration](#ienumerable-demonstration)
 - [IDictionary demonstration](#idictionary-demonstration)
 - [Error scenarios](#error-scenarios)
@@ -28,6 +29,23 @@ using SeanOne.Alchemy;
 
 AlchemyFormatter.Format(1, "/tostring:f2");
 // Return: 1.00
+```
+
+### `Fe` Common
+
+- [DSL Format String Demonstration directory](#dsl-format-string-demonstration-directory)
+
+> **Performance Tip:** Use `/fe-opt:true` for large collections. This enables an optimized formatter that's ~1.5x faster but may have compatibility issues with some custom collections.  
+
+```csharp
+using SeanOne.Alchemy;
+
+List<int> ints = Enumerable.Range(0, 10).ToList();
+
+AlchemyFormatter.Format(ints, "fe /fe-opt:true /tostring:f2 /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
+/* Return:
+0.00, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00 and 9.00
+*/
 ```
 
 ### IEnumerable demonstration
@@ -149,16 +167,16 @@ AlchemyFormatter.Format(dict, "fe /dict-format:{1}>\\u0020{0}\\u0020 /key-format
 ```csharp
 using SeanOne.Alchemy;
 
-// Incorrect: obj is null
+// ❌ Incorrect: obj is null
 // Throw: System.ArgumentNullException: 'Value cannot be null. (Parameter 'Input object must not be null.')'
 AlchemyFormatter.Format(null, "/tostring:f2");
 
-// Incorrect: dslInstruction is null or empty
+// ❌ Incorrect: dslInstruction is null or empty
 // Throw: System.ArgumentNullException: 'Value cannot be null. (Parameter 'Alchemy instruction cannot be null or empty')'
 AlchemyFormatter.Format(5, null);
 AlchemyFormatter.Format(5, "");
 
-// Correct: obj and dslInstruction are not null
+// ✅ Correct: obj and dslInstruction are not null
 AlchemyFormatter.Format(5, "/tostring:f2");
 // Return: 5.00
 ```
@@ -170,11 +188,11 @@ AlchemyFormatter.Format(5, "/tostring:f2");
 ```csharp
 using SeanOne.Alchemy;
 
-// Incorrect: Parameter '/tostring:' is specified multiple times
+// ❌ Incorrect: Parameter '/tostring:' is specified multiple times
 // Throw: System.ArgumentException: 'Parameter '/tostring:' is specified multiple times.'
 AlchemyFormatter.Format(5, "/tostring:f2 /tostring:F3");
 
-// Correct: Parameter '/tostring:' is specified only once
+// ✅ Correct: Parameter '/tostring:' is specified only once
 AlchemyFormatter.Format(5, "/tostring:f2");
 // Return: 5.00
 ```
@@ -186,24 +204,24 @@ AlchemyFormatter.Format(5, "/tostring:f2");
 ```csharp
 using SeanOne.Alchemy;
 
-// Incorrect: Unknown parameter: ts
+// ❌ Incorrect: Unknown parameter: ts
 // Throw: System.ArgumentException: 'Invalid parameters for basic processing: ts'
 AlchemyFormatter.Format(5, "/ts:F2 /end:!");
 
-// Correct: Known parameter: tostring
+// ✅ Correct: Known parameter: tostring
 AlchemyFormatter.Format(5, "/tostring:F2 /end:!");
 // Return: 5.00!
 
-// Incorrect: Unknown parameter: ls
+// ❌ Incorrect: Unknown parameter: ls
 // Throw: System.ArgumentException: 'Invalid parameters for enumerable processing: ls' 
 var list = Enumerable.Range(1,10).ToList();
 AlchemyFormatter.Format(list, "fe /ls:F2 /end:\\u0020");
 
-// Correct: Known parameter: tostring
+// ✅ Correct: Known parameter: tostring
 AlchemyFormatter.Format(list, "fe /tostring:F2 /end:\\u0020");
 // Return: 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00 10.00
 
-// Incorrect: Unknown parameter: df
+// ❌ Incorrect: Unknown parameter: df
 // Throw: System.ArgumentException: 'Invalid parameters for dictionary processing: df' 
 var dict = Enumerable.Range(1,10)
     .ToDictionary(
@@ -212,7 +230,7 @@ var dict = Enumerable.Range(1,10)
     );
 AlchemyFormatter.Format(dict, "fe /df:{0}=>{1} /value-format:F2 /end:\\u0020");
 
-// Correct: Known parameter: dict-format
+// ✅ Correct: Known parameter: dict-format
 AlchemyFormatter.Format(dict, "fe /dict-format:{0}=>{1} /value-format:F2 /end:\\u0020");
 // Return: 1=>3.14 2=>6.28 3=>9.42 4=>12.57 5=>15.71 6=>18.85 7=>21.99 8=>25.13 9=>28.27 10=>31.42
 ```
@@ -224,11 +242,11 @@ AlchemyFormatter.Format(dict, "fe /dict-format:{0}=>{1} /value-format:F2 /end:\\
 ```csharp
 using SeanOne.Alchemy;
 
-// Incorrect: string does not implement IFormattable
+// ❌ Incorrect: string does not implement IFormattable
 // Throw: System.ArgumentException: 'Collection elements must implement IFormattable for 'tostring'. Found: String'
 AlchemyFormatter.Format("5", "/tostring:f2");
 
-// Correct: int implements IFormattable
+// ✅ Correct: int implements IFormattable
 AlchemyFormatter.Format(5, "/tostring:f2");
 // Return: 5.00
 ```
@@ -242,11 +260,11 @@ using SeanOne.Alchemy;
 
 List<int> ints = Enumerable.Range(0, 10).ToList();
 
-// Incorrect: Unknown functions directive: loop
+// ❌ Incorrect: Unknown functions directive: loop
 // Throw: System.MissingMethodException: 'Unknown functions directive: loop'
 AlchemyFormatter.Format(ints, "loop /tostring:f2 /end:\\u0020");
 
-// Correct: Known functions directive: foreach
+// ✅ Correct: Known functions directive: foreach
 AlchemyFormatter.Format(ints, "foreach /tostring:f2 /end:\\u0020");
 // Return: 0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00
 ```
@@ -264,15 +282,15 @@ using SeanOne.Alchemy;
 
 List<int> ints = Enumerable.Range(0, 10).ToList();
 
-// Incorrect: fe directive is used with a collection of strings
+// ❌ Incorrect: fe directive is used with a collection of strings
 // Throw: System.ArgumentException: 'String is not supported for 'fe' directive'
 AlchemyFormatter.Format("ints", "fe /end:\\u0020");
 
-// Incorrect: fe directive is used with a non-IEnumerable type
+// ❌ Incorrect: fe directive is used with a non-IEnumerable type
 // Throw: System.ArgumentException: 'Object must implement IEnumerable for 'fe' directive'
 AlchemyFormatter.Format(5, "fe /tostring:f2 /end:\\u0020");
 
-// Correct: fe directive is used with a collection of integers
+// ✅ Correct: fe directive is used with a collection of integers
 AlchemyFormatter.Format(ints, "fe /tostring:f2 /end:\\u0020");
 // Return: 0.00 1.00 2.00 3.00 4.00 5.00 6.00 7.00 8.00 9.00
 ```
@@ -285,15 +303,15 @@ using SeanOne.Alchemy;
 var dict = Enumerable.Range(1, 10)
     .ToDictionary(i => i, i => $"Value {i}");
 
-// Incorrect: dict-format is null
+// ❌ Incorrect: dict-format is null
 // Throw System.ArgumentNullException: 'Value cannot be null. (Parameter ''dict-format' parameter is required when processing dictionaries.')' 
 AlchemyFormatter.Format(dict, "fe /end:\\u0020");
 
-// Incorrect: dict-format is empty
+// ❌ Incorrect: dict-format is empty
 // Throw: System.ArgumentNullException: 'Value cannot be null. (Parameter ''dict-format' parameter is required when processing dictionaries.')' 
 AlchemyFormatter.Format(dict, "fe /dict-format: /end:\\u0020");
 
-// Correct: dict-format is not null or empty
+// ✅ Correct: dict-format is not null or empty
 AlchemyFormatter.Format(dict, "fe /dict-format:{0} /end:\\u0020");
 // Return: 1 2 3 4 5 6 7 8 9 10
 ```
