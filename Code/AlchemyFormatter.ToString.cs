@@ -74,13 +74,22 @@ namespace SeanOne.Alchemy
             string keyFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("key-format"), string.Empty);
             string valueFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("value-format"), string.Empty);
 
-            // 提取並解析 /exclude-last-end: 參數
+            // 提取並解析 exclude-last-end 參數
             bool exclude_last_end = false;
             string excludeLastEndValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey("exclude-last-end"));
             if (!string.IsNullOrEmpty(excludeLastEndValue) &&
                 bool.TryParse(excludeLastEndValue, out bool parsedEndPrint))
             {
                 exclude_last_end = parsedEndPrint;
+            }
+
+            // 提取並解析 fe-opt
+            bool fe_opt = false;
+            string feOptValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey("fe-opt"));
+            if (!string.IsNullOrEmpty(feOptValue) &&
+                bool.TryParse(feOptValue, out bool parsedOptPrint)) 
+            {
+                fe_opt = parsedOptPrint;
             }
 
             // 驗證格式參數
@@ -95,14 +104,20 @@ namespace SeanOne.Alchemy
                 if (!Judge.ValidateCodeParametersAuto(dslInstruction, dictionary.GetType(), out var invalidParams))
                     throw new ArgumentException($"Invalid parameters for dictionary processing: {string.Join(", ", invalidParams)}");
 
-                return FE_ProcessDictionary(dictionary, dictFormat, keyFormat, valueFormat, end, final_pair_separator, exclude_last_end);
+                if (fe_opt)
+                    return FE_ProcessDictionary_Optimized(dictionary, dictFormat, keyFormat, valueFormat, end, final_pair_separator, exclude_last_end);
+                else
+                    return FE_ProcessDictionary(dictionary, dictFormat, keyFormat, valueFormat, end, final_pair_separator, exclude_last_end);
             }
 
             // 處理普通集合類型
             if (!Judge.ValidateCodeParametersAuto(dslInstruction, enumerable.GetType(), out var invalidParamsForEnum))
                 throw new ArgumentException($"Invalid parameters for enumerable processing: {string.Join(", ", invalidParamsForEnum)}");
 
-            return FE_ProcessEnumerable(enumerable, format, end, final_pair_separator, exclude_last_end);
+            if (fe_opt)
+                return FE_ProcessEnumerable_Optimized(enumerable, format, end, final_pair_separator, exclude_last_end);
+            else
+                return FE_ProcessEnumerable(enumerable, format, end, final_pair_separator, exclude_last_end);
         }
 
         /// <summary>
@@ -152,6 +167,94 @@ namespace SeanOne.Alchemy
         }
 
         /// <summary>
+        /// 處理字典集合 (優化過後)
+        /// </summary>
+        /// <param name="dictionary"> 目標字典 </param>
+        /// <param name="dictFormat"> 字典格式 </param>
+        /// <param name="keyFormat"> 字典的鍵格式 </param>
+        /// <param name="valueFormat"> 字典的值格式 </param>
+        /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
+        /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
+        private static string FE_ProcessDictionary_Optimized(IDictionary dictionary, string dictFormat, string keyFormat, string valueFormat, string end, string final_pair_separator, bool exclude_last_end)
+        {
+            if (dictionary == null) return string.Empty;
+            if (string.IsNullOrEmpty(dictFormat))
+                throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
+
+            var results = new StringBuilder();
+            var enumerator = dictionary.GetEnumerator();
+
+            try
+            {
+                // 嘗試讀取第一個元素
+                if (!enumerator.MoveNext()) return string.Empty;
+
+                // 字典使用 DictionaryEntry 來同時獲取 Key 和 Value
+                DictionaryEntry currentItem = (DictionaryEntry)enumerator.Current; // 當前要處理的元素
+                bool hasNextItem = enumerator.MoveNext(); // 檢查是否還有更多元素
+
+                // 如果只有一個元素
+                if (!hasNextItem)
+                {
+                    string keyStr = FormatObject(currentItem.Key, keyFormat);
+                    string valueStr = FormatObject(currentItem.Value, valueFormat);
+                    results.Append(Dict_Format(dictFormat, keyStr, valueStr));
+
+                    if (!exclude_last_end) results.Append(end);
+                    return results.ToString();
+                }
+
+                // 處理多個元素
+                while (hasNextItem)
+                {
+                    // 讀取下一個元素到 nextItem
+                    DictionaryEntry nextItem = (DictionaryEntry)enumerator.Current; // 下一個要處理的元素
+                    // 嘗試讀取下下個元素，結果存入 hasNextItem
+                    hasNextItem = enumerator.MoveNext();
+
+                    // 處理當前元素 (currentItem)
+                    string keyStr = FormatObject(currentItem.Key, keyFormat);
+                    string valueStr = FormatObject(currentItem.Value, valueFormat);
+                    string formatted = Dict_Format(dictFormat, keyStr, valueStr);
+
+                    if (!hasNextItem)
+                    {
+                        // 當前是倒數第二個元素，且 final_pair_separator 不為 null 或空字串
+                        if (!string.IsNullOrEmpty(final_pair_separator))
+                            results.Append(formatted).Append(final_pair_separator);
+                        // 否則添加 end
+                        else
+                            results.Append(formatted).Append(end);
+
+                        // 處理最後一個元素 (nextItem)
+                        string lastKeyStr = FormatObject(nextItem.Key, keyFormat);
+                        string lastValueStr = FormatObject(nextItem.Value, valueFormat);
+                        results.Append(Dict_Format(dictFormat, lastKeyStr, lastValueStr));
+
+                        // 如果是最後一個，且 exclude_last_end 為 false 才加 end
+                        if (!exclude_last_end) results.Append(end);
+                    }
+                    else
+                    {
+                        // 一般中間元素
+                        results.Append(formatted).Append(end);
+                    }
+
+                    // 移動到下一輪要處理的元素
+                    currentItem = nextItem;
+                }
+            }
+            finally
+            {
+                // 釋放資源
+                if (enumerator is IDisposable disposable) disposable.Dispose();
+            }
+
+            return results.ToString();
+        }
+
+        /// <summary>
         /// 處理普通集合
         /// </summary>
         /// <param name="enumerable"> 目標集合 </param>
@@ -183,6 +286,82 @@ namespace SeanOne.Alchemy
             }
 
             return results.ToString();
+        }
+
+        /// <summary>
+        /// 處理普通集合 (優化過後)
+        /// </summary>
+        /// <param name="enumerable"> 目標集合 </param>
+        /// <param name="format"> 指定集合的格式化方式 </param>
+        /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
+        /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
+        private static string FE_ProcessEnumerable_Optimized(IEnumerable enumerable, string format, string end, string final_pair_separator, bool exclude_last_end)
+        {
+            if (enumerable == null) return string.Empty;
+
+            var sb = new StringBuilder();
+            var enumerator = enumerable.GetEnumerator();
+
+            try
+            {
+                // 嘗試讀取第一個元素
+                if (!enumerator.MoveNext()) return string.Empty;
+
+                object currentItem = enumerator.Current; // 當前要處理的元素
+                bool hasNextItem = enumerator.MoveNext(); // 檢查是否還有更多元素
+
+                // 如果只有一個元素
+                if (!hasNextItem)
+                {
+                    sb.Append(FormatObject(currentItem, format));
+                    if (!exclude_last_end) sb.Append(end);
+                    return sb.ToString();
+                }
+
+                // 處理多個元素
+                while (hasNextItem)
+                {
+                    // 讀取下一個元素到 nextItem
+                    object nextItem = enumerator.Current; // 下一個要處理的元素
+                    // 嘗試讀取下下個元素，結果存入 hasNextItem
+                    hasNextItem = enumerator.MoveNext();
+
+                    // 處理當前元素 (currentItem)
+                    string currentStr = FormatObject(currentItem, format);
+
+                    if (!hasNextItem)
+                    {
+                        // 當前是倒數第二個元素，且 final_pair_separator 不為 null 或空字串
+                        if (!string.IsNullOrEmpty(final_pair_separator))
+                            sb.Append(currentStr).Append(final_pair_separator);
+                        // 否則添加 end
+                        else
+                            sb.Append(currentStr).Append(end);
+
+                        // 處理最後一個元素 (nextItem)
+                        sb.Append(FormatObject(nextItem, format));
+
+                        // 如果是最後一個，且 exclude_last_end 為 false 才加 end
+                        if (!exclude_last_end) sb.Append(end);
+                    }
+                    else
+                    {
+                        // 一般中間的元素
+                        sb.Append(currentStr).Append(end);
+                    }
+
+                    // 移動到下一輪要處理的元素
+                    currentItem = nextItem;
+                }
+            }
+            finally
+            {
+                // 釋放資源
+                if (enumerator is IDisposable disposable) disposable.Dispose();
+            }
+
+            return sb.ToString();
         }
         #endregion
 
@@ -240,7 +419,7 @@ namespace SeanOne.Alchemy
         /// </summary>
         /// <param name="obj"> 要格式化的對象 </param>
         /// <param name="format"> 格式化字串 </param>
-        internal static string FormatObject(object obj, string format)
+        private static string FormatObject(object obj, string format)
         {
             // 如果對象為null，返回空字符串
             if (obj == null) return string.Empty;
@@ -261,7 +440,7 @@ namespace SeanOne.Alchemy
         /// <param name="format"> 格式化字串 </param>
         /// <param name="key"> 鍵 </param>
         /// <param name="value"> 值 </param>
-        internal static string Dict_Format(string format, string key, string value)
+        private static string Dict_Format(string format, string key, string value)
         {
             if (string.IsNullOrEmpty(format)) return string.Empty;
 

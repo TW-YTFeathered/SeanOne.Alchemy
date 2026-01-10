@@ -67,8 +67,8 @@ namespace SeanOne.Alchemy
         private static readonly Dictionary<string, HashSet<string>> MethodParameters = new Dictionary<string, HashSet<string>>
         {
             ["basic"] = new HashSet<string> { "end", "tostring" },
-            ["FE_ProcessEnumerable"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "tostring" },
-            ["FE_ProcessDictionary"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "dict-format", "key-format", "value-format" }
+            ["FE_ProcessEnumerable"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "tostring" },
+            ["FE_ProcessDictionary"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "dict-format", "key-format", "value-format" }
         };
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace SeanOne.Alchemy
 
     /// <summary>
     /// 將指定輸入轉換成 Unicode 值
-    /// 注意：部分情況直接使用 C# 數值轉換更快更準，可能看似非標準 Unicode
+    /// 注意: 部分情況直接使用 C# 數值轉換更快更準，可能看似非標準 Unicode
     /// </summary>
     internal static class ConvertToUnicode
     {
@@ -320,5 +320,77 @@ namespace SeanOne.Alchemy
 
             return sb.ToString(); // 回傳轉換結果
         }
+    }
+
+    /// <summary>
+    /// 轉換成不同常見溫標
+    /// 注意: 不用第三方庫是因為這樣能更好的控制變量
+    /// </summary>
+    internal class TemperatureConverter
+    {
+        //private const double AbsoluteZeroC = -273.15;
+        // 攝氏零度相對於絕對溫度的偏移量
+        private const double KelvinOffset = 273.15;
+        // 攝氏零度對應的華氏溫度之偏移量
+        private const double FahrenheitOffset = 32.0;
+        // 攝氏與華氏的比例 (9/5)
+        private const double FahrenheitFactor = 1.8;
+
+        private void ThrowIfBelowAbsoluteZero(double k)
+        {
+            if (k < 0)
+                throw new ArgumentException("Temperature below absolute zero is not physically possible.");
+        }
+
+        #region Abstract version (checking absolute zero)
+        public double FtoK(double f)
+        {
+            double k = FtoK_Core(f);
+            ThrowIfBelowAbsoluteZero(k);
+            return k;
+        }
+
+        public double FtoC(double f)
+        {
+            double k = FtoK_Core(f);
+            ThrowIfBelowAbsoluteZero(k);
+            return FtoC_Core(f);
+        }
+
+        public double KtoF(double k)
+        {
+            ThrowIfBelowAbsoluteZero(k);
+            return KtoF_Core(k);
+        }
+
+        public double KtoC(double k)
+        {
+            ThrowIfBelowAbsoluteZero(k);
+            return KtoC_Core(k);
+        }
+
+        public double CtoK(double c)
+        {
+            double k = CtoK_Core(c);
+            ThrowIfBelowAbsoluteZero(k);
+            return k;
+        }
+
+        public double CtoF(double c)
+        {
+            double k = CtoK_Core(c);
+            ThrowIfBelowAbsoluteZero(k);
+            return CtoF_Core(c);
+        }
+        #endregion
+
+        #region Core version (pure mathematical conversion)
+        public double FtoK_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor + KelvinOffset;
+        public double FtoC_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor;
+        public double KtoF_Core(double k) => (k - KelvinOffset) * FahrenheitFactor + FahrenheitOffset;
+        public double KtoC_Core(double k) => k - KelvinOffset;
+        public double CtoK_Core(double c) => c + KelvinOffset;
+        public double CtoF_Core(double c) => c * FahrenheitFactor + FahrenheitOffset;
+        #endregion
     }
 }
