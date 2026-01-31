@@ -52,7 +52,7 @@ namespace SeanOne.Alchemy
 
             dslInstruction = dslInstruction.Trim(); // 去除前後空白
 
-            return await Decoder_Async(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
+            return await Decoder_Async(obj, dslInstruction); // 呼叫 Decoder_Async 方法，並回傳結果
         }
     }
 }
