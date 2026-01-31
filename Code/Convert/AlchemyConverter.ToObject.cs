@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SeanOne.Alchemy
 {
@@ -44,11 +46,16 @@ namespace SeanOne.Alchemy
             }
         }
 
-        private static AlchemyResult CNV(object obj, string dslInstruction)
+        private static AlchemyResult CNV(object copyObj, string dslInstruction)
         {
-            string sort = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("sort"), string.Empty);
+            string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("sort"), string.Empty);
 
-            return AlchemyResult.Parse(obj);
+            Sort.Entry(copyObj, sortStr);
+
+            // short time testing method
+            //Console.Write(Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("print"), string.Empty));
+
+            return AlchemyResult.Parse(copyObj);
         }
     }
 }

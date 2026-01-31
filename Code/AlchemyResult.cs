@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
@@ -44,6 +45,37 @@ namespace SeanOne.Alchemy
             return base.ToString();
         }
 
+        // 非同步 ToString
+        public async Task<string> ToStringAsync()
+        {
+            // 簡單情況下直接返回同步版本
+            return await Task.Run(() => { 
+                return this.ToString();
+            });
+        }
+
+        #region Convert/ConvertAsync
+        /// <summary>
+        /// Converts the current source object according to the provided DSL instruction.
+        /// </summary>
+        /// <param name="dslInstruction">The DSL instruction string.</param>
+        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        public AlchemyResult Convert(string dslInstruction)
+        {
+            return AlchemyConverter.Convert(_source, dslInstruction);
+        }
+
+        /// <summary>
+        /// Asynchronously converts the specified object according to the provided DSL instruction.
+        /// </summary>
+        /// <param name="dslInstruction">The DSL instruction string.</param>
+        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        public Task<AlchemyResult> ConvertAsync(string dslInstruction)
+        {
+            return AlchemyConverter.ConvertAsync(_source, dslInstruction);
+        }
+        #endregion
+
         #region Parse/TryParse
         /// <summary>
         /// Creates a new instance of the AlchemyResult class from the specified object.
@@ -75,17 +107,47 @@ namespace SeanOne.Alchemy
                 return false;
             }
 
-            try
-            {
-                result = Parse(sourceObj); // 這裡可能拋錯
-                return true;
-            }
-            catch
-            {
-                result = null; // 失敗時設為 null
-                return false;
-            }
+            result = new AlchemyResult(sourceObj);
+            return true;
         }
         #endregion
+    }
+
+    /// <summary>
+    /// Provides extension methods for the <see cref="AlchemyResult"/> class.
+    /// </summary>
+    public static class AlchemyResultTaskExtensions
+    {
+        /// <summary>
+        /// Asynchronously converts the specified object according to the provided DSL instruction.
+        /// </summary>
+        /// <param name="task">The task that contains the source object to convert.</param>
+        /// <param name="dslInstruction">The DSL instruction string.</param>
+        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        public static async Task<AlchemyResult> ConvertAsync(this Task<AlchemyResult> task, string dslInstruction)
+        {
+            var result = await task;
+            return await result.ConvertAsync(dslInstruction);
+        }
+
+        // 轉換為 List<T> (非同步版本)
+        public static async Task<List<T>> ToListAsync<T>(this Task<AlchemyResult> task)
+        {
+            var result = await task;
+            return result.ToList<T>();
+        }
+
+        /// 轉換為對象 (非同步版本)
+        public static async Task<T> ToObjectAsync<T>(this Task<AlchemyResult> task)
+        {
+            var result = await task;
+            return result.ToObject<T>();
+        }
+
+        public static async Task<string> ToStringAsync(this Task<AlchemyResult> task)
+        {
+            var result = await task;
+            return await result.ToStringAsync();
+        }
     }
 }

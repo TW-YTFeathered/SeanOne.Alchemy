@@ -243,6 +243,17 @@ namespace SeanOne.Alchemy
             var match = Regex.Match(sub, $@"[\s{Regex.Escape(DslSymbols.ParamPrefix)}]");
             return match.Success ? startIndex + match.Index : dslInstruction.Length; // 如果沒有找到終止符，則回傳字串的結尾
         }
+
+        /// <summary>
+        /// 從 dslInstruction 中提取指令的名稱，最前面的那一個字串
+        /// </summary>
+        /// <param name="dslInstruction"> Dsl 指令(要被提取的字串)，但本身必須要被Trim過一遍 </param>
+        public static string ExtractDirective(string dslInstruction)
+        {
+            return dslInstruction.Contains(DslSymbols.ParamPrefix) ?
+                    dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
+                    : dslInstruction;
+        }
     }
 
     /// <summary>
