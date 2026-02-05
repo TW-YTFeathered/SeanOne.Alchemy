@@ -1,0 +1,74 @@
+﻿using System;
+using System.Text;
+
+namespace SeanOne.Alchemy.Builder
+{
+    /// <summary>
+    /// Defines the parameter options used by <c>IBasicAlchemyFunction</c> (basic).
+    /// Handles basic DSL parameters and formatting logic.
+    /// </summary>
+    public enum BasicParam
+    {
+        /// <summary>
+        /// Appends a string after each value.
+        /// DSL param: <c>end</c>.
+        /// </summary>
+        End,
+
+        /// <summary>
+        /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
+        /// DSL param: <c>tostring</c>.
+        /// </summary>
+        ToString
+    }
+    /// <summary>
+    /// Implementation of <c>IBasicAlchemyFunction</c> using <c>BasicParam</c>.
+    /// Handles basic DSL parameters and formatting logic.
+    /// </summary>
+    public class BasicFunc : IBasicAlchemyFunction<BasicParam>
+    {
+        // 暫存的字串
+        private readonly StringBuilder _sb = new StringBuilder();
+
+        /// <summary>
+        /// 初始化，先添加 basic
+        /// </summary>
+        internal BasicFunc()
+        {
+            _sb.Append("basic ");
+        }
+
+        /// <summary>
+        /// Adds a parameter and its associated value to the DSL function.
+        /// </summary>
+        /// <param name="param">The DSL parameter to configure.</param>
+        /// <param name="value">The value associated with the parameter.</param>
+        /// <returns>The current DSL function instance for chaining.</returns>
+        public IAlchemyFunction<BasicParam> With(BasicParam param, string value)
+        {
+            value = DslSyntaxBuilder.EscapeDslValue(value);
+
+            switch (param)
+            {
+                case BasicParam.ToString:
+                    _sb.AppendParam("tostring").AppendQuoted(value);
+                    break;
+                case BasicParam.End:
+                    _sb.AppendParam("end").AppendQuoted(value);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
+            }
+            return this; // 回傳自己，支援 Fluent DSL
+        }
+
+        /// <summary>
+        /// Builds the DSL function into a <see cref="AlchemyExecutable"/> instance.
+        /// </summary>
+        /// <returns>The constructed <see cref="AlchemyExecutable"/>.</returns>
+        public AlchemyExecutable Build()
+        {
+            return new AlchemyExecutable(_sb.ToString());
+        }
+    }
+}
