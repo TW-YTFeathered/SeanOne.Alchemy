@@ -1,4 +1,7 @@
-﻿namespace SeanOne.Alchemy.Builder
+// Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
+// SeanOne™ - A Professional Project and Brand.
+
+namespace SeanOne.Alchemy.Builder
 {
     /// <summary>
     /// Generic base interface for DSL functions.

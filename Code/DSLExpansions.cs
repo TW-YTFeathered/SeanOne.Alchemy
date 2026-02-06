@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
+// SeanOne™ - A Professional Project and Brand.
+
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;

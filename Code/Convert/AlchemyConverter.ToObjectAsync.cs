@@ -1,6 +1,10 @@
-﻿using System;
+// Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
+// SeanOne™ - A Professional Project and Brand.
+
+using System;
 using System.Threading.Tasks;
 
+// Used to ensure it's UTF-8 🤗
 namespace SeanOne.Alchemy
 {
     public partial class AlchemyConverter
