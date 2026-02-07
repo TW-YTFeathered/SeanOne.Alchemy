@@ -18,7 +18,7 @@ Alchemy is a lightweight C# library that enables fast and flexible object-to-str
 ### Installation
 
 ```bash
-dotnet add package SeanOne.Alchemy --version 1.1.0
+dotnet add package SeanOne.Alchemy --version 2.0.0
 ```
 
 ### Supported .NET Versions
@@ -33,6 +33,9 @@ dotnet add package SeanOne.Alchemy --version 1.1.0
 
 ```csharp
 using SeanOne.Alchemy;
+
+AlchemyFormatter.Format(5, "/tostring:F2 /end:!");
+// Return: 5.00!
 
 List<int> ints = Enumerable.Range(0, 10).ToList();
 
@@ -55,6 +58,13 @@ AlchemyFormatter.Format(ints, "fe /tostring:F2 /end:\\n /exclude-last-end:true")
 
 ```csharp
 using SeanOne.Alchemy.Builder;
+
+AlchemyFormatBuilder.SelectBasic()
+    .With(BasicParam.ToString, "F2")
+    .With(BasicParam.End, "!")
+    .Build()
+    .Run(5);
+// Return: 5.00!
 
 List<int> ints = Enumerable.Range(0, 10).ToList();
 
@@ -155,6 +165,118 @@ This naming convention ensures consistency, type safety, and a development exper
 | `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
 | `prefix`       | `/prefix:"["`  | Prepends a string before each value. Note: For collections, adds to entire result, not each element.                   |
 | `suffix`       | `/suffix:"]"`  | Appends a string after each value. Note: For collections, adds to entire result, not each element.                     |
+
+## Escape Sequences
+
+### Background
+
+To ensure cross-platform compatibility and clarity in DSL instruction strings, Alchemy supports two escape sequence formats:
+
+### Supported Escape Sequences
+
+#### 1. **Unicode Escape Sequences** (`\uXXXX`)
+
+- **Format**: `\u` followed by 4 hexadecimal digits
+- **Purpose**: Represent any Unicode character
+- **Advantages**:
+  - Fully cross-platform
+  - Supports all Unicode characters
+  - Unambiguous parsing
+- **Disadvantages**: Longer code, slightly less readable
+- **Examples**:
+  - `\u0020` → Space
+  - `\u000A` → Line feed (LF) - platform independent
+  - `\u000D` → Carriage return (CR)
+
+#### 2. **Short Escape Sequences** (`\X`)
+
+- **Format**: `\` followed by a single character
+- **Currently supported**:
+  - `\0` → Null character
+  - `\a` → Alert/beep character
+  - `\b` → Backspace
+  - `\f` → Form feed
+  - `\n` → **Platform-specific newline** (converted to `Environment.NewLine`)
+  - `\r` → Carriage return
+  - `\t` → Horizontal tab
+  - `\v` → Vertical tab
+  - `\\` → Backslash
+  - `\'` → Single quote
+  - `\"` → Double quote
+
+### Important Notes on Line Breaks
+
+#### **`\n` Behavior**
+
+Unlike traditional escape sequences, Alchemy's `\n` is converted to `Environment.NewLine` at runtime. This means:
+
+- **On Windows**: `\n` → `\r\n`
+- **On Unix/Linux**: `\n` → `\n`
+- **On macOS**: `\n` → `\n`
+
+**Advantage**: Automatic platform adaptation - you don't need to worry about platform differences.
+
+**Disadvantage**: Inconsistent output across platforms - the same DSL string may produce different output on different operating systems.
+
+#### **For Consistent Cross-Platform Output**
+
+If you need **identical output** across all platforms, use Unicode escape sequences:
+
+- `\u000A` for LF (always `\n`)
+- `\u000D` for CR (always `\r`)
+- `\u000D\u000A` for CRLF (always `\r\n`)
+
+### Design Considerations
+
+#### **Why convert `\n` to `Environment.NewLine`?**
+
+- **Developer convenience**: Most C# developers expect `\n` to behave like `Environment.NewLine`
+- **Native .NET behavior**: Aligns with how C# handles newlines in string literals
+- **Legacy compatibility**: Many existing applications rely on platform-specific line breaks
+
+#### **Usage Recommendations**
+
+1. **General use**: Use `\n` for newlines (recommended for most scenarios)
+2. **Cross-platform consistency needed**: Use `\u000A` for LF or `\u000D\u000A` for CRLF
+3. **Special characters**: Use the short escape sequences for common control characters
+4. **Unicode characters**: Use `\uXXXX` for any Unicode character
+5. **Literal backslash**: Use `\\`
+6. **Quotes inside strings**: Use `\"` or `\'`
+
+### Example Comparison
+
+```csharp
+// Using short escape sequence (platform-dependent newline)
+AlchemyFormatter.Format(list, "fe /end:\\n");
+// Windows output: "value1\r\nvalue2\r\nvalue3"
+// Unix output: "value1\nvalue2\nvalue3"
+
+// Using Unicode escape sequence (platform-independent newline)
+AlchemyFormatter.Format(list, "fe /end:\\u000A");
+// Always outputs: "value1\nvalue2\nvalue3"
+
+// Using CRLF for Windows-style line breaks (platform-independent)
+AlchemyFormatter.Format(list, "fe /end:\\u000D\\u000A");
+// Always outputs: "value1\r\nvalue2\r\nvalue3"
+
+// Traditional way (may cause issues)
+AlchemyFormatter.Format(list, "fe /end:\r\n");
+// Windows: works as expected
+// Unix: outputs literal "\r\n" characters
+```
+
+### Notes
+
+1. Escape sequences in DSL strings **only take effect in parameter values**
+2. Parameter names (like `/tostring:`) do not support escape sequences
+3. If a string value contains spaces or special characters, it is recommended to enclose it in double quotes
+4. Unrecognized escape sequences (like `\x`) will be treated as literal characters (e.g., `\x` becomes `\x`)
+
+---
+
+*Note: The examples above use the DSL format string. For Fluent API, you can use regular C# string literals with standard escape sequences.*
+
+---
 
 ### Fe Parameters
 
