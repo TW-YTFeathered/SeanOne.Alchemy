@@ -34,7 +34,25 @@ namespace SeanOne.Alchemy.Builder
         /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
         /// DSL param: <c>tostring</c>.
         /// </summary>
-        ToString
+        ToString,
+
+        /// <summary>
+        /// Prepends a string before the sequence. Note: Adds to entire result, not each element.
+        /// DSL param: <c>prefix</c>.
+        /// </summary>
+        Prefix,
+
+        /// <summary>
+        /// Appends a string after the sequence. Note: Adds to entire result, not each element.
+        /// DSL param: <c>suffix</c>.
+        /// </summary>
+        Suffix,
+
+        /// <summary>
+        /// Enable optimized formatting (may have compatibility issues).
+        /// DSL param: <c>fe-opt</c>.
+        /// </summary>
+        FeOpt
     }
     /// <summary>
     /// Implementation of <c>ISequenceAlchemyFunction</c> using <c>FeSeqParam</c>.
@@ -75,6 +93,15 @@ namespace SeanOne.Alchemy.Builder
                     break;
                 case FeSeqParam.FinalPairSeparator:
                     _sb.AppendParam("final-pair-separator").AppendQuoted(value);
+                    break;
+                case FeSeqParam.Prefix:
+                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    break;
+                case FeSeqParam.Suffix:
+                    _sb.AppendParam("suffix").AppendQuoted(value);
+                    break;
+                case FeSeqParam.FeOpt:
+                    _sb.AppendParam("fe-opt").AppendQuoted(value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);
@@ -133,7 +160,25 @@ namespace SeanOne.Alchemy.Builder
         /// Format string applied to dictionary values.
         /// DSL param: <c>value-format</c>.
         /// </summary>
-        ValueFormat
+        ValueFormat,
+
+        /// <summary>
+        /// Prepends a string before the sequence. Note: Adds to entire result, not each element.
+        /// DSL param: <c>prefix</c>.
+        /// </summary>
+        Prefix,
+
+        /// <summary>
+        /// Appends a string after the sequence. Note: Adds to entire result, not each element.
+        /// DSL param: <c>suffix</c>.
+        /// </summary>
+        Suffix,
+
+        /// <summary>
+        /// Enable optimized formatting (may have compatibility issues).
+        /// DSL param: <c>fe-opt</c>.
+        /// </summary>
+        FeOpt
     }
     /// <summary>
     /// Implementation of <c>IDictionaryAlchemyFunction</c> using <c>FeDictParam</c>.
@@ -181,6 +226,15 @@ namespace SeanOne.Alchemy.Builder
                     break;
                 case FeDictParam.ValueFormat:
                     _sb.AppendParam("value-format").AppendQuoted(value);
+                    break;
+                case FeDictParam.Prefix:
+                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    break;
+                case FeDictParam.Suffix:
+                    _sb.AppendParam("suffix").AppendQuoted(value);
+                    break;
+                case FeDictParam.FeOpt:
+                    _sb.AppendParam("fe-opt").AppendQuoted(value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);

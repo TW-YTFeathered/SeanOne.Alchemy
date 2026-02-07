@@ -22,7 +22,19 @@ namespace SeanOne.Alchemy.Builder
         /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
         /// DSL param: <c>tostring</c>.
         /// </summary>
-        ToString
+        ToString,
+
+        /// <summary>
+        /// Prepends a string before the value.
+        /// DSL param: <c>prefix</c>.
+        /// </summary>
+        Prefix,
+
+        /// <summary>
+        /// Appends a string after the value.
+        /// DSL param: <c>suffix</c>.
+        /// </summary>
+        Suffix
     }
     /// <summary>
     /// Implementation of <c>IBasicAlchemyFunction</c> using <c>BasicParam</c>.
@@ -58,6 +70,12 @@ namespace SeanOne.Alchemy.Builder
                     break;
                 case BasicParam.End:
                     _sb.AppendParam("end").AppendQuoted(value);
+                    break;
+                case BasicParam.Prefix:
+                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    break;
+                case BasicParam.Suffix:
+                    _sb.AppendParam("suffix").AppendQuoted(value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);

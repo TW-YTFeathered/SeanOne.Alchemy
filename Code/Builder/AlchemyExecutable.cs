@@ -44,14 +44,24 @@ namespace SeanOne.Alchemy.Builder
     public static class AlchemyFunctionExtensions
     {
         /// <summary>
-        /// Builds the DSL function and immediately executes it with the specified object.
+        /// Builds the DSL formatter and immediately executes it with the specified object.
         /// Equivalent to calling <c>Build().Run(obj)</c>.
         /// </summary>
-        /// <typeparam name="TParam">The type of parameter used in the DSL function.</typeparam>
-        /// <param name="func">The DSL function instance to be executed.</param>
+        /// <typeparam name="TParam">The type of parameter enum used by the DSL function.</typeparam>
+        /// <param name="func">The DSL function builder instance.</param>
         /// <param name="obj">The object to be formatted.</param>
-        /// <returns>The formatted DSL result string.</returns>
+        /// <returns>The formatted result string.</returns>
         public static string BuildRun<TParam>(this IAlchemyFunction<TParam> func, object obj)
             => func.Build().Run(obj);
+
+        /// <summary>
+        /// Builds the DSL formatter and returns its DSL string representation.
+        /// Equivalent to calling <c>Build().ToString()</c>.
+        /// </summary>
+        /// <typeparam name="TParam">The type of parameter used in the DSL function.</typeparam>
+        /// <param name="func">The DSL function builder instance.</param>
+        /// <returns>The DSL string representing the configured formatting rules.</returns>
+        public static string BuildToString<TParam>(this IAlchemyFunction<TParam> func)
+            => func.Build().ToString();
     }
 }
