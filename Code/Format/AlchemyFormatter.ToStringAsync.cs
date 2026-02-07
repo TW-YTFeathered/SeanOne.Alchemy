@@ -80,6 +80,8 @@ namespace SeanOne.Alchemy
             string dictFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("dict-format"), string.Empty);
             string keyFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("key-format"), string.Empty);
             string valueFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("value-format"), string.Empty);
+            string prefix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("prefix"), string.Empty);
+            string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("suffix"), string.Empty);
 
             // 提取並解析 /exclude-last-end: 參數
             bool exclude_last_end = false;
@@ -112,9 +114,17 @@ namespace SeanOne.Alchemy
                     throw new ArgumentException($"Invalid parameters for dictionary processing: {string.Join(", ", invalidParams)}");
 
                 if (fe_opt)
-                    return await FE_ProcessDictionary_OptimizedAsync(dictionary, dictFormat, keyFormat, valueFormat, end, final_pair_separator, exclude_last_end);
+                    return await FE_ProcessDictionary_OptimizedAsync(dictionary,
+                        dictFormat, keyFormat, valueFormat,
+                        end, final_pair_separator,
+                        prefix, suffix,
+                        exclude_last_end);
                 else
-                    return await FE_ProcessDictionary_Async(dictionary, dictFormat, keyFormat, valueFormat, end, final_pair_separator, exclude_last_end);
+                    return await FE_ProcessDictionary_Async(dictionary,
+                        dictFormat, keyFormat, valueFormat,
+                        end, final_pair_separator,
+                        prefix, suffix,
+                        exclude_last_end);
             }
 
             // 處理普通集合類型
@@ -122,9 +132,15 @@ namespace SeanOne.Alchemy
                 throw new ArgumentException($"Invalid parameters for enumerable processing: {string.Join(", ", invalidParamsForEnum)}");
 
             if (fe_opt)
-                return await FE_ProcessEnumerable_OptimizedAsync(enumerable, format, end, final_pair_separator, exclude_last_end);
+                return await FE_ProcessEnumerable_OptimizedAsync(enumerable,
+                    format, end, final_pair_separator,
+                    prefix, suffix,
+                    exclude_last_end);
             else
-                return await FE_ProcessEnumerable_Async(enumerable, format, end, final_pair_separator, exclude_last_end);
+                return await FE_ProcessEnumerable_Async(enumerable,
+                    format, end, final_pair_separator,
+                    prefix, suffix,
+                    exclude_last_end);
         }
 
         /// <summary>
@@ -136,15 +152,21 @@ namespace SeanOne.Alchemy
         /// <param name="valueFormat"> 字典的值格式 </param>
         /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
         /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="prefix"> 最前面的前綴，會加在整個字典處理結果的開頭(即使字典為空也會添加) </param>
+        /// <param name="suffix"> 最後面的後綴，會加在整個字典處理結果的結尾(即使字典為空也會添加) </param>
         /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
-        private static Task<string> FE_ProcessDictionary_Async(IDictionary dictionary, string dictFormat, string keyFormat, string valueFormat, string end, string final_pair_separator, bool exclude_last_end)
+        private static Task<string> FE_ProcessDictionary_Async(IDictionary dictionary,
+            string dictFormat, string keyFormat, string valueFormat,
+            string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
         {
             object syncRoot = _lock; // 複製鎖定物件，避免在多線程環境中出現問題
 
             return Task.Run(() =>
             {
                 if (string.IsNullOrEmpty(dictFormat))
-                    throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries");
+                throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
                 var results = new StringBuilder();
 
@@ -154,7 +176,8 @@ namespace SeanOne.Alchemy
 
                 var keyList = keys.Cast<object>().ToList();
 
-                // 避免執行續搶，而導致格式化結果不符合預期
+                results.Append(prefix);
+
                 lock (syncRoot)
                 {
                     for (int i = 0; i < count; i++)
@@ -178,6 +201,8 @@ namespace SeanOne.Alchemy
                     }
                 }
 
+                results.Append(suffix);
+
                 return results.ToString();
             });
         }
@@ -191,14 +216,20 @@ namespace SeanOne.Alchemy
         /// <param name="valueFormat"> 字典的值格式 </param>
         /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
         /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="prefix"> 最前面的前綴，會加在整個字典處理結果的開頭(即使字典為空也會添加) </param>
+        /// <param name="suffix"> 最後面的後綴，會加在整個字典處理結果的結尾(即使字典為空也會添加) </param>
         /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
-        private static Task<string> FE_ProcessDictionary_OptimizedAsync(IDictionary dictionary, string dictFormat, string keyFormat, string valueFormat, string end, string final_pair_separator, bool exclude_last_end)
+        private static Task<string> FE_ProcessDictionary_OptimizedAsync(IDictionary dictionary,
+            string dictFormat, string keyFormat, string valueFormat,
+            string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
         {
             object syncRoot = _lock; // 複製鎖定物件，避免在多線程環境中出現問題
 
             return Task.Run(() =>
             {
-                if (dictionary == null) return string.Empty;
+                if (dictionary == null) return prefix + suffix;
                 if (string.IsNullOrEmpty(dictFormat))
                     throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
@@ -211,7 +242,7 @@ namespace SeanOne.Alchemy
                     try
                     {
                         // 嘗試讀取第一個元素
-                        if (!enumerator.MoveNext()) return string.Empty;
+                        if (!enumerator.MoveNext()) return prefix + suffix;
 
                         // 字典使用 DictionaryEntry 來同時獲取 Key 和 Value
                         DictionaryEntry currentItem = (DictionaryEntry)enumerator.Current;
@@ -220,13 +251,20 @@ namespace SeanOne.Alchemy
                         // 如果只有一個元素
                         if (!hasNextItem)
                         {
+                            results.Append(prefix);
+
                             string keyStr = FormatObject(currentItem.Key, keyFormat);
                             string valueStr = FormatObject(currentItem.Value, valueFormat);
                             results.Append(Dict_Format(dictFormat, keyStr, valueStr));
 
                             if (!exclude_last_end) results.Append(end);
+
+                            results.Append(suffix);
+
                             return results.ToString();
                         }
+
+                        results.Append(prefix);
 
                         // 處理多個元素
                         while (hasNextItem)
@@ -275,6 +313,8 @@ namespace SeanOne.Alchemy
                     }
                 }
 
+                results.Append(suffix);
+
                 return results.ToString();
             });
         }
@@ -286,8 +326,13 @@ namespace SeanOne.Alchemy
         /// <param name="format"> 指定集合的格式化方式 </param>
         /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
         /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="prefix"> 最前面的前綴，會加在整個字典處理結果的開頭(即使字典為空也會添加) </param>
+        /// <param name="suffix"> 最後面的後綴，會加在整個字典處理結果的結尾(即使字典為空也會添加) </param>
         /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
-        private static Task<string> FE_ProcessEnumerable_Async(IEnumerable enumerable, string format, string end, string final_pair_separator, bool exclude_last_end)
+        private static Task<string> FE_ProcessEnumerable_Async(IEnumerable enumerable,
+            string format, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
         {
             object syncRoot = _lock; // 複製鎖定物件，避免在多線程環境中出現問題
 
@@ -299,7 +344,8 @@ namespace SeanOne.Alchemy
                 var list = enumerable.Cast<object>().ToList();
                 int count = list.Count;
 
-                // 避免執行續搶，而導致格式化結果不符合預期
+                results.Append(prefix);
+
                 lock (syncRoot)
                 {
                     for (int i = 0; i < count; i++)
@@ -317,6 +363,8 @@ namespace SeanOne.Alchemy
                     }
                 }
 
+                results.Append(suffix);
+
                 return results.ToString();
             });
         }
@@ -328,16 +376,21 @@ namespace SeanOne.Alchemy
         /// <param name="format"> 指定集合的格式化方式 </param>
         /// <param name="end"> 每次跌代後加的字串(如果是倒數第二個且 final_pair_separator 為空字串，或是最後一個且 exclude_last_end 為 true，則不加) </param>
         /// <param name="final_pair_separator"> 用於倒數第二個與最後一個項目之間的連接字串 </param>
+        /// <param name="prefix"> 最前面的前綴，會加在整個字典處理結果的開頭(即使字典為空也會添加) </param>
+        /// <param name="suffix"> 最後面的後綴，會加在整個字典處理結果的結尾(即使字典為空也會添加) </param>
         /// <param name="exclude_last_end"> 是否排除最後一個項目的 end 字串 </param>
-        private static Task<string> FE_ProcessEnumerable_OptimizedAsync(IEnumerable enumerable, string format, string end, string final_pair_separator, bool exclude_last_end)
+        private static Task<string> FE_ProcessEnumerable_OptimizedAsync(IEnumerable enumerable,
+            string format, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
         {
             object syncRoot = _lock; // 複製鎖定物件，避免在多線程環境中出現問題
 
             return Task.Run(() =>
             {
-                if (enumerable == null) return string.Empty;
+                if (enumerable == null) return prefix + suffix;
 
-                var sb = new StringBuilder();
+                var result = new StringBuilder();
 
                 // 避免執行續搶，而導致格式化結果不符合預期
                 lock (syncRoot)
@@ -347,7 +400,7 @@ namespace SeanOne.Alchemy
                     try
                     {
                         // 嘗試讀取第一個元素
-                        if (!enumerator.MoveNext()) return string.Empty;
+                        if (!enumerator.MoveNext()) return prefix + suffix;
 
                         object currentItem = enumerator.Current; // 當前要處理的元素
                         bool hasNextItem = enumerator.MoveNext(); // 檢查是否還有更多元素
@@ -355,10 +408,17 @@ namespace SeanOne.Alchemy
                         // 如果只有一個元素
                         if (!hasNextItem)
                         {
-                            sb.Append(FormatObject(currentItem, format));
-                            if (!exclude_last_end) sb.Append(end);
-                            return sb.ToString();
+                            result.Append(prefix);
+
+                            result.Append(FormatObject(currentItem, format));
+                            if (!exclude_last_end) result.Append(end);
+
+                            result.Append(suffix);
+
+                            return result.ToString();
                         }
+
+                        result.Append(prefix);
 
                         // 處理多個元素
                         while (hasNextItem)
@@ -374,21 +434,21 @@ namespace SeanOne.Alchemy
                             {
                                 // 當前是倒數第二個元素，且 final_pair_separator 不為 null 或空字串
                                 if (!string.IsNullOrEmpty(final_pair_separator))
-                                    sb.Append(currentStr).Append(final_pair_separator);
+                                    result.Append(currentStr).Append(final_pair_separator);
                                 // 否則添加 end
                                 else
-                                    sb.Append(currentStr).Append(end);
+                                    result.Append(currentStr).Append(end);
 
                                 // 處理最後一個元素 (nextItem)
-                                sb.Append(FormatObject(nextItem, format));
+                                result.Append(FormatObject(nextItem, format));
 
                                 // 如果是最後一個，且 exclude_last_end 為 false 才加 end
-                                if (!exclude_last_end) sb.Append(end);
+                                if (!exclude_last_end) result.Append(end);
                             }
                             else
                             {
                                 // 一般中間的元素
-                                sb.Append(currentStr).Append(end);
+                                result.Append(currentStr).Append(end);
                             }
 
                             // 移動到下一輪要處理的元素
@@ -402,7 +462,9 @@ namespace SeanOne.Alchemy
                     }
                 }
 
-                return sb.ToString();
+                result.Append(suffix);
+
+                return result.ToString();
             });
         }
         #endregion
@@ -420,6 +482,8 @@ namespace SeanOne.Alchemy
                 string format = string.Empty;
 
                 string end = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("end"), string.Empty);
+                string prefix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("prefix"), string.Empty);
+                string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("suffix"), string.Empty);
 
                 // 提取並驗證 /tostring: 參數
                 if (Judge.HasString(dslInstruction, DslSyntaxBuilder.BuildParamKey("tostring")))
@@ -439,7 +503,7 @@ namespace SeanOne.Alchemy
                 // 格式化對象
                 string result = FormatObject(obj, format);
 
-                return result + end;
+                return prefix + result + end + suffix;
             });
         }
         #endregion

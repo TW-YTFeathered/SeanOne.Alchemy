@@ -68,9 +68,9 @@ namespace SeanOne.Alchemy.Utility
         // 定義每個方法支援的參數
         private static readonly Dictionary<string, HashSet<string>> MethodParameters = new Dictionary<string, HashSet<string>>
         {
-            ["basic"] = new HashSet<string> { "end", "tostring" },
-            ["FE_ProcessEnumerable"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "tostring" },
-            ["FE_ProcessDictionary"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "dict-format", "key-format", "value-format" }
+            ["basic"] = new HashSet<string> { "end", "tostring", "prefix", "suffix" },
+            ["FE_ProcessEnumerable"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "tostring", "prefix", "suffix" },
+            ["FE_ProcessDictionary"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "dict-format", "key-format", "value-format", "prefix", "suffix" }
         };
 
         /// <summary>
