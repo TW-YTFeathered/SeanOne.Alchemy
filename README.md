@@ -153,6 +153,8 @@ This naming convention ensures consistency, type safety, and a development exper
 |----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
 | `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
 | `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
+| `prefix`       | `/prefix:"["`  | Prepends a string before each value. Note: For collections, adds to entire result, not each element.                   |
+| `suffix`       | `/suffix:"]"`  | Appends a string after each value. Note: For collections, adds to entire result, not each element.                     |
 
 ### Fe Parameters
 
