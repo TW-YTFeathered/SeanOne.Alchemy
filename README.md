@@ -138,8 +138,6 @@ This naming convention ensures consistency, type safety, and a development exper
 
 ---
 
-## Formatting with `AlchemyFormatter`
-
 ## Escape Sequences
 
 ### Background
@@ -250,7 +248,11 @@ AlchemyFormatter.Format(list, "fe /end:\r\n");
 
 *Note: The examples above use the DSL format string. For Fluent API, you can use regular C# string literals with standard escape sequences.*
 
+> **Now that you understand how to represent special characters, let's explore the complete Alchemy syntax and parameters in detail below.**  
+
 ---
+
+## Formatting with `AlchemyFormatter`
 
 ### Syntax
 
@@ -310,7 +312,7 @@ AlchemyFormatter.Format(list, "fe /end:\r\n");
 
 ## More Examples
 
-For more detailed examples and advanced usage, see the [complete guide](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/GUIDE.md).
+For more detailed examples and advanced usage, see the [complete guide](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/GUIDE.md#dsl-format-string-demonstration).
 
 ---
 
@@ -328,12 +330,14 @@ For developers who prefer a more structured and type-safe approach, the library 
 
 ### Builder Methods
 
-| Method               | Description                                   |
-|----------------------|-----------------------------------------------|
-| `With(param, value)` | Configures a formatting parameter             |
-| `Build()`            | Creates a reusable formatter instance         |
-| `Run(obj)`           | Executes formatting on the specified object   |
-| `BuildRun(obj)`      | Combines `Build()` and `Run(obj)` in one call |
+| Method               | Description                                                        |
+|----------------------|--------------------------------------------------------------------|
+| `With(param, value)` | Configures a formatting parameter                                  |
+| `Build()`            | Creates a reusable formatter instance                              |
+| `Run(obj)`           | Executes formatting on the specified object                        |
+| `ToString()`         | Returns the DSL string representation of the configured formatter  |
+| `BuildRun(obj)`      | Combines `Build()` and `Run(obj)` in one call                      |
+| `BuildToString()`    | Combines `Build()` and `ToString()` to get the DSL string directly |
 
 The Fluent API provides dedicated builders for different data types:
 
@@ -343,7 +347,13 @@ The Fluent API provides dedicated builders for different data types:
 
 Each builder provides strongly-typed methods for configuring formatting options, eliminating the need to remember parameter names and reducing runtime errors.
 
-See [GUIDE.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/GUIDE.md) for complete Fluent API examples and usage patterns.
+See [GUIDE.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/GUIDE.md#fluent-api-demonstration) for complete Fluent API examples and usage patterns.
+
+---
+
+## Issues and Support
+
+Found a bug or have a feature request? Please open an issue on [GitHub Issues](https://github.com/TW-YTFeathered/SeanOne.Alchemy/issues).
 
 ---
 
