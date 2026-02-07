@@ -140,32 +140,6 @@ This naming convention ensures consistency, type safety, and a development exper
 
 ## Formatting with `AlchemyFormatter`
 
-### Syntax
-
-```text
-[FunctionName] /param1:value1 /param2:"value with spaces" /param3:"value/with/slash" ...
-```
-
-- Parameters start with `/` followed by the name and a colon
-- Values containing spaces must be enclosed in double quotes
-- Parameter names are case-sensitive
-
-### Common Functions
-
-| Function Name     | Description                                                            |
-|-------------------|------------------------------------------------------------------------|
-| `fe` or `foreach` | Iterates over an `IEnumerable` or `IDictionary` and lists its contents |
-| `basic`           | Default return method for formatting objects                           |
-
-### Common Parameters
-
-| Parameter Name | Example        | Description                                                                                                            |
-|----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
-| `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
-| `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
-| `prefix`       | `/prefix:"["`  | Prepends a string before each value. Note: For collections, adds to entire result, not each element.                   |
-| `suffix`       | `/suffix:"]"`  | Appends a string after each value. Note: For collections, adds to entire result, not each element.                     |
-
 ## Escape Sequences
 
 ### Background
@@ -277,6 +251,32 @@ AlchemyFormatter.Format(list, "fe /end:\r\n");
 *Note: The examples above use the DSL format string. For Fluent API, you can use regular C# string literals with standard escape sequences.*
 
 ---
+
+### Syntax
+
+```text
+[FunctionName] /param1:value1 /param2:"value with spaces" /param3:"value/with/slash" ...
+```
+
+- Parameters start with `/` followed by the name and a colon
+- Values containing spaces must be enclosed in double quotes
+- Parameter names are case-sensitive
+
+### Common Functions
+
+| Function Name     | Description                                                            |
+|-------------------|------------------------------------------------------------------------|
+| `fe` or `foreach` | Iterates over an `IEnumerable` or `IDictionary` and lists its contents |
+| `basic`           | Default return method for formatting objects                           |
+
+### Common Parameters
+
+| Parameter Name | Example        | Description                                                                                                            |
+|----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
+| `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
+| `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
+| `prefix`       | `/prefix:"["`  | Prepends a string before each value. Note: For collections, adds to entire result, not each element.                   |
+| `suffix`       | `/suffix:"]"`  | Appends a string after each value. Note: For collections, adds to entire result, not each element.                     |
 
 ### Fe Parameters
 
