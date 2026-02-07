@@ -2,11 +2,10 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SeanOne.Alchemy
+namespace SeanOne.Alchemy.Utility
 {
     /// <summary>
     /// 提供物件深度複製 (Deep Clone) 的工具類別
