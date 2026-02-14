@@ -57,12 +57,11 @@ namespace SeanOne.Alchemy.Utility
             if (string.IsNullOrWhiteSpace(dslInstruction) || string.IsNullOrWhiteSpace(parameterName))
                 return 0;
 
-            // 移除所有 \"...\" 之間的內容（非貪婪）
-            string withoutQuotes = Regex.Replace(dslInstruction, "\\\\\".*?\\\\\"", string.Empty);
+            // 移除所有 "..." 之間的內容 (非貪婪)
+            string withoutQuotes = Regex.Replace(dslInstruction, "\\\".*?\\\"", string.Empty);
 
-            // 精確匹配參數名稱（前後界限）
-            string pattern = $@"(?<=^|\s){Regex.Escape(parameterName)}(?=\s|:|$)";
-            return Regex.Matches(withoutQuotes, pattern).Count;
+            // 直接匹配參數名稱子串
+            return Regex.Matches(withoutQuotes, Regex.Escape(parameterName)).Count;
         }
 
         // 定義每個方法支援的參數
