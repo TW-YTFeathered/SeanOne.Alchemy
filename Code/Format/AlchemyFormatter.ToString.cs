@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using SeanOne.Alchemy.Utility;
 
 namespace SeanOne.Alchemy
@@ -21,23 +19,13 @@ namespace SeanOne.Alchemy
         private static string Decoder(object obj, string dslInstruction)
         {
             // 從 DSL 指令中提取函數名稱
-            string directive = dslInstruction.Contains(DslSymbols.ParamPrefix) ?
-                dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
-                : dslInstruction;
-
-            // 創建函數名稱字典，映射到對應的執行函數
-            Dictionary<string, Func<string>> actions = new Dictionary<string, Func<string>>
-            {
-                ["fe"] = () => FE(obj, dslInstruction, "fe"),
-                ["foreach"] = () => FE(obj, dslInstruction, "foreach"),
-                ["basic"] = () => Basic(obj, dslInstruction),
-            };
+            string directive = Get.ExtractDirective(dslInstruction);
 
             // 嘗試從字典中獲取對應的執行函數
-            if (actions.TryGetValue(directive, out var func))
+            if (s_ActionsSync.TryGetValue(directive, out var func))
             {
                 // 找到並執行函數
-                return func();
+                return func(obj, dslInstruction);
             }
             else
             {
@@ -466,65 +454,5 @@ namespace SeanOne.Alchemy
             return prefix + result + end + suffix;
         }
         #endregion
-
-        /// <summary>
-        /// 驗證集合元素是否可格式化
-        /// </summary>
-        /// <param name="enumerable"> 要檢查的集合 </param>
-        /// <param name="format"> 格式化字串(目前沒用) </param>
-        private static void ValidateEnumerableFormattable(IEnumerable enumerable, string format)
-        {
-            foreach (var element in enumerable)
-            {
-                if (element != null && !Judge.SafeToString(element))
-                {
-                    var elementType = element.GetType();
-                    throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {elementType.Name}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// 格式化對象 (需支持 IFormattable)
-        /// </summary>
-        /// <param name="obj"> 要格式化的對象 </param>
-        /// <param name="format"> 格式化字串 </param>
-        private static string FormatObject(object obj, string format)
-        {
-            // 如果對象為null，返回空字符串
-            if (obj == null) return string.Empty;
-
-            // 如果提供了格式且對象實現了IFormattable，則使用該格式
-            if (!string.IsNullOrEmpty(format) && obj is IFormattable formattable)
-                return formattable.ToString(format, null);
-
-            // 否則，使用默認的ToString方法
-            return obj.ToString() ?? string.Empty;
-        }
-
-        private static readonly Regex _placeholderRegex =
-            new Regex(@"\{(\d+)\}", RegexOptions.Compiled);
-        /// <summary>
-        /// 格式化字典
-        /// </summary>
-        /// <param name="format"> 格式化字串 </param>
-        /// <param name="key"> 鍵 </param>
-        /// <param name="value"> 值 </param>
-        private static string Dict_Format(string format, string key, string value)
-        {
-            if (string.IsNullOrEmpty(format)) return string.Empty;
-
-            var dict = new Dictionary<string, object>
-            {
-                { "0", key },
-                { "1", value }
-            };
-
-            return _placeholderRegex.Replace(format, m =>
-            {
-                var index = m.Groups[1].Value;
-                return dict.TryGetValue(index, out var val) ? val.ToString() : m.Value;
-            });
-        }
     }
 }

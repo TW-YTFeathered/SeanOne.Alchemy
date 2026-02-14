@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,23 +23,13 @@ namespace SeanOne.Alchemy
         private async static Task<string> Decoder_Async(object obj, string dslInstruction)
         {
             // 從 DSL 指令中提取函數名稱
-            string directive = dslInstruction.Contains(DslSymbols.ParamPrefix) ? 
-                dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
-                : dslInstruction;
-
-            // 創建函數名稱字典，映射到對應的執行函數
-            var actions = new Dictionary<string, Func<Task<string>>>
-            {
-                ["fe"] = () => FE_Async(obj, dslInstruction, "fe"),
-                ["foreach"] = () => FE_Async(obj, dslInstruction, "foreach"),
-                ["basic"] = () => Basic_Async(obj, dslInstruction),
-            };
+            string directive = Get.ExtractDirective(dslInstruction);
 
             // 嘗試從字典中獲取對應的執行函數
-            if (actions.TryGetValue(directive, out var func))
+            if (s_ActionsAsync.TryGetValue(directive, out var func))
             {
                 // 找到並執行函數
-                return await func();
+                return await func(obj, dslInstruction);
             }
             else
             {
@@ -507,27 +496,5 @@ namespace SeanOne.Alchemy
             });
         }
         #endregion
-
-        /// <summary>
-        /// 驗證集合元素是否可格式化 (非同步)
-        /// </summary>
-        /// <param name="enumerable"> 要檢查的集合 </param>
-        /// <param name="format"> 格式化字串(目前沒用) </param>
-        private static Task ValidateEnumerableFormattable_Async(IEnumerable enumerable, string format)
-        {
-            var snapshot = enumerable.Cast<object>().ToList(); // 創建集合快照，避免多線程問題
-
-            return Task.Run(() =>
-            {
-                foreach (var element in snapshot)
-                {
-                    if (element != null && !Judge.SafeToString(element))
-                    {
-                        var elementType = element.GetType();
-                        throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {elementType.Name}");
-                    }
-                }
-            });
-        }
     }
 }
