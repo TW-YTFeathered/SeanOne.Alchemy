@@ -2,6 +2,7 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace SeanOne.Alchemy.Sorting
@@ -11,35 +12,44 @@ namespace SeanOne.Alchemy.Sorting
     /// </summary>
     internal static class SortCommands
     {
-        private static readonly StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+        public static readonly Dictionary<string, Action<IList>> s_ListSorterActions =
+            new Dictionary<string, Action<IList>>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                // 氣泡排序升序
+                { "bs", list => ListSorter.BubbleSortList(list, false) },
+                { "bubble", list => ListSorter.BubbleSortList(list, false) },
+                { "bubblesort", list => ListSorter.BubbleSortList(list, false) },
+                // 氣泡排序降序
+                { "bsd", list => ListSorter.BubbleSortList(list, true) },
+                { "bubbledesc", list => ListSorter.BubbleSortList(list, true) },
+                { "bubbledescending", list => ListSorter.BubbleSortList(list, true) },
+                { "bubblesortdescending", list => ListSorter.BubbleSortList(list, true) },
 
-        #region Command Aliases
-        private static readonly HashSet<string> BubbleSortAliases = new HashSet<string>(comparer)
-        {
-            "bs", "bubble", "bubblesort"
-        };
+                // 插入排序升序
+                { "is", list => ListSorter.InsertionSortList(list, false) },
+                { "insertion", list => ListSorter.InsertionSortList(list, false) },
+                { "insertionsort", list => ListSorter.InsertionSortList(list, false) },
+                // 插入排序降序
+                { "isd", list => ListSorter.InsertionSortList(list, true) },
+                { "insertiondesc", list => ListSorter.InsertionSortList(list, true) },
+                { "insertiondescending", list => ListSorter.InsertionSortList(list, true) },
 
-        private static readonly HashSet<string> BubbleSortDescendingAliases = new HashSet<string>(comparer)
-        {
-            "bsd", "bubbledescending", "bubblesortdescending"
-        };
+                // Array.Sort 升序
+                { "as", list => ListSorter.ArraySortList(list, false) },
+                { "arraysort", list => ListSorter.ArraySortList(list, false) },
+                // Array.Sort 降序
+                { "asd", list => ListSorter.ArraySortList(list, true) },
+                { "arraysortdesc", list => ListSorter.ArraySortList(list, true) },
+                { "arraysortdescending", list => ListSorter.ArraySortList(list, true) },
 
-        private static readonly HashSet<string> LinqSortAliases = new HashSet<string>(comparer)
-        {
-            "ls", "linq", "linqsort"
-        };
-
-        private static readonly HashSet<string> LinqSortDescendingAliases = new HashSet<string>(comparer)
-        {
-            "lsd", "linqdescending", "linqsortdescending"
-        };
-        #endregion
-
-        #region Command Validation Methods
-        public static bool IsBubbleSortCommand(string command) => BubbleSortAliases.Contains(command);
-        public static bool IsBubbleSortDescendingCommand(string command) => BubbleSortDescendingAliases.Contains(command);
-        public static bool IsLinqSortCommand(string command) => LinqSortAliases.Contains(command);
-        public static bool IsLinqSortDescendingCommand(string command) => LinqSortDescendingAliases.Contains(command);
-        #endregion
+                // Linq.OrderBy 升序
+                { "ls", list => ListSorter.LinqSortList(list, false) },
+                { "linq", list => ListSorter.LinqSortList(list, false) },
+                { "linqsort", list => ListSorter.LinqSortList(list, false) },
+                // Linq.OrderBy 降序
+                { "lsd", list => ListSorter.LinqSortList(list, true) },
+                { "linqsortdesc", list => ListSorter.LinqSortList(list, true) },
+                { "linqsortdescending", list => ListSorter.LinqSortList(list, true) },
+            };
     }
 }

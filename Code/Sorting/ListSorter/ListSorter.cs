@@ -12,21 +12,10 @@ namespace SeanOne.Alchemy.Sorting
 
         public static void Sort(IList list, string algorithm)
         {
-            if (SortCommands.IsBubbleSortCommand(algorithm))
+            // 嘗試取得函式，並執行
+            if (SortCommands.s_ListSorterActions.TryGetValue(algorithm, out var action))
             {
-                BubbleSortList(list, false);
-            }
-            else if (SortCommands.IsBubbleSortDescendingCommand(algorithm))
-            {
-                BubbleSortList(list, true);
-            }
-            else if (SortCommands.IsLinqSortCommand(algorithm))
-            {
-                LinqSortList(list, false);
-            }
-            else if (SortCommands.IsLinqSortDescendingCommand(algorithm))
-            {
-                LinqSortList(list, true);
+                action(list);
             }
             else
             {

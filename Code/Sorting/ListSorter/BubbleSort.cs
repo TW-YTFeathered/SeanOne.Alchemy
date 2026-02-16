@@ -7,7 +7,7 @@ namespace SeanOne.Alchemy.Sorting
 {
     partial class ListSorter
     {
-        private static void BubbleSortList(IList list, bool isDescending)
+        public static void BubbleSortList(IList list, bool isDescending)
         {
             if (list == null || list.Count <= 1)
                 return;
