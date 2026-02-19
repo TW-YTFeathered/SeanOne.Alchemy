@@ -55,6 +55,15 @@ a general transformation framework driven by DSL and expressive rules.
 
 ## **Beta**
 
+### **beta 3.0.1**
+
+*Focus:Add new object → object functions*
+
+- Added `cnv` function to support object → object transformations via `AlchemyConverter.Convert` method (synchronous entry point).
+  - Added `/sort` parameter to control sorting of collections (currently supports IList only).
+- Fixed a bug where duplicate parameters were not detected as duplicates.
+- Performance: Converted frequently used dictionaries to `static readonly` to reduce allocations and improve performance.
+
 ### **beta 3.0.0**
 
 *Focus:Add new parameters for collection formatting*
