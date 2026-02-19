@@ -8,10 +8,18 @@ using System.Collections.Generic;
 namespace SeanOne.Alchemy.Sorting
 {
     /// <summary>
-    /// 
+    /// 提供排序命令的靜態映射，將命令字串與具體的排序實作連結
     /// </summary>
     internal static class SortCommands
     {
+        /// <summary>
+        /// 存放所有 IList 可以成功排序的參數
+        /// 鍵 (Key) 為命令字串 (如 "bs", "bubble")
+        /// 值 (Value) 為對應的排序動作委託，接受 IList 參數並直接修改該清單
+        /// </summary>
+        /// <remarks>
+        /// 所有命令字串均不區分大小寫，建議使用小寫以保持一致
+        /// </remarks>
         public static readonly Dictionary<string, Action<IList>> s_ListSorterActions =
             new Dictionary<string, Action<IList>>(StringComparer.InvariantCultureIgnoreCase)
             {
