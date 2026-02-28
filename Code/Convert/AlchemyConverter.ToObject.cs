@@ -2,7 +2,6 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using System;
-using System.Collections.Generic;
 using SeanOne.Alchemy.Utility;
 using SeanOne.Alchemy.Sorting;
 
@@ -41,6 +40,10 @@ namespace SeanOne.Alchemy
             string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("sort"), string.Empty);
 
             Sort.Entry(copyObj, sortStr);
+
+            string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("temp"), string.Empty);
+
+            TemperatureConversion(copyObj, tempCnvIns);
 
             // short time testing method
             //Console.Write(Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("print"), string.Empty));

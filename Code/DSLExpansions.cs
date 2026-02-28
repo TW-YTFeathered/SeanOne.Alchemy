@@ -89,7 +89,7 @@ namespace SeanOne.Alchemy.Utility
     /// 轉換成不同常見溫標
     /// 注意: 不用第三方庫是因為這樣能更好的控制變量
     /// </summary>
-    internal class TemperatureConverter
+    internal static class TemperatureConverter
     {
         //private const double AbsoluteZeroC = -273.15;
         // 攝氏零度相對於絕對溫度的偏移量
@@ -99,47 +99,88 @@ namespace SeanOne.Alchemy.Utility
         // 攝氏與華氏的比例 (9/5)
         private const double FahrenheitFactor = 1.8;
 
-        private void ThrowIfBelowAbsoluteZero(double k)
+        /// <summary>
+        /// 檢查是否低於絕對零度
+        /// </summary>
+        /// <param name="k">凱氏溫度值 (K)</param>
+        /// <exception cref="ArgumentException">凱氏溫度值低於絕對零度時拋出</exception>
+        private static void ThrowIfBelowAbsoluteZero(double k)
         {
             if (k < 0)
                 throw new ArgumentException("Temperature below absolute zero is not physically possible.");
         }
 
         #region Abstract version (checking absolute zero)
-        public double FtoK(double f)
+        /// <summary>
+        /// 華氏轉凱氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="f">華氏溫度值 (F)</param>
+        /// <returns>凱氏溫度值 (K)</returns>
+        /// <exception cref="ArgumentException">轉換結果低於絕對零度時拋出</exception>
+        public static double FtoK(double f)
         {
             double k = FtoK_Core(f);
             ThrowIfBelowAbsoluteZero(k);
             return k;
         }
 
-        public double FtoC(double f)
+        /// <summary>
+        /// 華氏轉攝氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="f">華氏溫度值 (F)</param>
+        /// <returns>攝氏溫度值 (C)</returns>
+        /// <exception cref="ArgumentException">轉換結果低於絕對零度時拋出</exception>
+        public static double FtoC(double f)
         {
             double k = FtoK_Core(f);
             ThrowIfBelowAbsoluteZero(k);
             return FtoC_Core(f);
         }
 
-        public double KtoF(double k)
+        /// <summary>
+        /// 凱氏轉華氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="k">凱氏溫度值 (K)</param>
+        /// <returns>華氏溫度值 (F)</returns>
+        /// <exception cref="ArgumentException">輸入溫度低於絕對零度時拋出</exception>
+        public static double KtoF(double k)
         {
             ThrowIfBelowAbsoluteZero(k);
             return KtoF_Core(k);
         }
 
-        public double KtoC(double k)
+        /// <summary>
+        /// 凱氏轉攝氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="k">凱氏溫度值 (K)</param>
+        /// <returns>攝氏溫度值 (C)</returns>
+        /// <exception cref="ArgumentException">輸入溫度低於絕對零度時拋出</exception>
+        public static double KtoC(double k)
         {
             ThrowIfBelowAbsoluteZero(k);
             return KtoC_Core(k);
         }
 
-        public double CtoK(double c)
+        /// <summary>
+        /// 攝氏轉凱氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="c">攝氏溫度值 (C)</param>
+        /// <returns>凱氏溫度值 (K)</returns>
+        /// <exception cref="ArgumentException">轉換結果低於絕對零度時拋出</exception>
+        public static double CtoK(double c)
         {
             double k = CtoK_Core(c);
             ThrowIfBelowAbsoluteZero(k);
             return k;
         }
 
-        public double CtoF(double c)
+        /// <summary>
+        /// 攝氏轉華氏 (含絕對零度檢查)
+        /// </summary>
+        /// <param name="c">攝氏溫度值 (C)</param>
+        /// <returns>華氏溫度值 (F)</returns>
+        /// <exception cref="ArgumentException">轉換結果低於絕對零度時拋出</exception>
+        public static double CtoF(double c)
         {
             double k = CtoK_Core(c);
             ThrowIfBelowAbsoluteZero(k);
@@ -148,12 +189,42 @@ namespace SeanOne.Alchemy.Utility
         #endregion
 
         #region Core version (pure mathematical conversion)
-        public double FtoK_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor + KelvinOffset;
-        public double FtoC_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor;
-        public double KtoF_Core(double k) => (k - KelvinOffset) * FahrenheitFactor + FahrenheitOffset;
-        public double KtoC_Core(double k) => k - KelvinOffset;
-        public double CtoK_Core(double c) => c + KelvinOffset;
-        public double CtoF_Core(double c) => c * FahrenheitFactor + FahrenheitOffset;
+        /// <summary>
+        /// 華氏轉凱氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="f">華氏溫度值 (F)</param>
+        /// <returns>凱氏溫度值 (K)</returns>
+        public static double FtoK_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor + KelvinOffset;
+        /// <summary>
+        /// 華氏轉攝氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="f">華氏溫度值 (F)</param>
+        /// <returns>攝氏溫度值 (C)</returns>
+        public static double FtoC_Core(double f) => (f - FahrenheitOffset) / FahrenheitFactor;
+        /// <summary>
+        /// 凱氏轉華氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="k">凱氏溫度值 (K)</param>
+        /// <returns>華氏溫度值 (F)</returns>
+        public static double KtoF_Core(double k) => (k - KelvinOffset) * FahrenheitFactor + FahrenheitOffset;
+        /// <summary>
+        /// 凱氏轉攝氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="k">凱氏溫度值 (K)</param>
+        /// <returns>攝氏溫度值 (C)</returns>
+        public static double KtoC_Core(double k) => k - KelvinOffset;
+        /// <summary>
+        /// 攝氏轉凱氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="c">攝氏溫度值 (C)</param>
+        /// <returns>凱氏溫度值 (K)</returns>
+        public static double CtoK_Core(double c) => c + KelvinOffset;
+        /// <summary>
+        /// 攝氏轉華氏 (純數學轉換，無檢查)
+        /// </summary>
+        /// <param name="c">攝氏溫度值 (C)</param>
+        /// <returns>華氏溫度值 (F)</returns>
+        public static double CtoF_Core(double c) => c * FahrenheitFactor + FahrenheitOffset;
         #endregion
     }
 }
