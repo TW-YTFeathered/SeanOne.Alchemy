@@ -48,7 +48,6 @@ public static async Task<AlchemyResult> ConvertAsync(object obj, params string[]
 
 | Metric                 | Before                  | After   | Change        |
 |------------------------|-------------------------|---------|---------------|
-| **Code Quality Score** | 88.38                   | 91.90   | +3.52         |
 | **Code Duplication**   | 6.28%                   | 2.41%   | -61%          |
 | **Problem Files**      | `ToStringAsync.cs` (#1) | Removed | N/A           |
 | **Maintainability**    | 2 files to update       | 1 file  | 50% less work |
@@ -74,7 +73,6 @@ await AlchemyConverter.ConvertAsync(data, "cnv /temp:KtoC");
 
 - [Microsoft: Task.Run vs Task.FromResult](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run)
 - [CPU-Bound vs I/O-Bound Operations](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
-- Code Quality Report: [report.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/dev/DesignDocs/DeprecatedAPIs/report.md)
 
 ---
 
