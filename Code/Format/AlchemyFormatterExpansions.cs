@@ -5,9 +5,7 @@ using SeanOne.Alchemy.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
@@ -27,22 +25,6 @@ namespace SeanOne.Alchemy
                 ["fe"] = (obj, dslInstruction) => FE(obj, dslInstruction, "fe"),
                 ["foreach"] = (obj, dslInstruction) => FE(obj, dslInstruction, "foreach"),
                 ["basic"] = (obj, dslInstruction) => Basic(obj, dslInstruction),
-            };
-
-        /// <summary>
-        /// 取得 Format 相關的非同步執行函數字典
-        /// </summary>
-        /// <remarks>
-        /// 字典鍵值對應：
-        /// - "fe", "foreach": 執行 FE_Async 非同步函數（帶對應的類型參數）
-        /// - "basic": 執行 Basic_Async 非同步函數
-        /// </remarks>
-        private static readonly Dictionary<string, Func<object, string, Task<string>>> s_ActionsAsync =
-            new Dictionary<string, Func<object, string, Task<string>>>
-            {
-               ["fe"] = (obj, dslInstruction) => FE_Async(obj, dslInstruction, "fe"),
-               ["foreach"] = (obj, dslInstruction) => FE_Async(obj, dslInstruction, "foreach"),
-               ["basic"] = (obj, dslInstruction) => Basic_Async(obj, dslInstruction),
             };
 
         #region Sync
@@ -103,30 +85,6 @@ namespace SeanOne.Alchemy
             {
                 var index = m.Groups[1].Value;
                 return dict.TryGetValue(index, out var val) ? val.ToString() : m.Value;
-            });
-        }
-        #endregion
-
-        #region Async
-        /// <summary>
-        /// 驗證集合元素是否可格式化 (非同步)
-        /// </summary>
-        /// <param name="enumerable"> 要檢查的集合 </param>
-        /// <param name="format"> 格式化字串(目前沒用) </param>
-        private static Task ValidateEnumerableFormattable_Async(IEnumerable enumerable, string format)
-        {
-            var snapshot = enumerable.Cast<object>().ToList(); // 創建集合快照，避免多線程問題
-
-            return Task.Run(() =>
-            {
-                foreach (var element in snapshot)
-                {
-                    if (element != null && !Judge.SafeToString(element))
-                    {
-                        var elementType = element.GetType();
-                        throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {elementType.Name}");
-                    }
-                }
             });
         }
         #endregion
