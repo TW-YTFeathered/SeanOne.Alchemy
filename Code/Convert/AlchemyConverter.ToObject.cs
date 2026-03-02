@@ -37,13 +37,13 @@ namespace SeanOne.Alchemy
 
         private static AlchemyResult CNV(object copyObj, string dslInstruction)
         {
+            // 排序部分
             string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("sort"), string.Empty);
-
             Sort.Entry(copyObj, sortStr);
 
+            // 溫度轉換部分
             string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("temp"), string.Empty);
-
-            TemperatureConversion(copyObj, tempCnvIns);
+            copyObj = ConvertTemperature(copyObj, tempCnvIns);
 
             // short time testing method
             //Console.Write(Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("print"), string.Empty));

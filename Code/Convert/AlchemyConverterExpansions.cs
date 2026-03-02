@@ -78,31 +78,56 @@ namespace SeanOne.Alchemy
             };
 
         /// <summary>
-        /// 轉換清單中的溫度數值
+        /// 統一泛型入口：轉換溫度數值或清單中的每個元素
         /// </summary>
-        /// <param name="obj">目標物件(必須是 IList)</param>
-        /// <param name="ins">轉換指令(例如 "CtoF")</param>
-        /// <exception cref="ArgumentException">參數無效時拋出</exception>
-        /// <exception cref="InvalidOperationException">轉換失敗時拋出</exception>
-        private static void TemperatureConversion(object obj, string ins)
+        /// <typeparam name="T">輸入的型別，可以是數值型別或實作 IList 的集合型別</typeparam>
+        /// <param name="input">要轉換的數值或集合</param>
+        /// <param name="instruction">轉換指令 (例如 "CtoF" 或 "K->C")</param>
+        /// <returns>
+        /// 若輸入為數值，回傳轉換後的數值 (型別為 T)
+        /// 若輸入為集合，回傳修改後的集合本身 (原地轉換)
+        /// </returns>
+        private static T ConvertTemperature<T>(T input, string instruction)
         {
-            // 檢查物件是否為 IList。
-            if (!(obj is IList list))
-            {
-                throw new ArgumentException("Object must be of type IList", nameof(obj));
-            }
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
-            // 避免後續錯誤處理，先檢查清單是否為空
+            if (string.IsNullOrWhiteSpace(instruction))
+                return input;
+
+            // 檢查是否為清單 (包括陣列和泛型集合)
+            if (input is IList list)
+            {
+                ConvertList(list, instruction);
+                return input; // 回傳原集合 (已修改)
+            }
+            else
+            {
+                // 單一數值處理
+                double value = System.Convert.ToDouble(input);
+                double result = ConvertSingleValue(value, instruction);
+                return (T)System.Convert.ChangeType(result, typeof(T));
+            }   
+        }
+
+        // 私有輔助方法：轉換單一數值
+        private static double ConvertSingleValue(double value, string instruction)
+        {
+            if (!s_ActionsTemperature.TryGetValue(instruction, out var action))
+                throw new ArgumentException($"Unknown conversion instruction: {instruction}", nameof(instruction));
+
+            return action(value);
+        }
+
+        // 私有輔助方法：轉換 IList 集合 (原地修改)
+        private static void ConvertList(IList list, string instruction)
+        {
             if (list.Count == 0) return;
-            // 避免後續錯誤處理，先檢查指令是否為空
-            if (string.IsNullOrWhiteSpace(ins)) return;
 
-            if (!s_ActionsTemperature.TryGetValue(ins, out var action))
-            {
-                throw new ArgumentException($"Unknown conversion instruction: {ins}", nameof(ins));
-            }
+            if (!s_ActionsTemperature.TryGetValue(instruction, out var action))
+                throw new ArgumentException($"Unknown conversion instruction: {instruction}", nameof(instruction));
 
-            // 取得清單的實際元素類型 (只做一次)
+            // 取得清單元素型別 (陣列或泛型清單)
             Type elementType;
             try
             {
@@ -112,41 +137,31 @@ namespace SeanOne.Alchemy
             }
             catch
             {
-                throw new ArgumentException("Cannot determine element type of the list", nameof(obj));
+                throw new ArgumentException("Cannot determine element type of the list", nameof(list));
             }
 
-            // 逐個元素進行轉換
             for (int i = 0; i < list.Count; i++)
             {
                 try
                 {
-                    // 處理空值
                     if (list[i] == null)
-                    {
                         throw new InvalidOperationException($"Element at index {i} is null, cannot convert");
-                    }
 
-                    // 嘗試轉換為 double
                     double value = System.Convert.ToDouble(list[i]);
                     double result = action(value);
-
-                    // 轉換回原始Type
                     list[i] = System.Convert.ChangeType(result, elementType);
                 }
                 catch (FormatException)
                 {
-                    throw new InvalidOperationException(
-                        $"Element at index {i} ('{list[i]}') cannot be converted to a numeric value");
+                    throw new InvalidOperationException($"Element at index {i} ('{list[i]}') cannot be converted to a numeric value");
                 }
                 catch (InvalidCastException)
                 {
-                    throw new InvalidOperationException(
-                        $"Element at index {i} (type: {list[i]?.GetType()}) cannot be converted to a numeric value");
+                    throw new InvalidOperationException($"Element at index {i} (type: {list[i]?.GetType()}) cannot be converted to a numeric value");
                 }
                 catch (OverflowException)
                 {
-                    throw new InvalidOperationException(
-                        $"Conversion result exceeds the range of {elementType.Name}");
+                    throw new InvalidOperationException($"Conversion result exceeds the range of {elementType.Name}");
                 }
             }
         }
