@@ -74,7 +74,7 @@ await AlchemyConverter.ConvertAsync(data, "cnv /temp:KtoC");
 
 - [Microsoft: Task.Run vs Task.FromResult](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run)
 - [CPU-Bound vs I/O-Bound Operations](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
-- Code Quality Report: [report.md](./report.md)
+- Code Quality Report: [report.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/dev/DesignDocs/DeprecatedAPIs/report.md)
 
 ---
 
