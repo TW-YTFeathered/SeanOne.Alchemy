@@ -68,23 +68,17 @@ namespace SeanOne.Alchemy
         public static List<bool> GetBools(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                // 不使用 bool.TryParse 的原因是因為 Convert.ToBoolean 比 Parse 寬容
-                try
-                {
-                    return Convert.ToBoolean(item);
-                }
-                catch
-                {
-                    throw new InvalidCastException($"Failed to convert item at index {idx}: '{item}'");
-                }
+                if (!bool.TryParse(item?.ToString(), out var val))
+                    ThrowConversionFailed(item, idx);
+                return val;
             });
 
         public static List<char> GetChars(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!char.TryParse(item?.ToString(), out var c))
+                if (!char.TryParse(item?.ToString(), out var val))
                     ThrowConversionFailed(item, idx);
-                return c;
+                return val;
             });
 
         public static List<string> GetStrings(this AlchemyResult result) =>
