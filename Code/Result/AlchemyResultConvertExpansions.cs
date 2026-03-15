@@ -12,55 +12,55 @@ namespace SeanOne.Alchemy
     {
         #region Single value conversion
         public static bool GetBool(this AlchemyResult result) =>
-            Convert.ToBoolean(result._source);
+            bool.Parse(GetItemString(result._source));
 
         public static char GetChar(this AlchemyResult result) =>
-            Convert.ToChar(result._source);
+            char.Parse(GetItemString(result._source));
 
         public static string GetString(this AlchemyResult result) =>
-            Convert.ToString(result._source);
+            GetItemString(result._source);
 
         public static sbyte GetSByte(this AlchemyResult result) =>
-            Convert.ToSByte(result._source);
+            sbyte.Parse(GetItemString(result._source));
 
         public static byte GetByte(this AlchemyResult result) =>
-            Convert.ToByte(result._source);
+            byte.Parse(GetItemString(result._source));
 
         public static short GetShort(this AlchemyResult result) =>
-            Convert.ToInt16(result._source);
+            short.Parse(GetItemString(result._source));
 
         public static ushort GetUShort(this AlchemyResult result) =>
-            Convert.ToUInt16(result._source);
+            ushort.Parse(GetItemString(result._source));
 
         public static int GetInt(this AlchemyResult result) =>
-            Convert.ToInt32(result._source);
+            int.Parse(GetItemString(result._source));
 
         public static uint GetUInt(this AlchemyResult result) =>
-            Convert.ToUInt32(result._source);
+            uint.Parse(GetItemString(result._source));
 
         public static long GetLong(this AlchemyResult result) =>
-            Convert.ToInt64(result._source);
+            long.Parse(GetItemString(result._source));
 
         public static ulong GetULong(this AlchemyResult result) =>
-            Convert.ToUInt64(result._source);
+            ulong.Parse(GetItemString(result._source));
 
         public static float GetFloat(this AlchemyResult result) =>
-            Convert.ToSingle(result._source);
+            float.Parse(GetItemString(result._source));
 
         public static double GetDouble(this AlchemyResult result) =>
-            Convert.ToDouble(result._source);
+            double.Parse(GetItemString(result._source));
 
         public static decimal GetDecimal(this AlchemyResult result) =>
-            Convert.ToDecimal(result._source);
+            decimal.Parse(GetItemString(result._source));
 
         public static DateTime GetDateTime(this AlchemyResult result) =>
-            Convert.ToDateTime(result._source);
+            DateTime.Parse(GetItemString(result._source));
 
         public static Guid GetGuid(this AlchemyResult result) =>
-            Guid.Parse(result._source.ToString());
+            Guid.Parse(GetItemString(result._source));
 
         public static TimeSpan GetTimeSpan(this AlchemyResult result) =>
-            TimeSpan.Parse(result._source.ToString());
+            TimeSpan.Parse(GetItemString(result._source));
         #endregion
 
         #region List transformation (with default converters)
@@ -68,7 +68,7 @@ namespace SeanOne.Alchemy
         public static List<bool> GetBools(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!bool.TryParse(item?.ToString(), out var val))
+                if (!bool.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -76,7 +76,7 @@ namespace SeanOne.Alchemy
         public static List<char> GetChars(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!char.TryParse(item?.ToString(), out var val))
+                if (!char.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -84,15 +84,13 @@ namespace SeanOne.Alchemy
         public static List<string> GetStrings(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (item == null)
-                    ThrowConversionFailed(item, idx);
-                return item.ToString();
+                return GetItemString(item, idx);
             });
 
         public static List<sbyte> GetSbytes(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!sbyte.TryParse(item?.ToString(), out var val))
+                if (!sbyte.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -100,7 +98,7 @@ namespace SeanOne.Alchemy
         public static List<byte> GetBytes(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!byte.TryParse(item?.ToString(), out var val))
+                if (!byte.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -108,7 +106,7 @@ namespace SeanOne.Alchemy
         public static List<short> GetShorts(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!short.TryParse(item?.ToString(), out var val))
+                if (!short.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -116,7 +114,7 @@ namespace SeanOne.Alchemy
         public static List<ushort> GetUShorts(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!ushort.TryParse(item?.ToString(), out var val))
+                if (!ushort.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -124,7 +122,7 @@ namespace SeanOne.Alchemy
         public static List<int> GetInts(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!int.TryParse(item?.ToString(), out var val))
+                if (!int.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -132,7 +130,7 @@ namespace SeanOne.Alchemy
         public static List<uint> GetUInts(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!uint.TryParse(item?.ToString(), out var val))
+                if (!uint.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -140,7 +138,7 @@ namespace SeanOne.Alchemy
         public static List<long> GetLongs(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!long.TryParse(item?.ToString(), out var val))
+                if (!long.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -148,7 +146,7 @@ namespace SeanOne.Alchemy
         public static List<ulong> GetULongs(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!ulong.TryParse(item?.ToString(), out var val))
+                if (!ulong.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -156,7 +154,7 @@ namespace SeanOne.Alchemy
         public static List<float> GetFloats(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!float.TryParse(item?.ToString(), out var val))
+                if (!float.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -164,7 +162,7 @@ namespace SeanOne.Alchemy
         public static List<double> GetDoubles(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!double.TryParse(item?.ToString(), out var val))
+                if (!double.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -172,7 +170,7 @@ namespace SeanOne.Alchemy
         public static List<decimal> GetDecimals(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!decimal.TryParse(item?.ToString(), out var val))
+                if (!decimal.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -180,7 +178,7 @@ namespace SeanOne.Alchemy
         public static List<DateTime> GetDateTimes(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!DateTime.TryParse(item?.ToString(), out var val))
+                if (!DateTime.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -188,7 +186,7 @@ namespace SeanOne.Alchemy
         public static List<Guid> GetGuids(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!Guid.TryParse(item?.ToString(), out var val))
+                if (!Guid.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -196,7 +194,7 @@ namespace SeanOne.Alchemy
         public static List<TimeSpan> GetTimeSpans(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
-                if (!TimeSpan.TryParse(item?.ToString(), out var val))
+                if (!TimeSpan.TryParse(GetItemString(item, idx), out var val))
                     ThrowConversionFailed(item, idx);
                 return val;
             });
@@ -219,7 +217,7 @@ namespace SeanOne.Alchemy
         }
         #endregion
 
-        #region Private generic method with custom converter
+        #region Private Method
         /// <summary>
         /// 將結果中的集合轉換為 List，使用自訂的轉換器。 
         /// </summary>
@@ -271,9 +269,20 @@ namespace SeanOne.Alchemy
 
             throw new InvalidCastException($"Cannot convert {result._source?.GetType()} to any enumerable type.");
         }
-        #endregion
+        
+        private static string GetItemString(object item)
+        {
+            if (item == null)
+                throw new InvalidCastException("Item is null and cannot be converted.");
+            return item.ToString();
+        }
+        private static string GetItemString(object item, int index)
+        {
+            if (item == null)
+                throw new InvalidCastException($"Item at index {index} is null and cannot be converted.");
+            return item.ToString();
+        }
 
-        #region Private throw method
         private static void ThrowConversionFailed(object item, int idx) =>
             throw new InvalidCastException($"Failed to convert item at index {idx}: '{item}'");
         #endregion
