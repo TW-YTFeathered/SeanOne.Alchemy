@@ -68,6 +68,11 @@ namespace SeanOne.Alchemy
             return AlchemyConverter.Convert(_source, dslInstruction);
         }
 
+        public AlchemyResult Convert(params string[] dslInstructions)
+        {
+            return AlchemyConverter.Convert(_source, dslInstructions);
+        }
+
         /// <summary>
         /// Asynchronously converts the specified object according to the provided DSL instruction.
         /// </summary>
@@ -76,6 +81,11 @@ namespace SeanOne.Alchemy
         public Task<AlchemyResult> ConvertAsync(string dslInstruction)
         {
             return AlchemyConverter.ConvertAsync(_source, dslInstruction);
+        }
+
+        public Task<AlchemyResult> ConvertAsync(params string[] dslInstructions)
+        {
+            return AlchemyConverter.ConvertAsync(_source, dslInstructions);
         }
         #endregion
 
