@@ -1,13 +1,221 @@
-# GUIDE.md
+# Formatting Guide (Guide_Format.md)
 
-> **Note:** This guide provides quick examples. For complete parameter details, see the main `README.md`.  
+> **Note:** This guide provides quick examples and detailed parameter reference for formatting with `AlchemyFormatter`.  
 > **Quick Start:** The following are common usage scenarios. Each example includes the input object, DSL instruction, and expected output.  
 > **Compatibility:** Examples use `C# 9` top‑level statements and are supported only in `.NET 5+` or `.NET Core 3.1+`; they cannot be compiled on `.NET Framework`.
 
 ## Table of contents
 
-- [Example Format string](#dsl-format-string-demonstration)
+- [Parameter Reference](#parameter-reference)
+  - [Naming Conventions](#naming-conventions)
+  - [Escape Sequences](#escape-sequences)
+  - [Common Parameters](#common-parameters)
+  - [Fe Parameters](#fe-parameters)
+    - [IEnumerable‑Specific Parameters](#ienumerable-specific-parameters)
+    - [IDictionary‑Specific Parameters](#idictionary-specific-parameters)
+- [DSL Format String Demonstration](#dsl-format-string-demonstration)
+  - [Using `basic` functions](#using-basic-functions)
+  - [`Fe` Common](#fe-common)
+  - [IEnumerable demonstration](#ienumerable-demonstration)
+  - [IDictionary demonstration](#idictionary-demonstration)
+  - [Error scenarios](#error-scenarios)
 - [Fluent API Demonstration](#fluent-api-demonstration)
+  - [Basic usage with Fluent API](#basic-usage-with-fluent-api)
+  - [Advanced Usage (Reusable)](#advanced-usage-reusable)
+
+---
+
+## Parameter Reference
+
+### Naming Conventions
+
+The DSL and Fluent API adopt distinct naming styles, each tailored to their respective usage contexts.
+
+> Note: DSL parameters use lowercase strings, and multi-word identifiers are written in kebab-case (with dashes `-`, not underscores `_`). This differs from snake_case and is intentional for DSL readability.
+
+#### DSL: kebab-case or lowercase
+
+DSL parameters like `/tostring:F2` are designed to invoke C# built-in functions such as `ToString()`. In DSL syntax, these function names are intentionally written in lowercase (e.g., `tostring`) to simplify the grammar and distinguish them from user-defined functions. This lowercase convention applies specifically when referencing C# standard library methods—not their arguments like `"f2"` or `"yyyy-MM-dd"`, which are format strings.
+
+- Examples:
+  - `/padleft:3`
+  - `/upper-case:true`
+  - `/dict-format:{0}=>{1}`
+
+This naming style is suitable for quick inline formatting but lacks compile-time safety and IDE support.
+
+#### Fluent API: PascalCase via Enum
+
+In Fluent API, all parameters are mapped to strongly-typed enums using PascalCase naming. This aligns with C# conventions and enables full IntelliSense support, compile-time checking, and semantic clarity.
+
+Each `SelectXx()` method corresponds to a dedicated enum named `XxParam`, which defines all valid parameters for that formatting context.
+
+| DSL Function                  | Fluent API Entry Point | Enum Container |
+|-------------------------------|------------------------|----------------|
+| `basic`                       | `SelectBasic()`        | `BasicParam`   |
+| `fe` / `foreach` (sequence)   | `SelectFeSeq()`        | `FeSeqParam`   |
+| `fe` / `foreach` (dictionary) | `SelectFeDict()`       | `FeDictParam`  |
+
+#### Naming Conversion Examples
+
+> Note: The following table shows naming conversion examples.  
+> Not all parameters may be implemented in the current release.
+
+| DSL Parameter          | Fluent API Enum Member          |
+|------------------------|---------------------------------|
+| `padleft`              | `FeSeqParam.PadLeft`            |
+| `upper-case`           | `TextStyle.UpperCase`           |
+| `dict-format`          | `FeDictParam.DictFormat`        |
+| `key-format`           | `FeDictParam.KeyFormat`         |
+| `value-format`         | `FeDictParam.ValueFormat`       |
+| `exclude-last-end`     | `FeSeqParam.ExcludeLastEnd`     |
+| `final-pair-separator` | `FeSeqParam.FinalPairSeparator` |
+
+This naming convention ensures consistency, type safety, and a development experience that benefits from IDE tooling and C# language features.
+
+---
+
+### Escape Sequences
+
+#### Background
+
+To ensure cross-platform compatibility and clarity in DSL instruction strings, Alchemy supports two escape sequence formats:
+
+#### Supported Escape Sequences
+
+##### 1. **Unicode Escape Sequences** (`\uXXXX`)
+
+- **Format**: `\u` followed by 4 hexadecimal digits
+- **Purpose**: Represent any Unicode character
+- **Advantages**:
+  - Fully cross-platform
+  - Supports all Unicode characters
+  - Unambiguous parsing
+- **Disadvantages**: Longer code, slightly less readable
+- **Examples**:
+  - `\u0020` → Space
+  - `\u000A` → Line feed (LF) - platform independent
+  - `\u000D` → Carriage return (CR)
+
+##### 2. **Short Escape Sequences** (`\X`)
+
+- **Format**: `\` followed by a single character
+- **Currently supported**:
+  - `\0` → Null character
+  - `\a` → Alert/beep character
+  - `\b` → Backspace
+  - `\f` → Form feed
+  - `\n` → **Platform-specific newline** (converted to `Environment.NewLine`)
+  - `\r` → Carriage return
+  - `\t` → Horizontal tab
+  - `\v` → Vertical tab
+  - `\\` → Backslash
+  - `\'` → Single quote
+  - `\"` → Double quote
+
+#### Important Notes on Line Breaks
+
+##### **`\n` Behavior**
+
+Unlike traditional escape sequences, Alchemy's `\n` is converted to `Environment.NewLine` at runtime. This means:
+
+- **On Windows**: `\n` → `\r\n`
+- **On Unix/Linux**: `\n` → `\n`
+- **On macOS**: `\n` → `\n`
+
+**Advantage**: Automatic platform adaptation - you don't need to worry about platform differences.
+
+**Disadvantage**: Inconsistent output across platforms - the same DSL string may produce different output on different operating systems.
+
+##### **For Consistent Cross-Platform Output**
+
+If you need **identical output** across all platforms, use Unicode escape sequences:
+
+- `\u000A` for LF (always `\n`)
+- `\u000D` for CR (always `\r`)
+- `\u000D\u000A` for CRLF (always `\r\n`)
+
+#### Design Considerations
+
+##### **Why convert `\n` to `Environment.NewLine`?**
+
+- **Developer convenience**: Most C# developers expect `\n` to behave like `Environment.NewLine`
+- **Native .NET behavior**: Aligns with how C# handles newlines in string literals
+- **Legacy compatibility**: Many existing applications rely on platform-specific line breaks
+
+##### **Usage Recommendations**
+
+1. **General use**: Use `\n` for newlines (recommended for most scenarios)
+2. **Cross-platform consistency needed**: Use `\u000A` for LF or `\u000D\u000A` for CRLF
+3. **Special characters**: Use the short escape sequences for common control characters
+4. **Unicode characters**: Use `\uXXXX` for any Unicode character
+5. **Literal backslash**: Use `\\`
+6. **Quotes inside strings**: Use `\"` or `\'`
+
+#### Example Comparison
+
+```csharp
+// Using short escape sequence (platform-dependent newline)
+AlchemyFormatter.Format(list, "fe /end:\\n");
+// Windows output: "value1\r\nvalue2\r\nvalue3"
+// Unix output: "value1\nvalue2\nvalue3"
+
+// Using Unicode escape sequence (platform-independent newline)
+AlchemyFormatter.Format(list, "fe /end:\\u000A");
+// Always outputs: "value1\nvalue2\nvalue3"
+
+// Using CRLF for Windows-style line breaks (platform-independent)
+AlchemyFormatter.Format(list, "fe /end:\\u000D\\u000A");
+// Always outputs: "value1\r\nvalue2\r\nvalue3"
+
+// Traditional way (may cause issues)
+AlchemyFormatter.Format(list, "fe /end:\r\n");
+// Windows: works as expected
+// Unix: outputs literal "\r\n" characters
+```
+
+#### Notes
+
+1. Escape sequences in DSL strings **only take effect in parameter values**
+2. Parameter names (like `/tostring:`) do not support escape sequences
+3. If a string value contains spaces or special characters, it is recommended to enclose it in double quotes
+4. Unrecognized escape sequences (like `\x`) will be treated as literal characters (e.g., `\x` becomes `\x`)
+
+---
+
+### Common Parameters
+
+| Parameter Name | Example        | Description                                                                                                            |
+|----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
+| `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
+| `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
+| `prefix`       | `/prefix:"["`  | Prepends a string before the entire result.                                                                            |
+| `suffix`       | `/suffix:"]"`  | Appends a string after the entire result.                                                                              |
+
+### Fe Parameters
+
+#### Common Functions With Fe
+
+| Parameter Name | Example        | Description                                                 |
+|----------------|----------------|-------------------------------------------------------------|
+| `fe-opt`       | `/fe-opt:true` | Enable optimized formatting (may have compatibility issues) |
+
+#### IEnumerable-Specific Parameters
+
+| Parameter Name         | Example                           | Description                                                                                              |
+|------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------|
+| `exclude-last-end`     | `/exclude-last-end:true`          | Omits the end string after the last item in the sequence. Applies to all `IEnumerable` types.            |
+| `final-pair-separator` | `/final-pair-separator:" and "`   | Replaces the separator between the last two items in the sequence. Falls back to `end` if not specified. |
+
+#### IDictionary-Specific Parameters
+
+| Parameter Name | Example                 | Description                                                                                 |
+|----------------|-------------------------|---------------------------------------------------------------------------------------------|
+| `dict-format`  | `/dict-format:{0}=>{1}` | Format string for dictionary entries: `{0}` represents the key, `{1}` represents the value. |
+| `key-format`   | `/key-format:F2`        | Format string applied to dictionary keys                                                    |
+| `value-format` | `/value-format:F2`      | Format string applied to dictionary values                                                  |
+
+---
 
 ## DSL Format String Demonstration
 
