@@ -187,6 +187,7 @@ AlchemyFormatter.Format(list, "fe /end:\r\n");
 
 | Parameter Name | Example        | Description                                                                                                            |
 |----------------|----------------|------------------------------------------------------------------------------------------------------------------------|
+| `begin`        | `/begin:*`     | Prepends a string before each value.                                                                                   |
 | `end`          | `/end:\\n`     | Appends a string after each value.                                                                                     |
 | `tostring`     | `/tostring:F2` | Applies formatting to items implementing `IFormattable`. Not applicable to dictionaries. Use C#'s `ToString()` method. |
 | `prefix`       | `/prefix:"["`  | Prepends a string before the entire result.                                                                            |
