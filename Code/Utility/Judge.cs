@@ -1,6 +1,7 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using SeanOne.Alchemy.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +68,27 @@ namespace SeanOne.Alchemy.Utility
         // 定義每個方法支援的參數
         private static readonly Dictionary<string, HashSet<string>> MethodParameters = new Dictionary<string, HashSet<string>>
         {
-            ["basic"] = new HashSet<string> { "end", "tostring", "prefix", "suffix" },
-            ["FE_ProcessEnumerable"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "tostring", "prefix", "suffix" },
-            ["FE_ProcessDictionary"] = new HashSet<string> { "end", "final-pair-separator", "exclude-last-end", "fe-opt", "dict-format", "key-format", "value-format", "prefix", "suffix" }
+            ["basic"] = new HashSet<string> {
+                CommonParams.Begin, CommonParams.End,
+                CommonParams.Tostring,
+                CommonParams.Prefix, CommonParams.Suffix
+            },
+            ["FE_ProcessEnumerable"] = new HashSet<string> {
+                CommonParams.Begin, CommonParams.End,
+                IEnumerableParams.FinalPairSeparator,
+                IEnumerableParams.ExcludeLastEnd,
+                FeParams.FeOpt,
+                CommonParams.Tostring,
+                CommonParams.Prefix, CommonParams.Suffix
+            },
+            ["FE_ProcessDictionary"] = new HashSet<string> {
+                CommonParams.Begin, CommonParams.End,
+                IEnumerableParams.FinalPairSeparator,
+                IEnumerableParams.ExcludeLastEnd,
+                FeParams.FeOpt,
+                IDictionaryParams.DictFormat, IDictionaryParams.KeyFormat, IDictionaryParams.ValueFormat,
+                CommonParams.Prefix, CommonParams.Suffix
+            }
         };
 
         /// <summary>

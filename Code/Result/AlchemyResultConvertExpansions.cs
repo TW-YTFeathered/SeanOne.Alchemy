@@ -269,7 +269,7 @@ namespace SeanOne.Alchemy
 
             throw new InvalidCastException($"Cannot convert {result._source?.GetType()} to any enumerable type.");
         }
-        
+
         private static string GetItemString(object item)
         {
             if (item == null)

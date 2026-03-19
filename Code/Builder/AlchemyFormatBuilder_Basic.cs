@@ -1,6 +1,7 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using SeanOne.Alchemy.Definitions;
 using System;
 using System.Text;
 
@@ -66,20 +67,22 @@ namespace SeanOne.Alchemy.Builder
             switch (param)
             {
                 case BasicParam.ToString:
-                    _sb.AppendParam("tostring").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Tostring);
                     break;
                 case BasicParam.End:
-                    _sb.AppendParam("end").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.End);
                     break;
                 case BasicParam.Prefix:
-                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Prefix);
                     break;
                 case BasicParam.Suffix:
-                    _sb.AppendParam("suffix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Suffix);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);
             }
+            _sb.AppendQuoted(value);
+
             return this; // 回傳自己，支援 Fluent DSL
         }
 

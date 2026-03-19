@@ -1,6 +1,7 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using SeanOne.Alchemy.Definitions;
 using System;
 using System.Text;
 
@@ -83,29 +84,31 @@ namespace SeanOne.Alchemy.Builder
             switch (param)
             {
                 case FeSeqParam.End:
-                    _sb.AppendParam("end").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.End);
                     break;
                 case FeSeqParam.ExcludeLastEnd:
-                    _sb.AppendParam("exclude-last-end").AppendQuoted(value);
+                    _sb.AppendParam(IEnumerableParams.ExcludeLastEnd);
                     break;
                 case FeSeqParam.ToString:
-                    _sb.AppendParam("tostring").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Tostring);
                     break;
                 case FeSeqParam.FinalPairSeparator:
-                    _sb.AppendParam("final-pair-separator").AppendQuoted(value);
+                    _sb.AppendParam(IEnumerableParams.FinalPairSeparator);
                     break;
                 case FeSeqParam.Prefix:
-                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Prefix);
                     break;
                 case FeSeqParam.Suffix:
-                    _sb.AppendParam("suffix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Suffix);
                     break;
                 case FeSeqParam.FeOpt:
-                    _sb.AppendParam("fe-opt").AppendQuoted(value);
+                    _sb.AppendParam(FeParams.FeOpt);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);
             }
+            _sb.AppendQuoted(value);
+
             return this; // 回傳自己，支援 Fluent DSL
         }
 
@@ -210,35 +213,37 @@ namespace SeanOne.Alchemy.Builder
             switch (param)
             {
                 case FeDictParam.DictFormat:
-                    _sb.AppendParam("dict-format").AppendQuoted(value);
+                    _sb.AppendParam(IDictionaryParams.DictFormat);
                     break;
                 case FeDictParam.End:
-                    _sb.AppendParam("end").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.End);
                     break;
                 case FeDictParam.ExcludeLastEnd:
-                    _sb.AppendParam("exclude-last-end").AppendQuoted(value);
+                    _sb.AppendParam(IEnumerableParams.ExcludeLastEnd);
                     break;
                 case FeDictParam.FinalPairSeparator:
-                    _sb.AppendParam("final-pair-separator").AppendQuoted(value);
+                    _sb.AppendParam(IEnumerableParams.FinalPairSeparator);
                     break;
                 case FeDictParam.KeyFormat:
-                    _sb.AppendParam("key-format").AppendQuoted(value);
+                    _sb.AppendParam(IDictionaryParams.KeyFormat);
                     break;
                 case FeDictParam.ValueFormat:
-                    _sb.AppendParam("value-format").AppendQuoted(value);
+                    _sb.AppendParam(IDictionaryParams.ValueFormat);
                     break;
                 case FeDictParam.Prefix:
-                    _sb.AppendParam("prefix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Prefix);
                     break;
                 case FeDictParam.Suffix:
-                    _sb.AppendParam("suffix").AppendQuoted(value);
+                    _sb.AppendParam(CommonParams.Suffix);
                     break;
                 case FeDictParam.FeOpt:
-                    _sb.AppendParam("fe-opt").AppendQuoted(value);
+                    _sb.AppendParam(FeParams.FeOpt);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);
             }
+            _sb.AppendQuoted(value);
+
             return this; // 回傳自己，支援 Fluent DSL
         }
 

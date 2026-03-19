@@ -18,7 +18,7 @@ namespace SeanOne.Alchemy
         /// - "cnv", "convert": 執行 CNV 轉換
         /// - "fe", "foreach", "basic": 執行 AlchemyFormatter 格式化
         /// </remarks>
-        private static readonly Dictionary<string, Func<object, string, AlchemyResult>> s_ActionsSync = 
+        private static readonly Dictionary<string, Func<object, string, AlchemyResult>> s_ActionsSync =
             new Dictionary<string, Func<object, string, AlchemyResult>>
             {
                 ["cnv"] = (object copyObj, string dslInstruction) => CNV(copyObj, dslInstruction),
@@ -88,7 +88,7 @@ namespace SeanOne.Alchemy
                 double value = System.Convert.ToDouble(input);
                 double result = ConvertSingleValue(value, instruction);
                 return (T)System.Convert.ChangeType(result, typeof(T));
-            }   
+            }
         }
 
         // 私有輔助方法：轉換單一數值

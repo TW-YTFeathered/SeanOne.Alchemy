@@ -1,9 +1,10 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
-using System;
-using SeanOne.Alchemy.Utility;
+using SeanOne.Alchemy.Definitions;
 using SeanOne.Alchemy.Sorting;
+using SeanOne.Alchemy.Utility;
+using System;
 
 namespace SeanOne.Alchemy
 {
@@ -38,11 +39,11 @@ namespace SeanOne.Alchemy
         private static AlchemyResult CNV(object copyObj, string dslInstruction)
         {
             // 排序部分
-            string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("sort"), string.Empty);
+            string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Sort), string.Empty);
             Sort.Entry(copyObj, sortStr);
 
             // 溫度轉換部分
-            string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("temp"), string.Empty);
+            string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Temp), string.Empty);
             copyObj = ConvertTemperature(copyObj, tempCnvIns);
 
             // short time testing method

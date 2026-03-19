@@ -1,14 +1,14 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using SeanOne.Alchemy.Utility;
 using System;
 using System.Threading.Tasks;
-using SeanOne.Alchemy.Utility;
 
 namespace SeanOne.Alchemy
 {
     public partial class AlchemyConverter
-    {   
+    {
         /// <summary>
         /// Converts the specified object according to the provided DSL instruction.
         /// </summary>
@@ -29,7 +29,7 @@ namespace SeanOne.Alchemy
 
             // 先進行深層拷貝，避免對原始物件進行修改
             object copy = ReflectionCloner.DeepClone(obj);
-            
+
             return Decoder(copy, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
         }
 

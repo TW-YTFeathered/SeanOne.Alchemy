@@ -1,10 +1,9 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
-using System;
 using System.Text;
 
-namespace SeanOne.Alchemy
+namespace SeanOne.Alchemy.Definitions
 {
     /// <summary>
     /// DSL 符號定義類別，集中管理 DSL 語法解析中使用的各種符號常數。

@@ -43,7 +43,7 @@ namespace SeanOne.Alchemy.Utility
         public static string Unescape(string input)
         {
             // 如果為空，直接返回 string.Empty
-            if (string.IsNullOrEmpty(input)) return string.Empty; 
+            if (string.IsNullOrEmpty(input)) return string.Empty;
 
             var sb = new StringBuilder(); // 用於存放結果的字串
 
@@ -57,7 +57,7 @@ namespace SeanOne.Alchemy.Utility
                 {
                     char nextChar = input[i + 1]; // 取得下一個字符
 
-                    switch (nextChar) 
+                    switch (nextChar)
                     {
                         case '0': sb.Append('\0'); break;
                         case 'a': sb.Append('\a'); break;

@@ -52,7 +52,8 @@ namespace SeanOne.Alchemy
         public async Task<string> ToStringAsync()
         {
             // 簡單情況下直接返回同步版本
-            return await Task.Run(() => { 
+            return await Task.Run(() =>
+            {
                 return this.ToString();
             });
         }
