@@ -11,7 +11,8 @@ namespace SeanOne.Alchemy
     public partial class AlchemyResult
     {
         // 儲存原始的物件
-        internal readonly object _source;
+        private readonly object _source;
+        public object RawSource => _source;  // 唯讀屬性
 
         // 取得原始的物件
         protected AlchemyResult(object source)

@@ -12,55 +12,55 @@ namespace SeanOne.Alchemy
     {
         #region Single value conversion
         public static bool GetBool(this AlchemyResult result) =>
-            bool.Parse(GetItemString(result._source));
+            bool.Parse(GetItemString(result.RawSource));
 
         public static char GetChar(this AlchemyResult result) =>
-            char.Parse(GetItemString(result._source));
+            char.Parse(GetItemString(result.RawSource));
 
         public static string GetString(this AlchemyResult result) =>
-            GetItemString(result._source);
+            GetItemString(result.RawSource);
 
         public static sbyte GetSByte(this AlchemyResult result) =>
-            sbyte.Parse(GetItemString(result._source));
+            sbyte.Parse(GetItemString(result.RawSource));
 
         public static byte GetByte(this AlchemyResult result) =>
-            byte.Parse(GetItemString(result._source));
+            byte.Parse(GetItemString(result.RawSource));
 
         public static short GetShort(this AlchemyResult result) =>
-            short.Parse(GetItemString(result._source));
+            short.Parse(GetItemString(result.RawSource));
 
         public static ushort GetUShort(this AlchemyResult result) =>
-            ushort.Parse(GetItemString(result._source));
+            ushort.Parse(GetItemString(result.RawSource));
 
         public static int GetInt(this AlchemyResult result) =>
-            int.Parse(GetItemString(result._source));
+            int.Parse(GetItemString(result.RawSource));
 
         public static uint GetUInt(this AlchemyResult result) =>
-            uint.Parse(GetItemString(result._source));
+            uint.Parse(GetItemString(result.RawSource));
 
         public static long GetLong(this AlchemyResult result) =>
-            long.Parse(GetItemString(result._source));
+            long.Parse(GetItemString(result.RawSource));
 
         public static ulong GetULong(this AlchemyResult result) =>
-            ulong.Parse(GetItemString(result._source));
+            ulong.Parse(GetItemString(result.RawSource));
 
         public static float GetFloat(this AlchemyResult result) =>
-            float.Parse(GetItemString(result._source));
+            float.Parse(GetItemString(result.RawSource));
 
         public static double GetDouble(this AlchemyResult result) =>
-            double.Parse(GetItemString(result._source));
+            double.Parse(GetItemString(result.RawSource));
 
         public static decimal GetDecimal(this AlchemyResult result) =>
-            decimal.Parse(GetItemString(result._source));
+            decimal.Parse(GetItemString(result.RawSource));
 
         public static DateTime GetDateTime(this AlchemyResult result) =>
-            DateTime.Parse(GetItemString(result._source));
+            DateTime.Parse(GetItemString(result.RawSource));
 
         public static Guid GetGuid(this AlchemyResult result) =>
-            Guid.Parse(GetItemString(result._source));
+            Guid.Parse(GetItemString(result.RawSource));
 
         public static TimeSpan GetTimeSpan(this AlchemyResult result) =>
-            TimeSpan.Parse(GetItemString(result._source));
+            TimeSpan.Parse(GetItemString(result.RawSource));
         #endregion
 
         #region List transformation (with default converters)
@@ -202,10 +202,10 @@ namespace SeanOne.Alchemy
         // GetObjects 特殊處理 (保留原有邏輯)
         public static List<object> GetObjects(this AlchemyResult result)
         {
-            if (result._source is IEnumerable<object> objects)
+            if (result.RawSource is IEnumerable<object> objects)
                 return objects.ToList();
 
-            if (result._source is IEnumerable nonGenericEnumerable)
+            if (result.RawSource is IEnumerable nonGenericEnumerable)
             {
                 var list = new List<object>();
                 foreach (var item in nonGenericEnumerable)
@@ -213,7 +213,7 @@ namespace SeanOne.Alchemy
                 return list;
             }
 
-            throw new InvalidCastException($"Expected IEnumerable, but got {result._source?.GetType()}");
+            throw new InvalidCastException($"Expected IEnumerable, but got {result.RawSource?.GetType()}");
         }
         #endregion
 
@@ -231,11 +231,11 @@ namespace SeanOne.Alchemy
                 throw new ArgumentNullException(nameof(converter));
 
             // 如果已經是 IEnumerable<T>，直接轉換 (此時元素型別完全符合)
-            if (result._source is IEnumerable<T> typedEnumerable)
+            if (result.RawSource is IEnumerable<T> typedEnumerable)
                 return typedEnumerable.ToList();
 
             // 嘗試以 IEnumerable<object> 處理 (適用於元素類型為參考類型或已裝箱的情況)
-            if (result._source is IEnumerable<object> objects)
+            if (result.RawSource is IEnumerable<object> objects)
             {
                 int capacity = objects is ICollection<object> col1 ? col1.Count :
                                objects is ICollection col2 ? col2.Count : 0;
@@ -250,7 +250,7 @@ namespace SeanOne.Alchemy
             }
 
             // 嘗試以非泛型 IEnumerable 處理 (如 ArrayList，以及元素為值型別的泛型集合如 List<double> 等)
-            if (result._source is IEnumerable nonGeneric)
+            if (result.RawSource is IEnumerable nonGeneric)
             {
                 // 嘗試取得容量 (如果支援 ICollection)
                 int capacity = 0;
@@ -267,7 +267,7 @@ namespace SeanOne.Alchemy
                 return results;
             }
 
-            throw new InvalidCastException($"Cannot convert {result._source?.GetType()} to any enumerable type.");
+            throw new InvalidCastException($"Cannot convert {result.RawSource?.GetType()} to any enumerable type.");
         }
 
         private static string GetItemString(object item)
