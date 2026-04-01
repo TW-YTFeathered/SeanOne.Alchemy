@@ -7,36 +7,6 @@ using System.Text;
 namespace SeanOne.Alchemy.Builder
 {
     /// <summary>
-    /// Defines the parameter options used by <c>IBasicAlchemyFunction</c> (basic).
-    /// Handles basic DSL parameters and formatting logic.
-    /// </summary>
-    public enum BasicParam
-    {
-        /// <summary>
-        /// Appends a string after each value.
-        /// DSL param: <c>end</c>.
-        /// </summary>
-        End,
-
-        /// <summary>
-        /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
-        /// DSL param: <c>tostring</c>.
-        /// </summary>
-        ToString,
-
-        /// <summary>
-        /// Prepends a string before the value.
-        /// DSL param: <c>prefix</c>.
-        /// </summary>
-        Prefix,
-
-        /// <summary>
-        /// Appends a string after the value.
-        /// DSL param: <c>suffix</c>.
-        /// </summary>
-        Suffix
-    }
-    /// <summary>
     /// Implementation of <c>IBasicAlchemyFunction</c> using <c>BasicParam</c>.
     /// Handles basic DSL parameters and formatting logic.
     /// </summary>
