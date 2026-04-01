@@ -81,32 +81,8 @@ namespace SeanOne.Alchemy.Builder
         {
             value = DslSyntaxBuilder.EscapeDslValue(value);
 
-            switch (param)
-            {
-                case FeSeqParam.End:
-                    _sb.AppendParam(CommonParams.End);
-                    break;
-                case FeSeqParam.ExcludeLastEnd:
-                    _sb.AppendParam(IEnumerableParams.ExcludeLastEnd);
-                    break;
-                case FeSeqParam.ToString:
-                    _sb.AppendParam(CommonParams.Tostring);
-                    break;
-                case FeSeqParam.FinalPairSeparator:
-                    _sb.AppendParam(IEnumerableParams.FinalPairSeparator);
-                    break;
-                case FeSeqParam.Prefix:
-                    _sb.AppendParam(CommonParams.Prefix);
-                    break;
-                case FeSeqParam.Suffix:
-                    _sb.AppendParam(CommonParams.Suffix);
-                    break;
-                case FeSeqParam.FeOpt:
-                    _sb.AppendParam(FeParams.FeOpt);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
+            _sb.AppendParam(param.ToFeSeqParamString());
+
             _sb.AppendQuoted(value);
 
             return this; // 回傳自己，支援 Fluent DSL
@@ -210,38 +186,8 @@ namespace SeanOne.Alchemy.Builder
         {
             value = DslSyntaxBuilder.EscapeDslValue(value);
 
-            switch (param)
-            {
-                case FeDictParam.DictFormat:
-                    _sb.AppendParam(IDictionaryParams.DictFormat);
-                    break;
-                case FeDictParam.End:
-                    _sb.AppendParam(CommonParams.End);
-                    break;
-                case FeDictParam.ExcludeLastEnd:
-                    _sb.AppendParam(IEnumerableParams.ExcludeLastEnd);
-                    break;
-                case FeDictParam.FinalPairSeparator:
-                    _sb.AppendParam(IEnumerableParams.FinalPairSeparator);
-                    break;
-                case FeDictParam.KeyFormat:
-                    _sb.AppendParam(IDictionaryParams.KeyFormat);
-                    break;
-                case FeDictParam.ValueFormat:
-                    _sb.AppendParam(IDictionaryParams.ValueFormat);
-                    break;
-                case FeDictParam.Prefix:
-                    _sb.AppendParam(CommonParams.Prefix);
-                    break;
-                case FeDictParam.Suffix:
-                    _sb.AppendParam(CommonParams.Suffix);
-                    break;
-                case FeDictParam.FeOpt:
-                    _sb.AppendParam(FeParams.FeOpt);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
+            _sb.AppendParam(param.ToFeDictParamString());
+
             _sb.AppendQuoted(value);
 
             return this; // 回傳自己，支援 Fluent DSL

@@ -2,7 +2,6 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using SeanOne.Alchemy.Definitions;
-using System;
 using System.Text;
 
 namespace SeanOne.Alchemy.Builder
@@ -64,23 +63,8 @@ namespace SeanOne.Alchemy.Builder
         {
             value = DslSyntaxBuilder.EscapeDslValue(value);
 
-            switch (param)
-            {
-                case BasicParam.ToString:
-                    _sb.AppendParam(CommonParams.Tostring);
-                    break;
-                case BasicParam.End:
-                    _sb.AppendParam(CommonParams.End);
-                    break;
-                case BasicParam.Prefix:
-                    _sb.AppendParam(CommonParams.Prefix);
-                    break;
-                case BasicParam.Suffix:
-                    _sb.AppendParam(CommonParams.Suffix);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
+            _sb.AppendParam(param.ToBasicParamString());
+            
             _sb.AppendQuoted(value);
 
             return this; // 回傳自己，支援 Fluent DSL
