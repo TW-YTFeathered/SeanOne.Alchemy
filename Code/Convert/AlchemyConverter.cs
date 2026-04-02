@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
+    /// <summary>
+    /// Converts objects into new representations using a DSL instruction language.
+    /// </summary>
     public partial class AlchemyConverter
     {
         /// <summary>
@@ -15,6 +18,7 @@ namespace SeanOne.Alchemy
         /// <param name="obj">The source object to convert.</param>
         /// <param name="dslInstruction">The DSL instruction string.</param>
         /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstruction"/> is empty.</exception>
         public static AlchemyResult Convert(object obj, string dslInstruction)
         {
             // 檢查 物件 是否是 null
@@ -33,6 +37,13 @@ namespace SeanOne.Alchemy
             return Decoder(copy, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
         }
 
+        /// <summary>
+        /// Converts the specified object by sequentially applying multiple DSL instructions.
+        /// </summary>
+        /// <param name="obj">The source object to convert.</param>
+        /// <param name="dslInstructions">An array of DSL instruction strings to apply in order.</param>
+        /// <returns>An <see cref="AlchemyResult"/> representing the final converted object after all instructions.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstructions"/> is empty.</exception>
         public static AlchemyResult Convert(object obj, params string[] dslInstructions)
         {
             // 檢查 物件 是否是 null
@@ -46,6 +57,7 @@ namespace SeanOne.Alchemy
             // 進行深層拷貝，避免對原始物件進行修改
             object current = ReflectionCloner.DeepClone(obj);
 
+            // 用於記錄上一個指令的名稱，以便後續指令省略指令名稱時自動補齊
             string oldDirective = string.Empty;
             foreach (var ins in dslInstructions)
             {
@@ -54,22 +66,25 @@ namespace SeanOne.Alchemy
                 // 從 DSL 指令中提取指令名稱
                 string directive = Get.ExtractDirective(temp);
 
-                // 為了簡化寫法，避免要在 DSL 指令中一直寫指令名稱
+                // 若當前指令沒有指定指令名稱，且存在上一個指令名稱，則自動補齊
+                // 例如：["cnv /sort:as", "/sort:asd"] => 第二個指令會自動變成 "cnv /sort:asd"
                 if (string.IsNullOrWhiteSpace(directive) && !string.IsNullOrWhiteSpace(oldDirective))
                 {
                     temp = oldDirective + temp;
                 }
-                // 更新 oldDirective，避免無法使用免寫指令名稱
+
+                // 更新 oldDirective 為當前有效的指令名稱
                 if (!string.IsNullOrEmpty(directive))
                 {
                     oldDirective = directive;
                 }
 
-
-                // 為了支援多指令
+                // Decoder 返回 AlchemyResult，透過 ToObject<object>() 取得轉換後的實際物件，
+                // 以便作為下一個指令的輸入。
                 current = Decoder(current, temp).ToObject<object>();
             }
 
+            // 將最終轉換結果包裝成 AlchemyResult 回傳
             return AlchemyResult.Parse(current);
         }
 
@@ -78,17 +93,33 @@ namespace SeanOne.Alchemy
         /// </summary>
         /// <param name="obj">The source object to convert.</param>
         /// <param name="dslInstruction">The DSL instruction string.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous conversion operation.
+        /// The task result contains an <see cref="AlchemyResult"/> representing the converted object.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstruction"/> is <c>null</c> or empty.</exception>
         public static async Task<AlchemyResult> ConvertAsync(object obj, string dslInstruction)
         {
+            // 直接引用 Convert，避免程式碼過長或是重複性過高，並將其包在 Task.Run 中，以實現非同步執行
             return await Task.Run(() =>
             {
                 return Convert(obj, dslInstruction);
             });
         }
 
+        /// <summary>
+        /// Asynchronously converts the specified object by sequentially applying multiple DSL instructions.
+        /// </summary>
+        /// <param name="obj">The source object to convert.</param>
+        /// <param name="dslInstructions">An array of DSL instruction strings to apply in order.</param>
+        /// <returns>
+        /// A task that represents the asynchronous conversion operation.
+        /// The task result contains an <see cref="AlchemyResult"/> representing the final converted object after all instructions.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstructions"/> is <c>null</c> or empty.</exception>
         public static async Task<AlchemyResult> ConvertAsync(object obj, params string[] dslInstructions)
         {
+            // 直接引用 Convert，避免程式碼過長或是重複性過高，並將其包在 Task.Run 中，以實現非同步執行
             return await Task.Run(() =>
             {
                 return Convert(obj, dslInstructions);
