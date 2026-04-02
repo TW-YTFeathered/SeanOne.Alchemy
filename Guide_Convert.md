@@ -117,12 +117,12 @@ AlchemyConverter.Convert(data, "cnv /sort:bubble /temp:F->C");
 
 ## Multi‑Instruction Support
 
-You can specify both /sort and /temp in one cnv instruction. The execution order is determined by the function's internal logic (first sorting, then temperature conversion), regardless of the order in which the parameters appear.
+Multiple operations can be executed sequentially by passing multiple independent instruction strings. Each instruction is executed independently in the order it appears in the array, rather than being merged into a single internal logic with a fixed order.
 
 ```csharp
 using SeanOne.Alchemy;
 
-// Both calls are equivalent:
+// Both calls are not equivalent:
 AlchemyConverter.Convert(data, "cnv /sort:is", "/temp:F->C");
 AlchemyConverter.Convert(data, "cnv /sort:is /temp:F->C");
 ```
