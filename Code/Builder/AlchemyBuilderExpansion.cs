@@ -74,5 +74,52 @@ namespace SeanOne.Alchemy.Builder
                     throw new ArgumentOutOfRangeException(nameof(param), param, null);
             }
         }
+
+        public static string ToSortAlgorithmString(this SortAlgorithm param)
+        {
+            switch (param)
+            {
+                case SortAlgorithm.Bubble:
+                    return "bs";
+                case SortAlgorithm.Insertion:
+                    return "is";
+                case SortAlgorithm.ArraySort:
+                    return "as";
+                case SortAlgorithm.Linq:
+                    return "ls";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(param));
+            }
+        }
+
+        public static string ToDirParamString(this DirParam param)
+        {
+            switch (param)
+            {
+                case DirParam.Basic:
+                    return "basic";
+                case DirParam.FeSeq:
+                    return "fe";
+                case DirParam.FeDict:
+                    return "fe";
+                case DirParam.Cnv:
+                    return "cnv";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(param));
+            }
+        }
+
+        public static string ToCnvParamString(this CnvParam param)
+        {
+            switch (param)
+            {
+                case CnvParam.Sort:
+                    return CnvParams.Sort;
+                case CnvParam.Temp:
+                    return CnvParams.Temp;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

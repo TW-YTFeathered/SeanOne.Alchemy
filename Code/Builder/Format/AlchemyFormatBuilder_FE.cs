@@ -30,10 +30,9 @@ namespace SeanOne.Alchemy.Builder
         /// <returns>The current DSL function instance for chaining.</returns>
         public IAlchemyFunction<FeSeqParam> With(FeSeqParam param, string value)
         {
+            // 轉譯 value 後，依序加入參數及其值
             value = DslSyntaxBuilder.EscapeDslValue(value);
-
             _sb.AppendParam(param.ToFeSeqParamString());
-
             _sb.AppendQuoted(value);
 
             return this; // 回傳自己，支援 Fluent DSL
@@ -45,6 +44,7 @@ namespace SeanOne.Alchemy.Builder
         /// <returns>The constructed <see cref="AlchemyExecutable"/>.</returns>
         public AlchemyExecutable Build()
         {
+            // 將累積的 DSL 指令轉為可執行物件
             return new AlchemyExecutable(_sb.ToString());
         }
     }
@@ -74,10 +74,9 @@ namespace SeanOne.Alchemy.Builder
         /// <returns>The current DSL function instance for chaining.</returns>
         public IAlchemyFunction<FeDictParam> With(FeDictParam param, string value)
         {
+            // 轉譯 value 後，依序加入參數及其值
             value = DslSyntaxBuilder.EscapeDslValue(value);
-
             _sb.AppendParam(param.ToFeDictParamString());
-
             _sb.AppendQuoted(value);
 
             return this; // 回傳自己，支援 Fluent DSL
@@ -89,6 +88,7 @@ namespace SeanOne.Alchemy.Builder
         /// <returns>The constructed <see cref="AlchemyExecutable"/>.</returns>
         public AlchemyExecutable Build()
         {
+            // 將累積的 DSL 指令轉為可執行物件
             return new AlchemyExecutable(_sb.ToString());
         }
     }

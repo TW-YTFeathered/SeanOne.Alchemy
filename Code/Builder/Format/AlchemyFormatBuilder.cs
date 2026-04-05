@@ -29,5 +29,9 @@ namespace SeanOne.Alchemy.Builder
         /// </summary>
         /// <returns>An <see cref="IDictionaryAlchemyFunction{FeDictParam}"/> implementation.</returns>
         public static IDictionaryAlchemyFunction<FeDictParam> SelectFeDict() => new FeDictionaryFunc();
+
+        public static CnvFunc SelectCnv() => new CnvFunc();
+
+        public static AlchemyConversionBuilder CreatePipeline() => new AlchemyConversionBuilder();
     }
 }

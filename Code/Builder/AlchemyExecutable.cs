@@ -9,32 +9,52 @@ namespace SeanOne.Alchemy.Builder
     /// </summary>
     public class AlchemyExecutable
     {
-        private readonly string _dsl;
+        private readonly string[] _dsls;
+
+        /// <summary>
+        /// 取得 _dsls 的 value
+        /// </summary>
+        internal string[] GetDsls() => _dsls;
 
         /// <summary>
         /// 初始化 DSL 執行器
         /// </summary>
-        /// <param name="dsl"> 要傳入的 DSL 指令 </param>
-        internal AlchemyExecutable(string dsl)
+        /// <param name="dsls"> 要傳入的 DSL 指令 </param>
+        internal AlchemyExecutable(params string[] dsls)
         {
-            _dsl = dsl;
+            _dsls = dsls;
         }
 
         /// <summary>
-        /// Run DSL instruction.
+        /// Runs the DSL instruction and returns the formatted result.
         /// </summary>
-        /// <param name="obj">Format object.</param>
-        /// <returns>DSL formatter result.</returns>
+        /// <remarks>
+        /// <para><b>Note:</b> For compatibility with legacy code, this method only processes 
+        /// the first instruction in the pipeline. If the executable contains multiple instructions 
+        /// (e.g., built with <see cref="AlchemyConversionBuilder"/>), use <see cref="RunAsConvert"/> 
+        /// instead to execute the full pipeline.</para>
+        /// </remarks>
         public string Run(object obj)
         {
-            return AlchemyFormatter.Format(obj, _dsl);
+            return AlchemyFormatter.Format(obj, _dsls[0]);
+        }
+
+        /// <summary>
+        /// Executes the full DSL pipeline by converting and formatting the input object.
+        /// This method invokes the core conversion engine to process all instructions.
+        /// </summary>
+        /// <param name="obj">The source object to be processed.</param>
+        /// <returns>The result of the conversion and formatting pipeline.</returns>
+        public AlchemyResult RunAsConvert(object obj)
+        {
+            return AlchemyConverter.Convert(obj, _dsls);
         }
 
         /// <summary>
         /// Get DSL string.
         /// </summary>
         /// <returns>DSL string.</returns>
-        public override string ToString() => _dsl;
+        public override string ToString() => string.Join(" ", _dsls);
     }
 
     /// <summary>

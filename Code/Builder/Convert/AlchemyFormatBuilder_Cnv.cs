@@ -7,37 +7,38 @@ using System.Text;
 namespace SeanOne.Alchemy.Builder
 {
     /// <summary>
-    /// Implementation of <c>IBasicAlchemyFunction</c> using <c>BasicParam</c>.
-    /// Handles basic DSL parameters and formatting logic.
+    /// Implementation of <c>IAlchemyFunction&lt;CnvParam&gt;</c> for conversion instructions.
     /// </summary>
-    public class BasicFunc : IBasicAlchemyFunction<BasicParam>
+    public class CnvFunc : IAlchemyFunction<CnvParam>
     {
         // 暫存的字串
         private readonly StringBuilder _sb = new StringBuilder();
 
         /// <summary>
-        /// 初始化，先添加 basic
+        /// 初始化，先添加 cnv
         /// </summary>
-        internal BasicFunc()
+        internal CnvFunc()
         {
-            _sb.Append("basic ");
+            _sb.Append("cnv ");
         }
 
         /// <summary>
-        /// Adds a parameter and its associated value to the DSL function.
+        /// Implementation of <c>IAlchemyFunction&lt;CnvParam&gt;</c> for conversion instructions.
+        /// Handles conversion DSL parameters and formatting logic.
         /// </summary>
         /// <param name="param">The DSL parameter to configure.</param>
         /// <param name="value">The value associated with the parameter.</param>
         /// <returns>The current DSL function instance for chaining.</returns>
-        public IAlchemyFunction<BasicParam> With(BasicParam param, string value)
+        public IAlchemyFunction<CnvParam> With(CnvParam param, string value)
         {
             // 轉譯 value 後，依序加入參數及其值
             value = DslSyntaxBuilder.EscapeDslValue(value);
-            _sb.AppendParam(param.ToBasicParamString());
+            _sb.AppendParam(param.ToCnvParamString());
             _sb.AppendQuoted(value);
-
+            
             return this; // 回傳自己，支援 Fluent DSL
         }
+
 
         /// <summary>
         /// Builds the DSL function into a <see cref="AlchemyExecutable"/> instance.
