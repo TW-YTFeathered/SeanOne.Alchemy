@@ -32,6 +32,6 @@ namespace SeanOne.Alchemy.Builder
 
         public static CnvFunc SelectCnv() => new CnvFunc();
 
-        public static AlchemyConversionBuilder CreatePipeline() => new AlchemyConversionBuilder();
+        public static AlchemyPipelineBuilder CreatePipeline() => new AlchemyPipelineBuilder();
     }
 }

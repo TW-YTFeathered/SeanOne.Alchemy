@@ -9,7 +9,7 @@ namespace SeanOne.Alchemy.Builder
     /// <summary>
     /// Builds multi-instruction DSL pipelines by combining existing single-instruction builders.
     /// </summary>
-    public class AlchemyConversionBuilder
+    public class AlchemyPipelineBuilder
     {
         private readonly List<string> _segments = new List<string>();
 
@@ -19,7 +19,7 @@ namespace SeanOne.Alchemy.Builder
         /// <typeparam name="TParam">The parameter type of the builder.</typeparam>
         /// <param name="function">The builder that produces a single DSL instruction.</param>
         /// <returns>The same pipeline instance for chaining.</returns>
-        public AlchemyConversionBuilder Add<TParam>(IAlchemyFunction<TParam> function)
+        public AlchemyPipelineBuilder Add<TParam>(IAlchemyFunction<TParam> function)
         {
             var executable = function.Build();
             // 舊式建構器總是產生一個指令，但為了擴展性，我們遍歷所有
