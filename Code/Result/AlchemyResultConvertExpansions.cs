@@ -11,7 +11,7 @@ namespace SeanOne.Alchemy
     public static class AlchemyConverterExpansions
     {
         #region Single value conversion
-        public static bool GetBool(this AlchemyResult result) =>
+        public static bool GetBoolean(this AlchemyResult result) =>
             bool.Parse(GetItemString(result.RawSource));
 
         public static char GetChar(this AlchemyResult result) =>
@@ -26,25 +26,25 @@ namespace SeanOne.Alchemy
         public static byte GetByte(this AlchemyResult result) =>
             byte.Parse(GetItemString(result.RawSource));
 
-        public static short GetShort(this AlchemyResult result) =>
+        public static short GetInt16(this AlchemyResult result) =>
             short.Parse(GetItemString(result.RawSource));
 
-        public static ushort GetUShort(this AlchemyResult result) =>
+        public static ushort GetUInt16(this AlchemyResult result) =>
             ushort.Parse(GetItemString(result.RawSource));
 
-        public static int GetInt(this AlchemyResult result) =>
+        public static int GetInt32(this AlchemyResult result) =>
             int.Parse(GetItemString(result.RawSource));
 
-        public static uint GetUInt(this AlchemyResult result) =>
+        public static uint GetUInt32(this AlchemyResult result) =>
             uint.Parse(GetItemString(result.RawSource));
 
-        public static long GetLong(this AlchemyResult result) =>
+        public static long GetInt64(this AlchemyResult result) =>
             long.Parse(GetItemString(result.RawSource));
 
-        public static ulong GetULong(this AlchemyResult result) =>
+        public static ulong GetUInt64(this AlchemyResult result) =>
             ulong.Parse(GetItemString(result.RawSource));
 
-        public static float GetFloat(this AlchemyResult result) =>
+        public static float GetSingle(this AlchemyResult result) =>
             float.Parse(GetItemString(result.RawSource));
 
         public static double GetDouble(this AlchemyResult result) =>
@@ -65,7 +65,7 @@ namespace SeanOne.Alchemy
 
         #region List transformation (with default converters)
         // 原有便捷方法: 內部呼叫 GetList 並傳入預設轉換器
-        public static List<bool> GetBools(this AlchemyResult result) =>
+        public static List<bool> GetBooleanList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!bool.TryParse(GetItemString(item, idx), out var val))
@@ -73,7 +73,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<char> GetChars(this AlchemyResult result) =>
+        public static List<char> GetCharList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!char.TryParse(GetItemString(item, idx), out var val))
@@ -81,13 +81,13 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<string> GetStrings(this AlchemyResult result) =>
+        public static List<string> GetStringList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 return GetItemString(item, idx);
             });
 
-        public static List<sbyte> GetSbytes(this AlchemyResult result) =>
+        public static List<sbyte> GetSByteList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!sbyte.TryParse(GetItemString(item, idx), out var val))
@@ -95,7 +95,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<byte> GetBytes(this AlchemyResult result) =>
+        public static List<byte> GetByteList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!byte.TryParse(GetItemString(item, idx), out var val))
@@ -103,7 +103,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<short> GetShorts(this AlchemyResult result) =>
+        public static List<short> GetInt16List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!short.TryParse(GetItemString(item, idx), out var val))
@@ -111,7 +111,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<ushort> GetUShorts(this AlchemyResult result) =>
+        public static List<ushort> GetUInt16List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!ushort.TryParse(GetItemString(item, idx), out var val))
@@ -119,7 +119,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<int> GetInts(this AlchemyResult result) =>
+        public static List<int> GetInt32List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!int.TryParse(GetItemString(item, idx), out var val))
@@ -127,7 +127,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<uint> GetUInts(this AlchemyResult result) =>
+        public static List<uint> GetUInt32List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!uint.TryParse(GetItemString(item, idx), out var val))
@@ -135,7 +135,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<long> GetLongs(this AlchemyResult result) =>
+        public static List<long> GetInt64List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!long.TryParse(GetItemString(item, idx), out var val))
@@ -143,7 +143,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<ulong> GetULongs(this AlchemyResult result) =>
+        public static List<ulong> GetUInt64List(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!ulong.TryParse(GetItemString(item, idx), out var val))
@@ -151,7 +151,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<float> GetFloats(this AlchemyResult result) =>
+        public static List<float> GetSingleList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!float.TryParse(GetItemString(item, idx), out var val))
@@ -159,7 +159,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<double> GetDoubles(this AlchemyResult result) =>
+        public static List<double> GetDoubleList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!double.TryParse(GetItemString(item, idx), out var val))
@@ -167,7 +167,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<decimal> GetDecimals(this AlchemyResult result) =>
+        public static List<decimal> GetDecimalList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!decimal.TryParse(GetItemString(item, idx), out var val))
@@ -175,7 +175,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<DateTime> GetDateTimes(this AlchemyResult result) =>
+        public static List<DateTime> GetDateTimeList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!DateTime.TryParse(GetItemString(item, idx), out var val))
@@ -183,7 +183,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<Guid> GetGuids(this AlchemyResult result) =>
+        public static List<Guid> GetGuidList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!Guid.TryParse(GetItemString(item, idx), out var val))
@@ -191,7 +191,7 @@ namespace SeanOne.Alchemy
                 return val;
             });
 
-        public static List<TimeSpan> GetTimeSpans(this AlchemyResult result) =>
+        public static List<TimeSpan> GetTimeSpanList(this AlchemyResult result) =>
             GetList(result, (item, idx) =>
             {
                 if (!TimeSpan.TryParse(GetItemString(item, idx), out var val))
@@ -200,7 +200,7 @@ namespace SeanOne.Alchemy
             });
 
         // GetObjects 特殊處理 (保留原有邏輯)
-        public static List<object> GetObjects(this AlchemyResult result)
+        public static List<object> GetObjectList(this AlchemyResult result)
         {
             if (result.RawSource is IEnumerable<object> objects)
                 return objects.ToList();
