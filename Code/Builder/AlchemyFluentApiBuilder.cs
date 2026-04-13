@@ -3,7 +3,7 @@
 
 namespace SeanOne.Alchemy.Builder
 {
-    public class AlchemyFluentApiBuilder
+    public class AlchemyBuilder
     {
         /// <summary>
         /// Creates an instance of the <see cref="BasicFunc"/> class.
