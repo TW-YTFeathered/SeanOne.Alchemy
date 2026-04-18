@@ -105,7 +105,13 @@ namespace SeanOne.Alchemy.Definitions
         public const string Sort = "sort";
 
         /// <summary>
-        /// 暫時保留的參數，用於過渡或測試用途
+        /// 重量轉換參數
+        /// DSL 參數: <c>weight</c>
+        /// </summary>
+        public const string Weight = "weight";
+
+        /// <summary>
+        /// 溫度轉換參數
         /// DSL 參數: <c>temp</c>
         /// </summary>
         public const string Temp = "temp";

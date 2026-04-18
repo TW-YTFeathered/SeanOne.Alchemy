@@ -46,6 +46,9 @@ namespace SeanOne.Alchemy
             string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Temp), string.Empty);
             copyObj = ConvertTemperature(copyObj, tempCnvIns);
 
+            string weightCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Weight), string.Empty);
+            copyObj = ConvertWeight(copyObj, weightCnvIns);
+
             // short time testing method
             //Console.Write(Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("print"), string.Empty));
 
