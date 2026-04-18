@@ -67,7 +67,7 @@ namespace SeanOne.Alchemy
                 string directive = Get.ExtractDirective(temp);
 
                 // 若當前指令沒有指定指令名稱，且存在上一個指令名稱，則自動補齊
-                // 例如：["cnv /sort:as", "/sort:asd"] => 第二個指令會自動變成 "cnv /sort:asd"
+                // 例如: ["cnv /sort:as", "/sort:asd"] => 第二個指令會自動變成 "cnv /sort:asd"
                 if (string.IsNullOrWhiteSpace(directive) && !string.IsNullOrWhiteSpace(oldDirective))
                 {
                     temp = oldDirective + temp;
