@@ -35,7 +35,7 @@ namespace SeanOne.Alchemy.Builder
             value = DslSyntaxBuilder.EscapeDslValue(value);
             _sb.AppendParam(param.ToCnvParamString());
             _sb.AppendQuoted(value);
-            
+
             return this; // 回傳自己，支援 Fluent DSL
         }
 
