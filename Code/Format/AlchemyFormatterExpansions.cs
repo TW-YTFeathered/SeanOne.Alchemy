@@ -16,7 +16,7 @@ namespace SeanOne.Alchemy
         /// </summary>
         /// <remarks>
         /// 字典鍵值對應：
-        /// - "fe", "foreach": 執行 FE 函數（帶對應的類型參數）
+        /// - "fe", "foreach": 執行 FE 函數 (帶對應的類型參數)
         /// - "basic": 執行 Basic 函數
         /// </remarks>
         private static readonly Dictionary<string, Func<object, string, string>> s_ActionsSync =

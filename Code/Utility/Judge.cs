@@ -109,7 +109,7 @@ namespace SeanOne.Alchemy.Utility
 
             var validParams = MethodParameters[methodType];
 
-            // 1. 移除所有引號內的內容（允許跳脫字元）
+            // 1. 移除所有引號內的內容 (允許跳脫字元)
             string withoutQuotes = Regex.Replace(dslInstruction, "\"(?:\\\\.|[^\"])*\"", string.Empty);
 
             // 2. 正則匹配引號外的參數
@@ -159,7 +159,7 @@ namespace SeanOne.Alchemy.Utility
                 return "FE_ProcessDictionary";
             }
 
-            // 如果是可枚舉類型（但不是字符串）
+            // 如果是可枚舉類型 (但不是字符串)
             if (objectType != typeof(string) &&
                 (objectType.GetInterfaces().Contains(typeof(System.Collections.IEnumerable)) ||
                  objectType.IsArray))

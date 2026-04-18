@@ -30,7 +30,7 @@ namespace SeanOne.Alchemy
             }
             else
             {
-                // 如果指令以 DSL 定義的參數前綴符號（目前為 '/'）開頭，則執行 Basic 方法
+                // 如果指令以 DSL 定義的參數前綴符號 (目前為 '/')開頭，則執行 Basic 方法
                 if (dslInstruction.StartsWith(DslSymbols.ParamPrefix))
                 {
                     return Basic(obj, dslInstruction);

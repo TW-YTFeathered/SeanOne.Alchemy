@@ -81,7 +81,7 @@ namespace SeanOne.Alchemy.Utility
         }
 
         /// <summary>
-        /// 尋找下一個終止字元（空格或“/”）
+        /// 尋找下一個終止字元 (空格或“/”)
         /// </summary>
         /// <param name="dslInstruction"> Dsl 指令(要被查找的字串) </param>
         /// <param name="startIndex"> 開始查找的位置 </param>
