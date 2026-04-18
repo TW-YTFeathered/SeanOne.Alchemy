@@ -13,17 +13,17 @@ namespace SeanOne.Alchemy.UnitConversions
         /// </summary>
         public enum WeightUnit
         {
-            Milligram,   // 毫克 (mg)
-            Centigram,   // 厘克 (cg)
-            Decigram,    // 分克 (dg)
-            Gram,        // 公克 (g)
-            Decagram,    // 十克 (dag)
-            Hectogram,   // 百克 (hg)
-            Kilogram,    // 公斤 (kg)
-            Tonne,       // 公噸 (t)
-            Ounce,       // 盎司 (oz)
-            Pound,       // 英磅 (lb)
-            Stone,       // 英石 (st)
+            Mg,          // 毫克 (mg)
+            Cg,          // 厘克 (cg)
+            Dg,          // 分克 (dg)
+            G,           // 公克 (g)
+            Dag,         // 十克 (dag)
+            Hg,          // 百克 (hg)
+            Kg,          // 公斤 (kg)
+            T,           // 公噸 (t)
+            Oz,          // 盎司 (oz)
+            Lb,          // 英磅 (lb)
+            St,          // 英石 (st)
             ShortTon,    // 短噸 (shortTon)
             LongTon      // 長噸 (longTon)
         }
@@ -53,17 +53,17 @@ namespace SeanOne.Alchemy.UnitConversions
             private static readonly IReadOnlyDictionary<WeightUnit, double> ToGramFactor =
                 new Dictionary<WeightUnit, double>
                 {
-                    [WeightUnit.Milligram] = 1.0 / MilligramsPerGram,                // 0.001
-                    [WeightUnit.Centigram] = 1.0 / CentigramsPerGram,                // 0.01
-                    [WeightUnit.Decigram] = 1.0 / DecigramsPerGram,                  // 0.1
-                    [WeightUnit.Gram] = 1.0,                                         // 1
-                    [WeightUnit.Decagram] = GramsPerDecagram,                        // 10
-                    [WeightUnit.Hectogram] = GramsPerHectogram,                      // 100
-                    [WeightUnit.Kilogram] = GramsPerKilogram,                        // 1000
-                    [WeightUnit.Tonne] = KilogramsPerTonne * GramsPerKilogram,       // 1,000,000
-                    [WeightUnit.Ounce] = GramsPerOunce,                              // 28.349523125
-                    [WeightUnit.Pound] = GramsPerPound,                              // 453.59237
-                    [WeightUnit.Stone] = KilogramsPerStone * GramsPerKilogram,       // 6350.29318
+                    [WeightUnit.Mg] = 1.0 / MilligramsPerGram,                       // 0.001
+                    [WeightUnit.Cg] = 1.0 / CentigramsPerGram,                       // 0.01
+                    [WeightUnit.Dg] = 1.0 / DecigramsPerGram,                        // 0.1
+                    [WeightUnit.G] = 1.0,                                            // 1
+                    [WeightUnit.Dag] = GramsPerDecagram,                             // 10
+                    [WeightUnit.Hg] = GramsPerHectogram,                             // 100
+                    [WeightUnit.Kg] = GramsPerKilogram,                              // 1000
+                    [WeightUnit.T] = KilogramsPerTonne * GramsPerKilogram,           // 1,000,000
+                    [WeightUnit.Oz] = GramsPerOunce,                                 // 28.349523125
+                    [WeightUnit.Lb] = GramsPerPound,                                 // 453.59237
+                    [WeightUnit.St] = KilogramsPerStone * GramsPerKilogram,          // 6350.29318
                     [WeightUnit.ShortTon] = KilogramsPerShortTon * GramsPerKilogram, // 907184.74
                     [WeightUnit.LongTon] = KilogramsPerLongTon * GramsPerKilogram    // 1016046.9088
                 };
