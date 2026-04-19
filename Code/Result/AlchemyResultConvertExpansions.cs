@@ -66,138 +66,55 @@ namespace SeanOne.Alchemy
         #region List transformation (with default converters)
         // 原有便捷方法: 內部呼叫 GetList 並傳入預設轉換器
         public static List<bool> GetBooleanList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!bool.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, bool.Parse);
 
         public static List<char> GetCharList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!char.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, char.Parse);
 
         public static List<string> GetStringList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                return GetItemString(item, idx);
-            });
+            GetList(result, GetItemString);
 
         public static List<sbyte> GetSByteList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!sbyte.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, sbyte.Parse);
 
         public static List<byte> GetByteList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!byte.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, byte.Parse);
 
         public static List<short> GetInt16List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!short.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, short.Parse);
 
         public static List<ushort> GetUInt16List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!ushort.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, ushort.Parse);
 
         public static List<int> GetInt32List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!int.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, int.Parse);
 
         public static List<uint> GetUInt32List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!uint.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, uint.Parse);
 
         public static List<long> GetInt64List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!long.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, long.Parse);
 
         public static List<ulong> GetUInt64List(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!ulong.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, ulong.Parse);
 
         public static List<float> GetSingleList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!float.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, float.Parse);
 
         public static List<double> GetDoubleList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!double.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, double.Parse);
 
         public static List<decimal> GetDecimalList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!decimal.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, decimal.Parse);
 
         public static List<DateTime> GetDateTimeList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!DateTime.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, DateTime.Parse);
 
         public static List<Guid> GetGuidList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!Guid.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, Guid.Parse);
 
         public static List<TimeSpan> GetTimeSpanList(this AlchemyResult result) =>
-            GetList(result, (item, idx) =>
-            {
-                if (!TimeSpan.TryParse(GetItemString(item, idx), out var val))
-                    ThrowConversionFailed(item, idx);
-                return val;
-            });
+            GetList(result, TimeSpan.Parse);
 
         // GetObjects 特殊處理 (保留原有邏輯)
         public static List<object> GetObjectList(this AlchemyResult result)
@@ -225,7 +142,7 @@ namespace SeanOne.Alchemy
         /// <param name="result">AlchemyResult 實例</param>
         /// <param name="converter">轉換委託，接收元素物件和索引，傳回轉換後的 T</param>
         /// <returns>轉換後的 List</returns>
-        private static List<T> GetList<T>(this AlchemyResult result, Func<object, int, T> converter)
+        private static List<T> GetList<T>(this AlchemyResult result, Func<string, T> converter)
         {
             if (converter == null)
                 throw new ArgumentNullException(nameof(converter));
@@ -234,36 +151,31 @@ namespace SeanOne.Alchemy
             if (result.RawSource is IEnumerable<T> typedEnumerable)
                 return typedEnumerable.ToList();
 
-            // 嘗試以 IEnumerable<object> 處理 (適用於元素類型為參考類型或已裝箱的情況)
-            if (result.RawSource is IEnumerable<object> objects)
-            {
-                int capacity = objects is ICollection<object> col1 ? col1.Count :
-                               objects is ICollection col2 ? col2.Count : 0;
-                var results = capacity > 0 ? new List<T>(capacity) : new List<T>();
-                int index = 0;
-                foreach (var item in objects)
-                {
-                    results.Add(converter(item, index));
-                    index++;
-                }
-                return results;
-            }
-
-            // 嘗試以非泛型 IEnumerable 處理 (如 ArrayList，以及元素為值型別的泛型集合如 List<double> 等)
-            if (result.RawSource is IEnumerable nonGeneric)
+            // 嘗試以非泛型 IEnumerable 處理
+            if (result.RawSource is IEnumerable objects)
             {
                 // 嘗試取得容量 (如果支援 ICollection)
                 int capacity = 0;
-                if (nonGeneric is ICollection col)
+                if (objects is ICollection col)
                     capacity = col.Count;
 
                 var results = capacity > 0 ? new List<T>(capacity) : new List<T>();
                 int index = 0;
-                foreach (var item in nonGeneric)
+
+                foreach (var item in objects)
                 {
-                    results.Add(converter(item, index));
+                    try
+                    {
+                        results.Add(converter(GetItemString(item, index)));
+                    }
+                    catch
+                    {
+                        ThrowConversionFailed(item, index);
+                    }
+
                     index++;
                 }
+
                 return results;
             }
 
