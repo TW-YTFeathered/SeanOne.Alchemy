@@ -10,6 +10,7 @@ namespace SeanOne.Alchemy
 {
     partial class AlchemyConverter
     {
+        #region Unit Conversion Wrappers
         /// <summary>
         /// 統一泛型入口: 轉換溫度數值或清單中的每個元素
         /// </summary>
@@ -30,6 +31,13 @@ namespace SeanOne.Alchemy
             return ConvertUnit(input, instruction, ActionsWeight);
         }
 
+        private static T ConvertLength<T>(T input, string instruction)
+        {
+            return ConvertUnit(input, instruction, ActionsLength);
+        }
+        #endregion
+
+        #region Generic Conversion Engine
         // 抽象層，提供單一數值或清單的轉換方法
         private static T ConvertUnit<T>(T input, string instruction, IReadOnlyDictionary<string, Func<double, double>> actions)
         {
@@ -126,5 +134,6 @@ namespace SeanOne.Alchemy
                 }
             }
         }
+        #endregion
     }
 }

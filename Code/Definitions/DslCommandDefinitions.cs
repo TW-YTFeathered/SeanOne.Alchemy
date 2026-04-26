@@ -110,6 +110,8 @@ namespace SeanOne.Alchemy.Definitions
         /// </summary>
         public const string Weight = "weight";
 
+        public const string Length = "length";
+
         /// <summary>
         /// 溫度轉換參數
         /// DSL 參數: <c>temp</c>

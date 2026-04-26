@@ -10,6 +10,14 @@ namespace SeanOne.Alchemy.UnitConversions
         /// </summary>
         public static TemperatureConverter Temperature => default;
 
+        /// <summary>
+        /// 提供重量相關的轉換功能。
+        /// </summary>
         public static WeightConverter Weight => default;
+
+        /// <summary>
+        /// 提供長度相關的轉換功能。
+        /// </summary>
+        public static LengthConverter Length => default;
     }
 }

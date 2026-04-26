@@ -13,23 +13,27 @@ namespace SeanOne.Alchemy.UnitConversions
         /// </summary>
         public enum WeightUnit
         {
-            Mg,          // 毫克 (mg)
-            Cg,          // 厘克 (cg)
-            Dg,          // 分克 (dg)
-            G,           // 公克 (g)
-            Dag,         // 十克 (dag)
-            Hg,          // 百克 (hg)
-            Kg,          // 公斤 (kg)
-            T,           // 公噸 (t)
-            Oz,          // 盎司 (oz)
-            Lb,          // 英磅 (lb)
-            St,          // 英石 (st)
-            ShortTon,    // 短噸 (shortTon)
-            LongTon      // 長噸 (longTon)
+            // 公制單位 (Metric System)
+            Mg,          // 毫克 (Milligram)
+            Cg,          // 厘克 (Centigram)
+            Dg,          // 分克 (Decigram)
+            G,           // 公克 (Gram)
+            Dag,         // 十克 (Decagram)
+            Hg,          // 百克 (Hectogram)
+            Kg,          // 公斤 (Kilogram)
+            T,           // 公噸 (Tonne)
+
+            // 英美制質量單位 (Imperial / US Customary)
+            Oz,          // 盎司 (Ounce)
+            Lb,          // 英磅 (Pound)
+            St,          // 英石 (Stone)
+            ShortTon,    // 短噸 (Short Ton / US Ton)
+            LongTon      // 長噸 (Long Ton / Imperial Ton)
         }
 
         /// <summary>
         /// 重量單位轉換器 (結構體)
+        /// 注意: 不用第三方庫是因為這樣能更好的控制變量
         /// </summary>
         public readonly struct WeightConverter
         {
@@ -105,7 +109,9 @@ namespace SeanOne.Alchemy.UnitConversions
             /// <returns>轉換後的數值</returns>
             public static double Convert_Core(double value, WeightUnit from, WeightUnit to)
             {
+                // 先轉為公克
                 double gram = value * ToGramFactor[from];
+                // 再從公克轉為目標單位
                 return gram / ToGramFactor[to];
             }
         }

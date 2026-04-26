@@ -15,8 +15,10 @@ namespace SeanOne.Alchemy
 
             InitTemperatureDict(comparer);
             InitWeightDict(comparer);
+            InitLengthDict(comparer);
         }
 
+        #region Init Functions
         private static void InitTemperatureDict(StringComparer comparer)
         {
             var dict = new Dictionary<string, Func<double, double>>(comparer);
@@ -31,7 +33,7 @@ namespace SeanOne.Alchemy
                     // 建立轉換委派 (捕獲 from 和 to)
                     Func<double, double> convert = value => TemperatureConverter.Convert(value, from, to);
 
-                    // 兩種格式：XtoY 和 X->Y
+                    // 兩種格式: XtoY 和 X->Y
                     string keyTo = $"{from}To{to}";
                     string keyArrow = $"{from}->{to}";
 
@@ -57,7 +59,7 @@ namespace SeanOne.Alchemy
                     // 建立轉換委派 (捕獲 from 和 to)
                     Func<double, double> convert = value => WeightConverter.Convert(value, from, to);
 
-                    // 兩種格式：XtoY 和 X->Y
+                    // 兩種格式: XtoY 和 X->Y
                     string keyTo = $"{from}To{to}";
                     string keyArrow = $"{from}->{to}";
 
@@ -68,6 +70,34 @@ namespace SeanOne.Alchemy
 
             ActionsWeight = dict;
         }
+
+        private static void InitLengthDict(StringComparer comparer)
+        {
+            var dict = new Dictionary<string, Func<double, double>>(comparer);
+            var units = Enum.GetValues(typeof(LengthUnit));
+
+
+            foreach (LengthUnit from in units)
+            {
+                foreach (LengthUnit to in units)
+                {
+                    if (from == to) continue; // 不需要自己轉自己
+
+                    // 建立轉換委派 (捕獲 from 和 to)
+                    Func<double, double> convert = value => LengthConverter.Convert(value, from, to);
+
+                    // 兩種格式: XtoY 和 X->Y
+                    string keyTo = $"{from}To{to}";
+                    string keyArrow = $"{from}->{to}";
+
+                    dict[keyTo] = convert;
+                    dict[keyArrow] = convert;
+                }
+            }
+
+            ActionsLength = dict;
+        }
+        #endregion
 
         /// <summary>
         /// 溫度轉換指令與對應函數的映射字典
@@ -84,5 +114,7 @@ namespace SeanOne.Alchemy
         public static IReadOnlyDictionary<string, Func<double, double>> ActionsTemperature { get; private set; }
 
         public static IReadOnlyDictionary<string, Func<double, double>> ActionsWeight { get; private set; }
+
+        public static IReadOnlyDictionary<string, Func<double, double>> ActionsLength { get; private set; }
     }
 }

@@ -49,6 +49,9 @@ namespace SeanOne.Alchemy
             string weightCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Weight), string.Empty);
             copyObj = ConvertWeight(copyObj, weightCnvIns);
 
+            string lengthCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Length), string.Empty);
+            copyObj = ConvertLength(copyObj, lengthCnvIns);
+
             // short time testing method
             //Console.Write(Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey("print"), string.Empty));
 

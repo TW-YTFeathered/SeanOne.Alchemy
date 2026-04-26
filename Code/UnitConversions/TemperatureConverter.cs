@@ -16,7 +16,7 @@ namespace SeanOne.Alchemy.UnitConversions
         }
 
         /// <summary>
-        /// 轉換成不同常見溫標
+        /// 轉換成不同常見溫標 (結構體)
         /// 注意: 不用第三方庫是因為這樣能更好的控制變量
         /// </summary>
         public readonly struct TemperatureConverter
@@ -28,7 +28,7 @@ namespace SeanOne.Alchemy.UnitConversions
 
             /// <summary>
             /// 定義相對於凱氏溫度 (K) 的轉換係數
-            /// 公式：Kelvin = (Value + AddFirst) * Multiplier + AddSecond
+            /// 公式: Kelvin = (Value + AddFirst) * Multiplier + AddSecond
             /// </summary>
             private readonly struct ConversionRule
             {
@@ -42,18 +42,18 @@ namespace SeanOne.Alchemy.UnitConversions
                 }
             }
 
-            // 使用 Dict 儲存規則：所有單位都先定義「如何轉為凱氏溫度」
+            // 使用 Dict 儲存規則: 所有單位都先定義「如何轉為凱氏溫度」
             private static readonly IReadOnlyDictionary<TemperatureUnit, ConversionRule> Rules =
                 new Dictionary<TemperatureUnit, ConversionRule>
                 {
-                    // 攝氏：K = C + 273.15 (比例為 1)
+                    // 攝氏: K = C + 273.15 (比例為 1)
                     [TemperatureUnit.C] = new ConversionRule(1.0, KelvinOffset),
 
-                    // 華氏：K = (F - 32) / 1.8 + 273.15
-                    // 拆解成：F * (1/1.8) + (273.15 - 32/1.8)
+                    // 華氏: K = (F - 32) / 1.8 + 273.15
+                    // 拆解成: F * (1/1.8) + (273.15 - 32/1.8)
                     [TemperatureUnit.F] = new ConversionRule(1.0 / FahrenheitFactor, KelvinOffset - (FahrenheitOffset / FahrenheitFactor)),
 
-                    // 凱氏：K = K * 1 + 0
+                    // 凱氏: K = K * 1 + 0
                     [TemperatureUnit.K] = new ConversionRule(1.0, 0.0)
                 };
 
