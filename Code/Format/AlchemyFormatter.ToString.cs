@@ -5,8 +5,15 @@ using SeanOne.Alchemy.Definitions;
 using SeanOne.Alchemy.Utility;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+
+#if NET6_0_OR_GREATER
+using System.Buffers;
+#endif
 
 namespace SeanOne.Alchemy
 {
@@ -210,6 +217,118 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
+#if NET6_0_OR_GREATER
+            return FE_ProcessDictionary_Optimized_Net6(dictionary, 
+                dictFormat, keyFormat, valueFormat,
+                begin, end, final_pair_separator,
+                prefix, suffix,
+                exclude_last_end);
+#else
+            return FE_ProcessDictionary_Optimized_Legacy(dictionary,
+                dictFormat, keyFormat, valueFormat,
+                begin, end, final_pair_separator,
+                prefix, suffix,
+                exclude_last_end);
+#endif
+        }
+
+#if NET6_0_OR_GREATER
+        private static string FE_ProcessDictionary_Optimized_Net6(IDictionary dictionary,
+            string dictFormat, string keyFormat, string valueFormat,
+            string begin, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
+        {
+            if (dictionary == null) return prefix + suffix;
+            if (string.IsNullOrEmpty(dictFormat))
+                throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
+
+            bool hasFps = !string.IsNullOrEmpty(final_pair_separator);
+
+            ReadOnlySpan<char> beginSpan = begin.AsSpan();
+            ReadOnlySpan<char> endSpan = end.AsSpan();
+            ReadOnlySpan<char> fpsSpan = hasFps ? final_pair_separator.AsSpan() : default;
+
+            char[] buf = ArrayPool<char>.Shared.Rent(512);
+            int len = 0;
+
+            var enumerator = dictionary.GetEnumerator();
+
+            try
+            {
+                if (!enumerator.MoveNext()) return prefix + suffix;
+
+                DictionaryEntry currentItem = (DictionaryEntry)enumerator.Current;
+                bool hasNext = enumerator.MoveNext();
+
+                AppendSpan(ref buf, ref len, prefix.AsSpan());
+
+                if (!hasNext)
+                {
+                    AppendSpan(ref buf, ref len, beginSpan);
+                    AppendSpan(ref buf, ref len, Dict_Format(
+                        dictFormat,
+                        FormatObject(currentItem.Key, keyFormat),
+                        FormatObject(currentItem.Value, valueFormat)
+                        ).AsSpan());
+                    if (!exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
+                    AppendSpan(ref buf, ref len, suffix.AsSpan());
+                    return new string(buf, 0, len);
+                }
+
+                AppendSpan(ref buf, ref len, beginSpan);
+                AppendSpan(ref buf, ref len, Dict_Format(
+                    dictFormat,
+                    FormatObject(currentItem.Key, keyFormat),
+                    FormatObject(currentItem.Value, valueFormat)
+                    ).AsSpan());
+
+                while (true)
+                {
+                    DictionaryEntry nextItem = (DictionaryEntry)enumerator.Current;
+                    hasNext = enumerator.MoveNext();
+
+                    if (!hasNext)
+                    {
+                        AppendSpan(ref buf, ref len, hasFps ? fpsSpan : endSpan);
+                        AppendSpan(ref buf, ref len, beginSpan);
+                        AppendSpan(ref buf, ref len, Dict_Format(
+                            dictFormat,
+                            FormatObject(nextItem.Key, keyFormat),
+                            FormatObject(nextItem.Value, valueFormat)
+                            ).AsSpan());
+                        if (!exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
+                        break;
+                    }
+
+                    AppendSpan(ref buf, ref len, endSpan);
+                    AppendSpan(ref buf, ref len, beginSpan);
+                    AppendSpan(ref buf, ref len, Dict_Format(
+                        dictFormat,
+                        FormatObject(nextItem.Key, keyFormat),
+                        FormatObject(nextItem.Value, valueFormat)
+                        ).AsSpan());
+
+                    // 因為目前迴圈內沒有用，所以先註解掉
+                    //currentItem = nextItem;
+                }
+
+                AppendSpan(ref buf, ref len, suffix.AsSpan());
+                return new string(buf, 0, len);
+            }
+            finally
+            {
+                (enumerator as IDisposable)?.Dispose();
+                ArrayPool<char>.Shared.Return(buf);
+            }
+        }
+#else
+        private static string FE_ProcessDictionary_Optimized_Legacy(IDictionary dictionary,
+            string dictFormat, string keyFormat, string valueFormat,
+            string begin, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
+        {
             if (dictionary == null) return prefix + suffix;
             if (string.IsNullOrEmpty(dictFormat))
                 throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
@@ -219,81 +338,71 @@ namespace SeanOne.Alchemy
 
             try
             {
-                // 嘗試讀取第一個元素
                 if (!enumerator.MoveNext()) return prefix + suffix;
 
-                // 字典使用 DictionaryEntry 來同時獲取 Key 和 Value
-                DictionaryEntry currentItem = (DictionaryEntry)enumerator.Current; // 當前要處理的元素
-                bool hasNextItem = enumerator.MoveNext(); // 檢查是否還有更多元素
+                DictionaryEntry currentItem = (DictionaryEntry)enumerator.Current;
+                bool hasNextItem = enumerator.MoveNext();
 
-                // 如果只有一個元素
+                // 單元素
                 if (!hasNextItem)
                 {
-                    results.Append(begin).Append(prefix);
+                    results.Append(prefix).Append(begin);
 
                     string keyStr = FormatObject(currentItem.Key, keyFormat);
                     string valueStr = FormatObject(currentItem.Value, valueFormat);
-                    results.Append(begin).Append(Dict_Format(dictFormat, keyStr, valueStr));
+                    results.Append(Dict_Format(dictFormat, keyStr, valueStr));
 
                     if (!exclude_last_end) results.Append(end);
 
                     results.Append(suffix);
-
                     return results.ToString();
                 }
 
+                // 多元素
                 results.Append(prefix);
 
-                // 處理多個元素
                 while (hasNextItem)
                 {
-                    // 讀取下一個元素到 nextItem
-                    DictionaryEntry nextItem = (DictionaryEntry)enumerator.Current; // 下一個要處理的元素
-                    // 嘗試讀取下下個元素，結果存入 hasNextItem
+                    DictionaryEntry nextItem = (DictionaryEntry)enumerator.Current;
                     hasNextItem = enumerator.MoveNext();
 
-                    // 處理當前元素 (currentItem)
                     string keyStr = FormatObject(currentItem.Key, keyFormat);
                     string valueStr = FormatObject(currentItem.Value, valueFormat);
                     string formatted = Dict_Format(dictFormat, keyStr, valueStr);
 
                     if (!hasNextItem)
                     {
-                        // 當前是倒數第二個元素，且 final_pair_separator 不為 null 或空字串
+                        // 倒數第二個
                         if (!string.IsNullOrEmpty(final_pair_separator))
                             results.Append(begin).Append(formatted).Append(final_pair_separator);
-                        // 否則添加 end
                         else
                             results.Append(begin).Append(formatted).Append(end);
 
-                        // 處理最後一個元素 (nextItem)
+                        // 最後一個
                         string lastKeyStr = FormatObject(nextItem.Key, keyFormat);
                         string lastValueStr = FormatObject(nextItem.Value, valueFormat);
                         results.Append(begin).Append(Dict_Format(dictFormat, lastKeyStr, lastValueStr));
 
-                        // 如果是最後一個，且 exclude_last_end 為 false 才加 end
                         if (!exclude_last_end) results.Append(end);
                     }
                     else
                     {
-                        // 一般中間元素
+                        // 中間元素
                         results.Append(begin).Append(formatted).Append(end);
                     }
 
-                    // 移動到下一輪要處理的元素
                     currentItem = nextItem;
                 }
             }
             finally
             {
-                // 釋放資源
-                if (enumerator is IDisposable disposable) disposable.Dispose();
+                (enumerator as IDisposable)?.Dispose();
             }
 
             results.Append(suffix);
-
             return results.ToString();
         }
+#endif
 
         /// <summary>
         /// 處理普通集合
@@ -359,80 +468,151 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
+#if NET6_0_OR_GREATER
+            return FE_ProcessEnumerable_Optimized_Net6(enumerable, format, begin, end, final_pair_separator, prefix, suffix, exclude_last_end);
+#else
+            return FE_ProcessEnumerable_Optimized_Legacy(enumerable, format, begin, end, final_pair_separator, prefix, suffix, exclude_last_end);
+#endif
+        }
+
+#if NET6_0_OR_GREATER
+        private static string FE_ProcessEnumerable_Optimized_Net6(IEnumerable enumerable,
+            string format,
+            string begin, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
+        {
             if (enumerable == null) return prefix + suffix;
+
+            bool hasFormat = !string.IsNullOrEmpty(format);
+            bool hasFps = !string.IsNullOrEmpty(final_pair_separator);
+            ReadOnlySpan<char> beginSpan = begin.AsSpan();
+            ReadOnlySpan<char> endSpan = end.AsSpan();
+            ReadOnlySpan<char> fpsSpan = hasFps ? final_pair_separator.AsSpan() : default;
+
+            char[] buf = ArrayPool<char>.Shared.Rent(512);
+            int len = 0;
+            var enumerator = enumerable.GetEnumerator();
+            try
+            {
+                if (!enumerator.MoveNext())
+                    return prefix + suffix;   // buf 和 enumerator 會在 finally 釋放
+
+                object currentItem = enumerator.Current;
+                bool hasNext = enumerator.MoveNext();
+
+                AppendSpan(ref buf, ref len, prefix.AsSpan());
+
+                if (!hasNext)
+                {
+                    AppendSpan(ref buf, ref len, beginSpan);
+                    AppendObj(ref buf, ref len, currentItem, format, hasFormat);
+                    if (!exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
+                    AppendSpan(ref buf, ref len, suffix.AsSpan());
+                    return new string(buf, 0, len); // finally 會清理 buf
+                }
+
+                AppendSpan(ref buf, ref len, beginSpan);
+                AppendObj(ref buf, ref len, currentItem, format, hasFormat);
+
+                while (true)
+                {
+                    object nextItem = enumerator.Current;
+                    hasNext = enumerator.MoveNext();
+
+                    if (!hasNext)
+                    {
+                        AppendSpan(ref buf, ref len, hasFps ? fpsSpan : endSpan);
+                        AppendSpan(ref buf, ref len, beginSpan);
+                        AppendObj(ref buf, ref len, nextItem, format, hasFormat);
+                        if (!exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
+                        break;
+                    }
+
+                    AppendSpan(ref buf, ref len, endSpan);
+                    AppendSpan(ref buf, ref len, beginSpan);
+                    AppendObj(ref buf, ref len, nextItem, format, hasFormat);
+
+                    // 因為目前迴圈內沒有用，所以先註解掉
+                    //currentItem = nextItem;
+                }
+
+                AppendSpan(ref buf, ref len, suffix.AsSpan());
+                return new string(buf, 0, len);
+            }
+            finally
+            {
+                // 釋放資源
+                (enumerator as IDisposable)?.Dispose();
+                ArrayPool<char>.Shared.Return(buf);
+            }
+        }
+#else
+        private static string FE_ProcessEnumerable_Optimized_Legacy(IEnumerable enumerable,
+            string format,
+            string begin, string end, string final_pair_separator,
+            string prefix, string suffix,
+            bool exclude_last_end)
+        {
+            if (enumerable == null) return prefix + suffix;
+
+            bool hasFps = !string.IsNullOrEmpty(final_pair_separator);
 
             var result = new StringBuilder();
             var enumerator = enumerable.GetEnumerator();
 
             try
             {
-                // 嘗試讀取第一個元素
                 if (!enumerator.MoveNext()) return prefix + suffix;
 
-                object currentItem = enumerator.Current; // 當前要處理的元素
-                bool hasNextItem = enumerator.MoveNext(); // 檢查是否還有更多元素
-
-                // 如果只有一個元素
-                if (!hasNextItem)
-                {
-                    result.Append(prefix).Append(begin);
-
-                    result.Append(FormatObject(currentItem, format));
-                    if (!exclude_last_end) result.Append(end);
-
-                    result.Append(suffix);
-
-                    return result.ToString();
-                }
+                object currentItem = enumerator.Current;
+                bool hasNext = enumerator.MoveNext();
 
                 result.Append(prefix);
 
-                // 處理多個元素
-                while (hasNextItem)
+                if (!hasNext)
                 {
-                    // 讀取下一個元素到 nextItem
-                    object nextItem = enumerator.Current; // 下一個要處理的元素
-                    // 嘗試讀取下下個元素，結果存入 hasNextItem
-                    hasNextItem = enumerator.MoveNext();
+                    result.Append(begin);
+                    result.Append(FormatObject(currentItem, format));
+                    if (!exclude_last_end) result.Append(end);
+                    result.Append(suffix);
+                    return result.ToString();
+                }
 
-                    // 處理當前元素 (currentItem)
-                    string currentStr = FormatObject(currentItem, format);
+                // 第一個元素的格式化字串（先不寫入，等迴圈內統一處理）
+                string currentStr = FormatObject(currentItem, format);
 
-                    if (!hasNextItem)
+                while (hasNext)
+                {
+                    object nextItem = enumerator.Current;
+                    hasNext = enumerator.MoveNext();
+
+                    if (!hasNext)
                     {
-                        // 當前是倒數第二個元素，且 final_pair_separator 不為 null 或空字串
-                        if (!string.IsNullOrEmpty(final_pair_separator))
-                            result.Append(begin).Append(currentStr).Append(final_pair_separator);
-                        // 否則添加 end
-                        else
-                            result.Append(begin).Append(currentStr).Append(end);
+                        // 倒數第二個元素：使用 final_pair_separator 或 end
+                        result.Append(begin).Append(currentStr)
+                              .Append(hasFps ? final_pair_separator : end);
 
-                        // 處理最後一個元素 (nextItem)
+                        // 最後一個元素
                         result.Append(begin).Append(FormatObject(nextItem, format));
-
-                        // 如果是最後一個，且 exclude_last_end 為 false 才加 end
                         if (!exclude_last_end) result.Append(end);
                     }
                     else
                     {
-                        // 一般中間的元素
+                        // 一般中間元素
                         result.Append(begin).Append(currentStr).Append(end);
+                        currentStr = FormatObject(nextItem, format);
                     }
-
-                    // 移動到下一輪要處理的元素
-                    currentItem = nextItem;
                 }
+
+                return result.Append(suffix).ToString();
             }
             finally
             {
-                // 釋放資源
-                if (enumerator is IDisposable disposable) disposable.Dispose();
+                (enumerator as IDisposable)?.Dispose();
             }
-
-            result.Append(suffix);
-
-            return result.ToString();
         }
+#endif
         #endregion
 
         #region Basic Method

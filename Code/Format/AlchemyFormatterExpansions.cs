@@ -7,6 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+#if NET6_0_OR_GREATER
+using System.Buffers;
+using System.Runtime.CompilerServices;
+#endif
+
 namespace SeanOne.Alchemy
 {
     partial class AlchemyFormatter
@@ -75,18 +80,77 @@ namespace SeanOne.Alchemy
         {
             if (string.IsNullOrEmpty(format)) return string.Empty;
 
-            var dict = new Dictionary<string, object>
-            {
-                { "0", key },
-                { "1", value }
-            };
-
             return _placeholderRegex.Replace(format, m =>
             {
-                var index = m.Groups[1].Value;
-                return dict.TryGetValue(index, out var val) ? val.ToString() : m.Value;
+                switch (m.Groups[1].Value)
+                {
+                    case "0": return key;
+                    case "1": return value;
+                    default: return m.Value;
+                }
             });
         }
+        #endregion
+
+        #region NET6.0+
+#if NET6_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void AppendSpan(ref char[] buf, ref int len, ReadOnlySpan<char> value)
+        {
+            if (value.IsEmpty) return;
+
+            int required = len + value.Length;
+            if (required > buf.Length) Grow(ref buf, required);
+
+            value.CopyTo(buf.AsSpan(len));
+            len += value.Length;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void AppendObj(ref char[] buf, ref int len, object obj,
+            string format, bool hasFormat)
+        {
+            if (obj == null) return;
+
+            if (hasFormat && obj is ISpanFormattable sf)
+            {
+                const int Guess = 64;
+                EnsureCapacity(ref buf, len + Guess);
+
+                if (sf.TryFormat(buf.AsSpan(len), out int written, format, null))
+                {
+                    len += written;
+                    return;
+                }
+                AppendSpan(ref buf, ref len, ((IFormattable)sf).ToString(format, null).AsSpan());
+                return;
+            }
+
+            if (hasFormat && obj is IFormattable fmt)
+            {
+                AppendSpan(ref buf, ref len, fmt.ToString(format, null).AsSpan());
+                return;
+            }
+
+            AppendSpan(ref buf, ref len, (obj.ToString() ?? string.Empty).AsSpan());
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void Grow(ref char[] buf, int required)
+        {
+            int newSize = Math.Max(buf.Length * 2, required);
+            char[] newBuf = ArrayPool<char>.Shared.Rent(newSize);
+            buf.AsSpan().CopyTo(newBuf);
+            ArrayPool<char>.Shared.Return(buf);
+            buf = newBuf;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void EnsureCapacity(ref char[] buf, int required)
+        {
+            if (required > buf.Length) Grow(ref buf, required);
+        }
+#endif
         #endregion
     }
 }
