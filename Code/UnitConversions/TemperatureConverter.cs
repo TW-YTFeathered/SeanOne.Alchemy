@@ -82,7 +82,7 @@ namespace SeanOne.Alchemy.UnitConversions
                 ThrowIfInvalidKelvin(kelvin);
 
                 if (from == to) return value;
-                
+
                 return Convert_Core(kelvin, TemperatureUnit.K, to);
             }
 

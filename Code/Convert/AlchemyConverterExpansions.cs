@@ -1,9 +1,7 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
-using SeanOne.Alchemy.Utility;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace SeanOne.Alchemy
