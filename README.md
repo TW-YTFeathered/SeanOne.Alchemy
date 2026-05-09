@@ -1,22 +1,22 @@
 # SeanOne.Alchemy
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![.NET Support](https://img.shields.io/badge/.NET-net6.0%2B%20%7C%20net8.0%20%7C%20netstandard2.0%20%7C%20net472%20%7C%20net48-blue)
+![.NET Support](https://img.shields.io/badge/.NET-net6.0%20%7C%20net8.0%20%7C%20net10.0%20%7C%20netstandard2.0%20%7C%20net472%20%7C%20net48-blue)
 
 **Alchemy** is a lightweight C# library that enables fast and flexible object transformation through concise DSL syntax – a true data alchemy.
 
 ## ✨ Core Features
 
-- **Object Formatting** – Convert objects to strings with custom separators, format strings, etc. (`AlchemyFormatter`).
-- **Object Conversion** – Sort collections or perform temperature unit conversions (`AlchemyConverter`).
-- **DSL Driven** – Describe transformation logic with intuitive string instructions (e.g., `cnv /sort:bubble /temp:C->F`).
-- **Fluent API** – Type‑safe builder with full IntelliSense and compile‑time checks.
-- **Async Support** – Both synchronous and asynchronous methods for all operations.
+- **Object Formatting** – Convert objects to strings with custom separators, format strings, etc. (`AlchemyFormatter`)
+- **Object Conversion** – Sort collections or perform temperature unit conversions (`AlchemyConverter`)
+- **DSL Driven** – Describe transformation logic with intuitive string instructions (e.g., `cnv /sort:bubble /temp:C->F`)
+- **Fluent API** – Type‑safe builder with full IntelliSense and compile‑time checks
+- **Async Support** – Both synchronous and asynchronous methods for all operations
 
 ## 📦 Installation
 
 ```bash
-dotnet add package SeanOne.Alchemy --version 2.0.0
+dotnet add package SeanOne.Alchemy
 ```
 
 ## 🚀 Quick Examples
@@ -26,8 +26,14 @@ dotnet add package SeanOne.Alchemy --version 2.0.0
 ```csharp
 using SeanOne.Alchemy;
 
+// Format a single value
 string result = AlchemyFormatter.Format(5, "/tostring:F2 /end:!");
 // Output: "5.00!"
+
+// Format a collection
+var items = new[] { "apple", "banana", "cherry" };
+string list = AlchemyFormatter.Format(items, "fe /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
+// Output: "apple, banana and cherry"
 ```
 
 ### Conversion
@@ -35,27 +41,33 @@ string result = AlchemyFormatter.Format(5, "/tostring:F2 /end:!");
 ```csharp
 using SeanOne.Alchemy;
 
-var numbers = new List<double> { 32.0, 212.0, 0.0 };
-var result = AlchemyConverter.Convert(numbers, "cnv /sort:is", "/temp:F->C");
-// Converted list: [-17.777..., 0, 100] (sorted and temperature converted)
+// Sort a list
+var numbers = new List<int> { 5, 2, 8, 1 };
+var sorted = AlchemyConverter.Convert(numbers, "cnv /sort:is");
+// Result: [1, 2, 5, 8]
+
+// Temperature conversion
+double fahrenheit = 212.0;
+double celsius = AlchemyConverter.Convert(fahrenheit, "cnv /temp:F->C").ToObject<double>();
+// Result: 100.0
+
+// Combine operations
+var temps = new List<double> { 32.0, 212.0, 0.0 };
+var result = AlchemyConverter.Convert(temps, "cnv /sort:bubble", "/temp:F->C");
+// Sorts then converts: [-17.777..., 0, 100]
 ```
 
-## Formatting with `AlchemyFormatter`
+## 📖 Documentation
 
-### Syntax
-
-```text
-[FunctionName] /param1:value1 /param2:"value with spaces" /param3:"value/with/slash" ...
-```
-
-- Parameters start with `/` followed by the name and a colon
-- Values containing spaces must be enclosed in double quotes
-- Parameter names are case-sensitive
-
-## 📖 Detailed Guides
-
-- **[Formatting Guide (Guide_Format.md)](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/Guide_Format.md)** – Full documentation for `AlchemyFormatter`: DSL syntax, parameters, examples, and Fluent API.
-- **[Conversion Guide (Guide_Convert.md)](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/Guide_Convert.md)** – Full documentation for `AlchemyConverter`: sorting algorithms, temperature conversion, and combined usage.
+| Topic | Location |
+|-------|----------|
+| Getting Started | [Docs/GettingStarted.md](Docs/GettingStarted.md) |
+| DSL Syntax Reference | [Docs/DSLSyntax.md](Docs/DSLSyntax.md) |
+| Formatting Guide | [Docs/Formatter/](Docs/Formatter/) |
+| Conversion Guide | [Docs/Converter/](Docs/Converter/) |
+| Fluent API | [Docs/FluentAPI.md](Docs/FluentAPI.md) |
+| Error Handling | [Docs/ErrorHandling.md](Docs/ErrorHandling.md) |
+| FAQ | [Docs/FAQ.md](Docs/FAQ.md) |
 
 ## 📄 License
 
