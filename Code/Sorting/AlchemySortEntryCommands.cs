@@ -23,16 +23,6 @@ namespace SeanOne.Alchemy.Sorting
         public static readonly Dictionary<string, Action<IList>> s_ListSorterActions =
             new Dictionary<string, Action<IList>>(StringComparer.InvariantCultureIgnoreCase)
             {
-                // 氣泡排序升序
-                { "bs", list => ListSorter.BubbleSortList(list, false) },
-                { "bubble", list => ListSorter.BubbleSortList(list, false) },
-                { "bubblesort", list => ListSorter.BubbleSortList(list, false) },
-                // 氣泡排序降序
-                { "bsd", list => ListSorter.BubbleSortList(list, true) },
-                { "bubbledesc", list => ListSorter.BubbleSortList(list, true) },
-                { "bubbledescending", list => ListSorter.BubbleSortList(list, true) },
-                { "bubblesortdescending", list => ListSorter.BubbleSortList(list, true) },
-
                 // 插入排序升序
                 { "is", list => ListSorter.InsertionSortList(list, false) },
                 { "insertion", list => ListSorter.InsertionSortList(list, false) },
