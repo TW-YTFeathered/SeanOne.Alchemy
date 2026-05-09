@@ -61,7 +61,7 @@ Format: `\uXXXX` (4 hex digits)
 
 ## Multi‑Instruction Execution
 
-When you pass an array of instruction strings (e.g., `AlchemyFormatter.Format(obj, instr1, instr2)`), each instruction is executed **independently and sequentially**. The result of the previous instruction becomes the input for the next.
+When using `AlchemyConverter.Convert`, you can pass multiple instruction strings as an array. Each instruction is executed **independently and sequentially** – the result of the previous instruction becomes the input for the next.
 
 Example:
 
