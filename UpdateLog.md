@@ -55,7 +55,7 @@ a general transformation framework driven by DSL and expressive rules.
 
 ## **Beta**
 
-### **beta 3.0.2**
+### **V3.0.0-beta.3**
 
 *Focus: Add object → object conversion functions & performance optimizations*
 
@@ -76,7 +76,7 @@ a general transformation framework driven by DSL and expressive rules.
   - Converter sub‑docs: `Sorting.md`, `Temperature.md`, `Length.md`, `Weight.md`
   - All documentation now resides under the `Docs/` folder (capital D), with clear separation between user guides (`Docs/`) and internal design notes (`DesignDocs/`).
 
-### **beta 3.0.1**
+### **V3.0.0-beta.2**
 
 *Focus:Add new object → object functions*
 
@@ -85,7 +85,7 @@ a general transformation framework driven by DSL and expressive rules.
 - Fixed a bug where duplicate parameters were not detected as duplicates.
 - Performance: Converted frequently used dictionaries to `static readonly` to reduce allocations and improve performance.
 
-### **beta 3.0.0**
+### **V3.0.0-beta.1**
 
 *Focus:Add new parameters for collection formatting*
 
@@ -93,7 +93,7 @@ a general transformation framework driven by DSL and expressive rules.
   - `prefix` / `suffix`: Add strings before/after the entire collection result
   - `fe-opt`: Enable optimized formatting (may have compatibility issues)
 
-### **beta 0.4.0**
+### **V1.0.0-beta.4**
 
 *Focus:Bug fixs*
 
@@ -102,7 +102,7 @@ a general transformation framework driven by DSL and expressive rules.
 - Converted function comments to a unified XML format
 - Converted Markdown permalinks to relative URLs
 
-### **beta 0.3.0**
+### **V1.0.0-beta.3**
 
 *Focus:Refine GUIDE.md and improve API clarity*
 
@@ -112,7 +112,7 @@ a general transformation framework driven by DSL and expressive rules.
 - Replaced generic `throw` with specific exception type for clearer error semantics
 - Improve the comments
 
-### **beta 0.2.0**
+### **V1.0.0-beta.2**
 
 *Focus:Bug fixs*
 
@@ -123,7 +123,7 @@ a general transformation framework driven by DSL and expressive rules.
 - Fixed the issue where a parameter value was incorrectly interpreted as a parameter name
 - Fixed the bug where `\r`, `\n`, etc. are incorrectly treated as whitespace
 
-### **beta 0.1.0**
+### **V1.0.0-beta.1**
 
 *Focus:Initial file creation*
 
