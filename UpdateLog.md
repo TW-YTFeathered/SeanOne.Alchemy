@@ -59,6 +59,7 @@ a general transformation framework driven by DSL and expressive rules.
 
 *Focus: Add object → object conversion functions & performance optimizations*
 
+- **Added .NET 10 support** – The library now targets and is fully compatible with .NET 10, in addition to existing .NET 6.0, 8.0, .NET Standard 2.0, .NET Framework 4.7.2 and 4.8.
 - **New conversion parameters** – Extended `AlchemyConverter.Convert` with three new unit‑aware transformations:
   - `/temp` – Convert between Celsius, Fahrenheit, and Kelvin.
   - `/weight` – Convert between metric (mg, g, kg, t) and imperial (oz, lb, st, short/long ton) units.
