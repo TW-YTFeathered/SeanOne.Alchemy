@@ -56,7 +56,7 @@ Not via DSL, but you can extend the library by contributing to the `Code/Sorting
 
 ### Is the Fluent API for conversion available?
 
-Not yet. It is under active development (targeting v2.1). See the preview in [FluentAPI.md](FluentAPI.md).
+Not yet. It is under active development (targeting v3.x). See the preview in [FluentAPI.md](FluentAPI.md).
 
 ### Can I parse a DSL string and then modify it with Fluent API?
 
