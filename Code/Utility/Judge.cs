@@ -66,7 +66,7 @@ namespace SeanOne.Alchemy.Utility
         }
 
         // 定義每個方法支援的參數
-        private static readonly Dictionary<string, HashSet<string>> MethodParameters = new Dictionary<string, HashSet<string>>
+        private static readonly Dictionary<string, HashSet<string>> s_MethodParameters = new Dictionary<string, HashSet<string>>
         {
             ["basic"] = new HashSet<string> {
                 CommonParams.Begin, CommonParams.End,
@@ -104,10 +104,10 @@ namespace SeanOne.Alchemy.Utility
             if (string.IsNullOrWhiteSpace(dslInstruction))
                 return true;
 
-            if (!MethodParameters.ContainsKey(methodType))
+            if (!s_MethodParameters.ContainsKey(methodType))
                 throw new KeyNotFoundException($"Unsupported method types: {methodType}");
 
-            var validParams = MethodParameters[methodType];
+            var validParams = s_MethodParameters[methodType];
 
             // 1. 移除所有引號內的內容 (允許跳脫字元)
             string withoutQuotes = Regex.Replace(dslInstruction, "\"(?:\\\\.|[^\"])*\"", string.Empty);

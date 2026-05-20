@@ -13,7 +13,7 @@ namespace SeanOne.Alchemy.Sorting
         public static void Sort(IList list, string algorithm)
         {
             // 嘗試取得函式，並執行
-            if (SortCommands.s_ListSorterActions.TryGetValue(algorithm, out var action))
+            if (SortCommands.ListSorterActions.TryGetValue(algorithm, out var action))
             {
                 action(list);
             }
