@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SeanOne.Alchemy.Sorting
@@ -22,7 +23,6 @@ namespace SeanOne.Alchemy.Sorting
 
         private static void InitListSorterDict(StringComparer comparer)
         {
-            var searchAbbreviation = new Regex(@"[A-Z]+");
             var searchTruncation = new Regex(@"^[A-Z][a-z]*");
 
             var dict = new Dictionary<string, Action<IList>>(comparer);
@@ -31,7 +31,7 @@ namespace SeanOne.Alchemy.Sorting
             {
                 string key = item.Key;
 
-                string abbreviation = searchAbbreviation.Match(key).Value;
+                string abbreviation = new string(key.Where(char.IsUpper).ToArray());
                 string abbreviationDesc = abbreviation + "d";
 
                 string truncation = searchTruncation.Match(key).Value;
