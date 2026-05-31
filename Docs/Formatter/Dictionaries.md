@@ -22,10 +22,10 @@ All parameters below work with dictionaries exactly as they do with sequences (`
 |-----------|---------|-------------|
 | `/key-format` | `/key-format:F2` | Format string applied to each key (keys must implement `IFormattable`). |
 | `/value-format` | `/value-format:yyyy-MM-dd` | Format string applied to each value (values must implement `IFormattable`). |
-| `/begin` | `/begin:"["` | Prepended **before each dictionary entry**. |
+| `/begin` | `/begin:[` | Prepended **before each dictionary entry**. |
 | `/end` | `/end:", "` | Appended **after each dictionary entry**. |
-| `/prefix` | `/prefix:"{"` | Added before the whole result. |
-| `/suffix` | `/suffix:"}"` | Added after the whole result. |
+| `/prefix` | `/prefix:{` | Added before the whole result. |
+| `/suffix` | `/suffix:}` | Added after the whole result. |
 | `/exclude-last-end` | `/exclude-last-end:true` | If `true`, the `/end` string is **not** appended after the last entry. |
 | `/final-pair-separator` | `/final-pair-separator:" and "` | Replaces the `/end` separator between the last two entries. |
 | `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster) but may have compatibility issues with custom dictionaries. |
@@ -37,7 +37,7 @@ All parameters below work with dictionaries exactly as they do with sequences (`
 ```csharp
 var dict = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
 AlchemyFormatter.Format(dict, "fe /dict-format:{0}={1} /end:\", \"");
-// Returns: "1=one, 2=two"
+// Returns: "1=one, 2=two, "
 ```
 
 ### Using `/exclude-last-end` and `/final-pair-separator`
@@ -52,7 +52,7 @@ AlchemyFormatter.Format(dict, "fe /dict-format:{0}:{1} /end:\", \" /final-pair-s
 
 ```csharp
 var dict = new Dictionary<double, double> { { 32.0, 212.0 }, { 0.0, 273.15 } };
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}°C → {1}°F /key-format:F1 /value-format:F1 /end:\"\\n\"");
+AlchemyFormatter.Format(dict, "fe /dict-format:\"{0}°C → {1}°F\" /key-format:F1 /value-format:F1 /end:\\n");
 // Returns:
 // 32.0°C → 212.0°F
 // 0.0°C → 273.1°F
@@ -61,21 +61,23 @@ AlchemyFormatter.Format(dict, "fe /dict-format:{0}°C → {1}°F /key-format:F1 
 ### Using only values (ignore keys)
 
 ```csharp
+var dict = new Dictionary<double, double> { { 32.0, 212.0 }, { 0.0, 273.15 } };
 AlchemyFormatter.Format(dict, "fe /dict-format:{1} /value-format:F2 /end:\", \"");
-// Returns: "212.00, 273.15"
+// Returns: "212.00, 273.15, "
 ```
 
 ### With prefix and suffix
 
 ```csharp
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}-{1} /prefix:\"[\" /suffix:\"]\" /end:\"; \"");
-// Returns: "[1-one; 2-two]"
+var dict = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
+AlchemyFormatter.Format(dict, "fe /dict-format:{0}-{1} /prefix:[ /suffix:] /end:\"; \"");
+// Returns: "[1-one; 2-two; ]"
 ```
 
 ### Using optimized formatter
 
 ```csharp
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}:{1} /fe-opt:true /end:\"\\n\"");
+AlchemyFormatter.Format(dict, "fe /dict-format:{0}:{1} /fe-opt:true /end:\\n");
 ```
 
 ## Fluent API Equivalent
