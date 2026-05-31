@@ -75,6 +75,7 @@ namespace SeanOne.Alchemy.Builder
             }
         }
 
+#if BETA
         public static string ToSortAlgorithmString(this SortAlgorithm param)
         {
             switch (param)
@@ -121,5 +122,6 @@ namespace SeanOne.Alchemy.Builder
                     throw new ArgumentOutOfRangeException();
             }
         }
+#endif
     }
 }

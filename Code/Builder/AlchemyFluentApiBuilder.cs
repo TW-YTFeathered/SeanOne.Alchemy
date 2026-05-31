@@ -1,6 +1,7 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+#if BETA
 namespace SeanOne.Alchemy.Builder
 {
     public class AlchemyBuilder
@@ -32,3 +33,4 @@ namespace SeanOne.Alchemy.Builder
         public static AlchemyPipelineBuilder CreatePipeline() => new AlchemyPipelineBuilder();
     }
 }
+#endif

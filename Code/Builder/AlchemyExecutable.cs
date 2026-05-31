@@ -31,7 +31,7 @@ namespace SeanOne.Alchemy.Builder
         /// <remarks>
         /// <para><b>Note:</b> For compatibility with legacy code, this method only processes 
         /// the first instruction in the pipeline. If the executable contains multiple instructions 
-        /// (e.g., built with <see cref="AlchemyConversionBuilder"/>), use <see cref="RunAsConvert"/> 
+        /// (e.g., built with AlchemyConversionBuilder - Beta only), use RunAsConvert (Beta) 
         /// instead to execute the full pipeline.</para>
         /// </remarks>
         public string Run(object obj)
@@ -39,6 +39,7 @@ namespace SeanOne.Alchemy.Builder
             return AlchemyFormatter.Format(obj, _dsls[0]);
         }
 
+#if BETA
         /// <summary>
         /// Executes the full DSL pipeline by converting and formatting the input object.
         /// This method invokes the core conversion engine to process all instructions.
@@ -49,6 +50,7 @@ namespace SeanOne.Alchemy.Builder
         {
             return AlchemyConverter.Convert(obj, _dsls);
         }
+#endif
 
         /// <summary>
         /// Get DSL string.
