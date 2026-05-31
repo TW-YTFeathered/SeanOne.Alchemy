@@ -49,10 +49,10 @@ formatter.Run(12);  // "12.00!"
 
 ## Conversion Fluent API (Beta)
 
-> ⚠️ **Status**: Beta feature – only available when `Beta` compilation symbol is defined. The API below is subject to change.
+> ⚠️ **Status**: Beta feature – available when building with the `Beta` configuration (e.g., select `Beta` in Visual Studio). The API below is subject to change.
 
 ```csharp
-// Example (when Beta is enabled)
+// Example (using Beta configuration)
 var converter = AlchemyBuilder.SelectCnv()
     .With(CnvParam.Sort, "bubble")
     .With(CnvParam.Temp, "C->F")
@@ -63,7 +63,7 @@ var result = converter.RunAsConvert(data);
 
 ## Pipeline Builder (Beta)
 
-Combine multiple instructions into a pipeline:
+Combine multiple instructions into a pipeline (Beta configuration only):
 
 ```csharp
 var pipeline = AlchemyBuilder.CreatePipeline()
@@ -73,5 +73,3 @@ var pipeline = AlchemyBuilder.CreatePipeline()
 
 var output = pipeline.RunAsConvert(myObject);
 ```
-
-See `DesignDocs/` for current design drafts.
