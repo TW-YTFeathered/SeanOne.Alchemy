@@ -17,6 +17,12 @@ namespace SeanOne.Alchemy.Builder
     public enum BasicParam
     {
         /// <summary>
+        /// Prepends a string immediately before the formatted value (after prefix).
+        /// DSL param: <c>begin</c>.
+        /// </summary>
+        Begin,
+
+        /// <summary>
         /// Appends a string after each value.
         /// DSL param: <c>end</c>.
         /// </summary>
@@ -47,6 +53,12 @@ namespace SeanOne.Alchemy.Builder
     /// </summary>
     public enum FeSeqParam
     {
+        /// <summary>
+        /// Prepends a string before each element in the sequence.
+        /// DSL param: <c>begin</c>.
+        /// </summary>
+        Begin,
+
         /// <summary>
         /// Appends a string after each value.
         /// DSL param: <c>end</c>.
@@ -102,6 +114,12 @@ namespace SeanOne.Alchemy.Builder
         /// DSL param: <c>dict-format</c>.
         /// </summary>
         DictFormat,
+
+        /// <summary>
+        /// Prepends a string before each dictionary entry.
+        /// DSL param: <c>begin</c>.
+        /// </summary>
+        Begin,
 
         /// <summary>
         /// Appends a string after each value.

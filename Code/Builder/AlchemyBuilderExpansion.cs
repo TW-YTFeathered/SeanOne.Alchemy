@@ -14,6 +14,8 @@ namespace SeanOne.Alchemy.Builder
             {
                 case BasicParam.ToString:
                     return CommonParams.Tostring;
+                case BasicParam.Begin:
+                    return CommonParams.Begin;
                 case BasicParam.End:
                     return CommonParams.End;
                 case BasicParam.Prefix:
@@ -29,6 +31,8 @@ namespace SeanOne.Alchemy.Builder
         {
             switch (param)
             {
+                case FeSeqParam.Begin:
+                    return CommonParams.Begin;
                 case FeSeqParam.End:
                     return CommonParams.End;
                 case FeSeqParam.ExcludeLastEnd:
@@ -54,6 +58,8 @@ namespace SeanOne.Alchemy.Builder
             {
                 case FeDictParam.DictFormat:
                     return IDictionaryParams.DictFormat;
+                case FeDictParam.Begin:
+                    return CommonParams.Begin;
                 case FeDictParam.End:
                     return CommonParams.End;
                 case FeDictParam.ExcludeLastEnd:
