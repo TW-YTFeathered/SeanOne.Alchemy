@@ -1,6 +1,6 @@
 # Fluent API
 
-The Fluent API provides a type‑safe, compile‑time checked alternative to DSL strings. It is available for formatting (`AlchemyFormatBuilder`) and partially for conversion (under development).
+The Fluent API provides a type‑safe, compile‑time checked alternative to DSL strings. It is available for formatting (`AlchemyFormatBuilder`) and partially for conversion (Beta).
 
 ## Basic Usage (Formatting)
 
@@ -39,38 +39,39 @@ formatter.Run(12);  // "12.00!"
 
 | DSL Parameter | Fluent Enum Member |
 |---------------|--------------------|
-| `/tostring` | `BasicParam.ToString` or `FeSeqParam.ToString` |
-| `/begin` | `FeSeqParam.Begin` |
-| `/end` | `FeSeqParam.End` |
-| `/exclude-last-end` | `FeSeqParam.ExcludeLastEnd` |
-| `/final-pair-separator` | `FeSeqParam.FinalPairSeparator` |
-| `/dict-format` | `FeDictParam.DictFormat` |
-| `/key-format` | `FeDictParam.KeyFormat` |
-| `/value-format` | `FeDictParam.ValueFormat` |
+| `tostring` | `BasicParam.ToString` or `FeSeqParam.ToString` |
+| `end` | `FeSeqParam.End` |
+| `exclude-last-end` | `FeSeqParam.ExcludeLastEnd` |
+| `final-pair-separator` | `FeSeqParam.FinalPairSeparator` |
+| `dict-format` | `FeDictParam.DictFormat` |
+| `key-format` | `FeDictParam.KeyFormat` |
+| `value-format` | `FeDictParam.ValueFormat` |
 
-## Conversion Fluent API (Preview)
+## Conversion Fluent API (Beta)
 
-> ⚠️ **Status**: Under active development, targeting version 3.x. The API below is subject to change.
-
-Planned usage:
+> ⚠️ **Status**: Beta feature – only available when `Beta` compilation symbol is defined. The API below is subject to change.
 
 ```csharp
-var converter = AlchemyConversionBuilder.Create()
-    .Sort(SortAlgorithm.Bubble, descending: false)
-    .ConvertTemperature(TemperatureUnit.Fahrenheit, TemperatureUnit.Celsius)
+// Example (when Beta is enabled)
+var converter = AlchemyBuilder.SelectCnv()
+    .With(CnvParam.Sort, "bubble")
+    .With(CnvParam.Temp, "C->F")
     .Build();
 
-var result = converter.Run(data);
+var result = converter.RunAsConvert(data);
+```
+
+## Pipeline Builder (Beta)
+
+Combine multiple instructions into a pipeline:
+
+```csharp
+var pipeline = AlchemyBuilder.CreatePipeline()
+    .Add(AlchemyBuilder.SelectBasic().With(BasicParam.Prefix, ">>"))
+    .Add(AlchemyBuilder.SelectFeSeq().With(FeSeqParam.End, "!"))
+    .Build();
+
+var output = pipeline.RunAsConvert(myObject);
 ```
 
 See `DesignDocs/` for current design drafts.
-
-## Mixing DSL and Fluent API
-
-You can build a formatter from DSL dynamically and then reuse it:
-
-```csharp
-var builder = AlchemyFormatBuilder.FromDsl("fe /tostring:F2 /end:\", \"");
-var formatter = builder.Build();
-string output = formatter.Run(myList);
-```
