@@ -72,6 +72,18 @@ All exceptions include the parameter name in the message when possible. Use tryâ
 
 No internal logging. All issues are reported via exceptions.
 
+### Can `AlchemyConverter.Convert` perform formatting tasks like `AlchemyFormatter.Format`?
+
+Yes. `Convert` seamlessly accepts formatting instructions. You can use `fe`, `foreach`, `basic` as the directive, or even start the instruction with `/` (e.g., `"/tostring:F2"`). Under the hood, `Convert` will route such instructions to `AlchemyFormatter.Format`.
+
+Example:
+```csharp
+// Formatting via Convert â€“ no need to call Formatter separately
+string result = AlchemyConverter.Convert(123.456, "/tostring:F2 /prefix:\"$\"").ToString();
+```
+
+This works because Convert internally checks the directive and delegates to Format when appropriate.
+
 ## Project & Support
 
 ### What .NET versions are supported?
