@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
-    /// <summary>
-    /// Converts objects into new representations using a DSL instruction language.
-    /// </summary>
-    public partial class Alchemy
+    partial class Alchemy
     {
         /// <summary>
         /// Transforms the specified object according to the provided DSL instruction.

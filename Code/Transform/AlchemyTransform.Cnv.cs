@@ -16,7 +16,7 @@ namespace SeanOne.Alchemy
             string directive = Get.ExtractDirective(dslInstruction);
 
             // 嘗試從字典中獲取對應的執行函數
-            if (s_ActionsSync.TryGetValue(directive, out var func))
+            if (s_TransformActionsSync.TryGetValue(directive, out var func))
             {
                 // 找到並執行函數
                 return func(copyObj, dslInstruction);
@@ -26,7 +26,7 @@ namespace SeanOne.Alchemy
                 // 如果指令以 DSL 定義的參數前綴符號 (目前為 '/')開頭，則執行 Basic 方法
                 if (dslInstruction.StartsWith(DslSymbols.ParamPrefix))
                 {
-                    return AlchemyResult.Parse(AlchemyFormatter.Format(copyObj, dslInstruction));
+                    return AlchemyResult.Parse(Format(copyObj, dslInstruction));
                 }
                 else
                 {

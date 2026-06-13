@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace SeanOne.Alchemy
 {
     /// <summary>
-    /// Provides extension methods for the <see cref="AlchemyResult"/> class.
+    /// Provides extension methods for <see cref="Task{TResult}"/> where <c>TResult</c> is <see cref="AlchemyResult"/>.
     /// </summary>
     public static class AlchemyResultTaskExtensions
     {
         /// <summary>
-        /// Asynchronously converts the specified object according to the provided DSL instruction.
+        /// Asynchronously transforms the source object using the specified DSL instruction.
         /// </summary>
-        /// <param name="task">The task that contains the source object to convert.</param>
+        /// <param name="task">The task that contains the source <see cref="AlchemyResult"/> to transform.</param>
         /// <param name="dslInstruction">The DSL instruction string.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
-        public static async Task<AlchemyResult> ConvertAsync(this Task<AlchemyResult> task, string dslInstruction)
+        /// <returns>A task representing the asynchronous operation, containing the transformed <see cref="AlchemyResult"/>.</returns>
+        public static async Task<AlchemyResult> TransformAsync(this Task<AlchemyResult> task, string dslInstruction)
         {
             var result = await task;
-            return await result.ConvertAsync(dslInstruction);
+            return await result.TransformAsync(dslInstruction);
         }
 
         // 轉換為 List<T> (非同步版本)

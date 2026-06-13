@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
-    /// <summary>
-    /// Transforms objects into formatted strings using a simple DSL syntax.
-    /// </summary>
-    public partial class AlchemyFormatter
+    partial class Alchemy
     {
         /// <summary>
         /// Formats the specified object according to the provided DSL instruction.
@@ -31,7 +28,7 @@ namespace SeanOne.Alchemy
                 throw new ArgumentNullException("Alchemy instruction cannot be null or empty");
 
             dslInstruction = dslInstruction.Trim(); // 去除前後空白
-            return Decoder(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
+            return FormatDecoder(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
         }
 
         /// <summary>
