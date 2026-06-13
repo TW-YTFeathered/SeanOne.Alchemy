@@ -8,7 +8,7 @@ using System;
 
 namespace SeanOne.Alchemy
 {
-    partial class AlchemyConverter
+    partial class Alchemy
     {
         private static AlchemyResult Decoder(object copyObj, string dslInstruction)
         {

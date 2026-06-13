@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SeanOne.Alchemy
 {
-    partial class AlchemyConverter
+    partial class Alchemy
     {
         /// <summary>
         /// 取得 Convert 相關的同步執行函數字典

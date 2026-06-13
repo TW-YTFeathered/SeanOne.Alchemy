@@ -67,12 +67,12 @@ namespace SeanOne.Alchemy
         /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
         public AlchemyResult Convert(string dslInstruction)
         {
-            return AlchemyConverter.Convert(_source, dslInstruction);
+            return Alchemy.Convert(_source, dslInstruction);
         }
 
         public AlchemyResult Convert(params string[] dslInstructions)
         {
-            return AlchemyConverter.Convert(_source, dslInstructions);
+            return Alchemy.Convert(_source, dslInstructions);
         }
 
         /// <summary>
@@ -82,12 +82,12 @@ namespace SeanOne.Alchemy
         /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
         public Task<AlchemyResult> ConvertAsync(string dslInstruction)
         {
-            return AlchemyConverter.ConvertAsync(_source, dslInstruction);
+            return Alchemy.ConvertAsync(_source, dslInstruction);
         }
 
         public Task<AlchemyResult> ConvertAsync(params string[] dslInstructions)
         {
-            return AlchemyConverter.ConvertAsync(_source, dslInstructions);
+            return Alchemy.ConvertAsync(_source, dslInstructions);
         }
         #endregion
 

@@ -8,7 +8,7 @@ using static SeanOne.Alchemy.AlchemyConverterUnitDict;
 
 namespace SeanOne.Alchemy
 {
-    partial class AlchemyConverter
+    partial class Alchemy
     {
         #region Unit Conversion Wrappers
         /// <summary>

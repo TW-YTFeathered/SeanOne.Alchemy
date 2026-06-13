@@ -10,7 +10,7 @@ namespace SeanOne.Alchemy
     /// <summary>
     /// Converts objects into new representations using a DSL instruction language.
     /// </summary>
-    public partial class AlchemyConverter
+    public partial class Alchemy
     {
         /// <summary>
         /// Converts the specified object according to the provided DSL instruction.
