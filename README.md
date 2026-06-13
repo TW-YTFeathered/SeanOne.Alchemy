@@ -5,10 +5,17 @@
 
 **Alchemy** is a lightweight C# library that enables fast and flexible object transformation through concise DSL syntax – a true data alchemy.
 
+> ⚠️ **Important – API Update**  
+> The class `AlchemyFormatter` is now **obsolete** and will be removed in a future version.  
+> Please use the new unified entry points:  
+> - `Alchemy.Format` for formatting objects to strings.  
+> - `Alchemy.Transform` for conversions (sorting, unit conversion, etc.) and combined operations.  
+> Both methods return an `AlchemyResult` which provides fluent conversion and chaining.
+
 ## ✨ Core Features
 
-- **Object Formatting** – Convert objects to strings with custom separators, format strings, etc. (`AlchemyFormatter`)
-- **Object Conversion** – Sort collections or perform temperature unit conversions (`AlchemyConverter`)
+- **Object Formatting** – Convert objects to strings with custom separators, format strings, etc.
+- **Object Conversion** – Sort collections or perform temperature/weight/length unit conversions
 - **DSL Driven** – Describe transformation logic with intuitive string instructions (e.g., `cnv /sort:bubble /temp:C->F`)
 - **Fluent API** – Type‑safe builder with full IntelliSense and compile‑time checks
 - **Async Support** – Both synchronous and asynchronous methods for all operations
@@ -27,12 +34,12 @@ dotnet add package SeanOne.Alchemy
 using SeanOne.Alchemy;
 
 // Format a single value
-string result = AlchemyFormatter.Format(5, "/tostring:F2 /end:!");
+string result = Alchemy.Format(5, "/tostring:F2 /end:!");
 // Output: "5.00!"
 
 // Format a collection
 var items = new[] { "apple", "banana", "cherry" };
-string list = AlchemyFormatter.Format(items, "fe /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
+string list = Alchemy.Format(items, "fe /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
 // Output: "apple, banana and cherry"
 ```
 
@@ -43,17 +50,18 @@ using SeanOne.Alchemy;
 
 // Sort a list
 var numbers = new List<int> { 5, 2, 8, 1 };
-var sorted = AlchemyConverter.Convert(numbers, "cnv /sort:is");
+var sortedResult = Alchemy.Transform(numbers, "cnv /sort:is");
+List<int> sorted = sortedResult.ToObject<List<int>>();
 // Result: [1, 2, 5, 8]
 
 // Temperature conversion
 double fahrenheit = 212.0;
-double celsius = AlchemyConverter.Convert(fahrenheit, "cnv /temp:F->C").ToObject<double>();
+double celsius = Alchemy.Transform(fahrenheit, "cnv /temp:F->C").ToObject<double>();
 // Result: 100.0
 
 // Combine operations
 var temps = new List<double> { 32.0, 212.0, 0.0 };
-var result = AlchemyConverter.Convert(temps, "cnv /sort:bubble", "/temp:F->C");
+var result = Alchemy.Transform(temps, "cnv /sort:bubble", "/temp:F->C");
 // Sorts then converts: [-17.777..., 0, 100]
 ```
 

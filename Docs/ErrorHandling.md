@@ -32,9 +32,9 @@ This document lists common exceptions thrown by `AlchemyFormatter` and how to re
 
 ## Additional Notes
 
-- `AlchemyFormatter.FormatAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
+- `Alchemy.FormatAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
 - `null` elements inside a collection are formatted as empty strings – they **do not** cause exceptions.
-- `AlchemyFormatter` does **not** modify the input object (no cloning). Only `AlchemyConverter` performs deep cloning.
+- `Alchemy.Format` does **not** modify the input object (no cloning). Only `Alchemy.Transform` performs deep cloning.
 - If you encounter an error not listed here, examine the full exception message – it often includes the exact parameter name or type that caused the problem.
 
-For `AlchemyConverter` errors (sorting, temperature conversion, etc.), please note that exception handling is still under development and will be documented in a future release.
+For `Alchemy.Transform` errors (sorting, temperature conversion, etc.), please note that exception handling is still under development and will be documented in a future release.

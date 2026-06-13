@@ -1,6 +1,6 @@
 # DSL Syntax Reference
 
-This document describes the common syntax rules for Alchemy DSL instructions, shared by both `AlchemyFormatter` and `AlchemyConverter`.
+This document describes the common syntax rules for Alchemy DSL instructions, shared by both `Alchemy.Format` and `Alchemy.Transform`.
 
 ## Instruction Format
 
@@ -61,12 +61,14 @@ Format: `\uXXXX` (4 hex digits)
 
 ## Multi‑Instruction Execution
 
-When using `AlchemyConverter.Convert`, you can pass multiple instruction strings as an array. Each instruction is executed **independently and sequentially** – the result of the previous instruction becomes the input for the next.
+When using `Alchemy.Transform`, you can pass multiple instruction strings as an array. Each instruction is executed **independently and sequentially** – the result of the previous instruction becomes the input for the next.
 
 Example:
 
 ```csharp
-AlchemyConverter.Convert(data, "cnv /sort:is", "/temp:F->C");
+using SeanOne.Alchemy;
+
+Alchemy.Transform(data, "cnv /sort:is", "/temp:F->C");
 // First sorts, then converts temperatures.
 ```
 

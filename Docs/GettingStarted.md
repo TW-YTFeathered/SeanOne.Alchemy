@@ -17,8 +17,8 @@ Install-Package SeanOne.Alchemy -Version 2.0.0
 
 Alchemy provides two main classes:
 
-- `AlchemyFormatter` – converts objects to formatted strings.
-- `AlchemyConverter` – sorts collections, converts temperature units, etc.
+- `Alchemy.Format` – converts objects to formatted strings.
+- `Alchemy.Transform` – sorts collections, converts temperature units, etc.
 
 Both accept a **DSL instruction string** that describes the transformation.
 
@@ -27,15 +27,17 @@ Both accept a **DSL instruction string** that describes the transformation.
 ```csharp
 using SeanOne.Alchemy;
 
-string result = AlchemyFormatter.Format(123.456, "/tostring:F2 /prefix:\"$\" /suffix:\" USD\"");
+string result = Alchemy.Format(123.456, "/tostring:F2 /prefix:\"$\" /suffix:\" USD\"");
 Console.WriteLine(result); // $123.46 USD
 ```
 
 ## Your First Conversion
 
 ```csharp
+using SeanOne.Alchemy;
+
 var numbers = new List<int> { 5, 1, 9, 3 };
-var sorted = AlchemyConverter.Convert(numbers, "cnv /sort:is");
+var sorted = Alchemy.Transform(numbers, "cnv /sort:is");
 // sorted contains [1, 3, 5, 9]
 ```
 
@@ -44,8 +46,10 @@ var sorted = AlchemyConverter.Convert(numbers, "cnv /sort:is");
 You can pass multiple instructions as an array:
 
 ```csharp
+using SeanOne.Alchemy;
+
 var temps = new List<double> { 32, 212, 0 };
-var result = AlchemyConverter.Convert(temps, "cnv /sort:bubble", "/temp:F->C");
+var result = Alchemy.Transform(temps, "cnv /sort:bubble", "/temp:F->C");
 // Sorts then converts Fahrenheit to Celsius
 ```
 

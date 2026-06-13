@@ -12,7 +12,7 @@ No. All operations are performed on a **deep clone** of the input object. The or
 
 ### Are the methods thread‑safe?
 
-The static methods `AlchemyFormatter.Format` and `AlchemyConverter.Convert` are thread‑safe as long as the input object is not mutated concurrently. Reusable builders (`Build()`) produce instances that are not guaranteed thread‑safe; create separate instances per thread or synchronize access.
+The static methods `Alchemy.Format` and `Alchemy.Transform` are thread‑safe as long as the input object is not mutated concurrently. Reusable builders (`Build()`) produce instances that are not guaranteed thread‑safe; create separate instances per thread or synchronize access.
 
 ## Performance
 
@@ -22,7 +22,7 @@ For large collections (thousands of elements), `/fe-opt:true` can be ~1.5x faste
 
 ### How expensive is deep cloning?
 
-Cloning is done via serialization (binary or JSON). For very large objects, consider working on a copy you create yourself, or use the Fluent API to avoid cloning by design? Actually the library always clones. If performance is critical, you might want to contribute an option to disable cloning.
+Cloning is done via reflection, recursively copying all fields (including private ones). For very large objects, consider working on a copy you create yourself, or use the Fluent API to avoid cloning by design? Actually the library always clones. If performance is critical, you might want to contribute an option to disable cloning.
 
 ## Formatting
 
@@ -38,7 +38,7 @@ Because `string` is `IEnumerable<char>`, but treating it as a collection of char
 
 Use `/dict-format:{1}` (ignore the key placeholder).
 
-## Conversion
+## Transform
 
 ### What happens if I sort a read‑only collection?
 
@@ -46,11 +46,25 @@ The library clones the input first, so the read‑only original is unaffected. H
 
 ### Does temperature conversion check for absolute zero?
 
-Currently not enforced, but planned for a future release. Inputs below 0 K will produce mathematically correct but physically invalid results.
+Yes. Passing a value below absolute zero (0 K) throws ArgumentException.
 
 ### Can I add custom sorting algorithms?
 
 Not via DSL, but you can extend the library by contributing to the `Code/Sorting/ListSorter` folder.
+
+### Can `Alchemy.Transform` perform formatting tasks like `Alchemy.Format`?
+
+Yes. `Alchemy.Transform` seamlessly accepts formatting instructions (fe, foreach, basic, or a parameter starting with '/'). Under the hood, it routes such instructions to `Alchemy.Format`.
+
+Example:
+```csharp
+using SeanOne.Alchemy;
+
+// Formatting via Transform – no need to call Formatter separately
+string result = Alchemy.Transform(123.456, "/tostring:F2 /prefix:\"$\"").ToString();
+```
+
+This works because Transform internally checks the directive and delegates to Format when appropriate.
 
 ## Fluent API
 
@@ -60,7 +74,7 @@ Not yet. It is under active development (targeting v3.x). See the preview in [Fl
 
 ### Can I parse a DSL string and then modify it with Fluent API?
 
-Yes. Use `AlchemyFormatBuilder.FromDsl(dslString)` to get a builder, then chain `.With(...)` and finally `.Build()` or `.BuildRun()`.
+Not implemented in this version.
 
 ## Errors and Debugging
 
@@ -71,18 +85,6 @@ All exceptions include the parameter name in the message when possible. Use try�
 ### Does the library log anything?
 
 No internal logging. All issues are reported via exceptions.
-
-### Can `AlchemyConverter.Convert` perform formatting tasks like `AlchemyFormatter.Format`?
-
-Yes. `Convert` seamlessly accepts formatting instructions. You can use `fe`, `foreach`, `basic` as the directive, or even start the instruction with `/` (e.g., `"/tostring:F2"`). Under the hood, `Convert` will route such instructions to `AlchemyFormatter.Format`.
-
-Example:
-```csharp
-// Formatting via Convert – no need to call Formatter separately
-string result = AlchemyConverter.Convert(123.456, "/tostring:F2 /prefix:\"$\"").ToString();
-```
-
-This works because Convert internally checks the directive and delegates to Format when appropriate.
 
 ## Project & Support
 

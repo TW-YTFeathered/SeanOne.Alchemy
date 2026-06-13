@@ -47,29 +47,63 @@ formatter.Run(12);  // "12.00!"
 | `key-format` | `FeDictParam.KeyFormat` |
 | `value-format` | `FeDictParam.ValueFormat` |
 
+Below is the revised **Conversion Fluent API (Beta)** section in English, written to align with the current codebase (no `AlchemyConverter`, use `Alchemy.Transform` for execution). The API is marked as Beta and subject to change.
+
 ## Conversion Fluent API (Beta)
 
-> ⚠️ **Status**: Beta feature – available when building with the `Beta` configuration (e.g., select `Beta` in Visual Studio). The API below is subject to change.
+> ⚠️ **Status**: Beta feature – available only when building with the `BETA` compilation symbol (e.g., select `Beta` configuration in Visual Studio). The API described below may change in future releases.
+
+The Fluent API for conversions allows you to build `cnv` instructions in a type‑safe, compile‑time checked way.
+
+### Building a Conversion Instruction
 
 ```csharp
-// Example (using Beta configuration)
-var converter = AlchemyBuilder.SelectCnv()
-    .With(CnvParam.Sort, "bubble")
-    .With(CnvParam.Temp, "C->F")
+using SeanOne.Alchemy.Builder;
+
+var executable = AlchemyBuilder.SelectCnv()
+    .With(CnvParam.Sort, "is")        // insertion sort, ascending
+    .With(CnvParam.Temp, "C->F")      // Celsius to Fahrenheit
     .Build();
 
-var result = converter.RunAsConvert(data);
+string dsl = executable.ToString();   // "cnv /sort:is /temp:C->F"
 ```
 
-## Pipeline Builder (Beta)
+### Executing the Conversion
 
-Combine multiple instructions into a pipeline (Beta configuration only):
+The `AlchemyExecutable` returned by `Build()` provides two ways to execute the conversion:
+
+#### 1. Using `RunAsTransform()` (Beta, recommended for pipelines)
+
+```csharp
+using SeanOne.Alchemy;
+
+var data = new List<double> { 0, 100, 25 };
+AlchemyResult result = executable.RunAsTransform(data);
+double first = result.ToObject<List<double>>()[0];
+```
+
+> `RunAsTransform` executes **all** instructions stored in the executable and returns an `AlchemyResult`.
+
+#### 2. Using `Alchemy.Transform` with the DSL string(s)
+
+```csharp
+AlchemyResult result = Alchemy.Transform(data, executable.ToString());
+// Or for multiple instructions:
+AlchemyResult result = Alchemy.Transform(data, executable.GetDsls());
+```
+
+### Pipeline Builder (Beta)
+
+Combine multiple instructions into a pipeline:
 
 ```csharp
 var pipeline = AlchemyBuilder.CreatePipeline()
-    .Add(AlchemyBuilder.SelectBasic().With(BasicParam.Prefix, ">>"))
-    .Add(AlchemyBuilder.SelectFeSeq().With(FeSeqParam.End, "!"))
+    .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Sort, "as"))
+    .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Temp, "F->C"))
     .Build();
 
-var output = pipeline.RunAsConvert(myObject);
+// Execute all instructions in sequence
+var finalResult = pipeline.RunAsTransform(originalData);
 ```
+
+> **Note**: The legacy `Run` method (used for formatting) only processes the first instruction and returns a string. For conversion pipelines, always use `RunAsTransform` (Beta) or `Alchemy.Transform`.

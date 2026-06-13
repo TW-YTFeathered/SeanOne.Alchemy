@@ -1,4 +1,4 @@
-# Length Conversion with AlchemyConverter
+# Length Conversion with Alchemy.Transform
 
 The `/length` parameter converts numeric values between different length units.
 
@@ -38,24 +38,30 @@ Parameter value is **case‑insensitive** – `KgToG`, `kgtog`, `KGTOG` all work
 ### Single value
 
 ```csharp
+using SeanOne.Alchemy;
+
 double meters = 1000;
-double kilometers = AlchemyConverter.Convert(meters, "cnv /length:M->KM").ToObject<double>();
+double kilometers = Alchemy.Transform(meters, "cnv /length:M->KM").ToObject<double>();
 // kilometers = 1.0
 ```
 
 ### Collection of values
 
 ```csharp
+using SeanOne.Alchemy;
+
 var lengths = new List<double> { 2.54, 5.08, 7.62 };
-AlchemyConverter.Convert(lengths, "cnv /length:CM->IN");
+Alchemy.Transform(lengths, "cnv /length:CM->IN");
 // Result: [1.0, 2.0, 3.0]
 ```
 
 ### Combining with sorting
 
 ```csharp
+using SeanOne.Alchemy;
+
 var data = new List<double> { 1000, 1, 0.001 };
-AlchemyConverter.Convert(data, "cnv /sort:is /length:M->KM");
+Alchemy.Transform(data, "cnv /sort:is", "/length:M->KM");
 // Sorts then converts: [0.001, 1, 1000] → [0.000001, 0.001, 1] (meters to kilometers)
 ```
 

@@ -1,4 +1,4 @@
-# Temperature Conversion with AlchemyConverter
+# Temperature Conversion with Alchemy.Transform
 
 The `/temp` parameter converts numeric values between Celsius, Fahrenheit, and Kelvin.
 
@@ -37,24 +37,30 @@ Parameter value is **case‑insensitive** – `C->F`, `c->f`, `CtoF` all work th
 ### Single value
 
 ```csharp
+using SeanOne.Alchemy;
+
 double celsius = 25;
-double fahrenheit = AlchemyConverter.Convert(celsius, "cnv /temp:C->F").ToObject<double>();
+double fahrenheit = Alchemy.Transform(celsius, "cnv /temp:C->F").ToObject<double>();
 // fahrenheit = 77.0
 ```
 
 ### Collection of values
 
 ```csharp
+using SeanOne.Alchemy;
+
 var temps = new List<double> { 0, 100, -40 };
-AlchemyConverter.Convert(temps, "cnv /temp:C->K");
+Alchemy.Transform(temps, "cnv /temp:C->K");
 // Result: [273.15, 373.15, 233.15]
 ```
 
 ### Combining with sorting
 
 ```csharp
+using SeanOne.Alchemy;
+
 var data = new List<double> { 32.0, 212.0, 0.0 };
-AlchemyConverter.Convert(data, "cnv /sort:is /temp:F->C");
+Alchemy.Transform(data, "cnv /sort:is", "/temp:F->C");
 // Sorts to [0, 32, 212] then converts to [-17.777..., 0, 100]
 ```
 

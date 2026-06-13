@@ -34,19 +34,19 @@ prefix + begin + (formatted value) + end + suffix
 using SeanOne.Alchemy;
 
 // Format a number with two decimal places
-AlchemyFormatter.Format(5, "/tostring:F2");
+Alchemy.Format(5, "/tostring:F2");
 // Returns: "5.00"
 
 // Add prefix and suffix
-AlchemyFormatter.Format(5, "/tostring:F2 /prefix:\"Value: \" /suffix:\" units\"");
+Alchemy.Format(5, "/tostring:F2 /prefix:\"Value: \" /suffix:\" units\"");
 // Returns: "Value: 5.00 units"
 
 // Using begin and end
-AlchemyFormatter.Format(5, "/tostring:F2 /begin:[ /end:]");
+Alchemy.Format(5, "/tostring:F2 /begin:[ /end:]");
 // Returns: "[5.00]"
 
 // Combine all
-AlchemyFormatter.Format(5, "/tostring:F2 /prefix:\"Result: \" /begin:( /end:) /suffix:!");
+Alchemy.Format(5, "/tostring:F2 /prefix:\"Result: \" /begin:( /end:) /suffix:!");
 // Returns: "Result: (5.00)!"
 ```
 

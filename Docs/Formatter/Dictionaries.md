@@ -35,24 +35,30 @@ All parameters below work with dictionaries exactly as they do with sequences (`
 ### Simple key‑value pair
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dict = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}={1} /end:\", \"");
+Alchemy.Format(dict, "fe /dict-format:{0}={1} /end:\", \"");
 // Returns: "1=one, 2=two, "
 ```
 
 ### Using `/exclude-last-end` and `/final-pair-separator`
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dict = new Dictionary<string, int> { { "apple", 1 }, { "banana", 2 }, { "cherry", 3 } };
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}:{1} /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
+Alchemy.Format(dict, "fe /dict-format:{0}:{1} /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
 // Returns: "apple:1, banana:2 and cherry:3"
 ```
 
 ### Applying format to keys and values
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dict = new Dictionary<double, double> { { 32.0, 212.0 }, { 0.0, 273.15 } };
-AlchemyFormatter.Format(dict, "fe /dict-format:\"{0}°C → {1}°F\" /key-format:F1 /value-format:F1 /end:\\n");
+Alchemy.Format(dict, "fe /dict-format:\"{0}°C → {1}°F\" /key-format:F1 /value-format:F1 /end:\\n");
 // Returns:
 // 32.0°C → 212.0°F
 // 0.0°C → 273.1°F
@@ -61,23 +67,29 @@ AlchemyFormatter.Format(dict, "fe /dict-format:\"{0}°C → {1}°F\" /key-format
 ### Using only values (ignore keys)
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dict = new Dictionary<double, double> { { 32.0, 212.0 }, { 0.0, 273.15 } };
-AlchemyFormatter.Format(dict, "fe /dict-format:{1} /value-format:F2 /end:\", \"");
+Alchemy.Format(dict, "fe /dict-format:{1} /value-format:F2 /end:\", \"");
 // Returns: "212.00, 273.15, "
 ```
 
 ### With prefix and suffix
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dict = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}-{1} /prefix:[ /suffix:] /end:\"; \"");
+Alchemy.Format(dict, "fe /dict-format:{0}-{1} /prefix:[ /suffix:] /end:\"; \"");
 // Returns: "[1-one; 2-two; ]"
 ```
 
 ### Using optimized formatter
 
 ```csharp
-AlchemyFormatter.Format(dict, "fe /dict-format:{0}:{1} /fe-opt:true /end:\\n");
+using SeanOne.Alchemy;
+
+Alchemy.Format(dict, "fe /dict-format:{0}:{1} /fe-opt:true /end:\\n");
 ```
 
 ## Fluent API Equivalent

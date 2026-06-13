@@ -1,4 +1,4 @@
-# Weight Conversion with AlchemyConverter
+# Weight Conversion with Alchemy.Transform
 
 The `/weight` parameter converts numeric values between different weight (mass) units.
 
@@ -39,24 +39,30 @@ Parameter value is **case‑insensitive** – `KgToG`, `kgtog`, `KGTOG` all work
 ### Single value
 
 ```csharp
+using SeanOne.Alchemy;
+
 double kilograms = 5;
-double grams = AlchemyConverter.Convert(kilograms, "cnv /weight:Kg->G").ToObject<double>();
+double grams = Alchemy.Transform(kilograms, "cnv /weight:Kg->G").ToObject<double>();
 // grams = 5000
 ```
 
 ### Collection of values
 
 ```csharp
+using SeanOne.Alchemy;
+
 var weights = new List<double> { 1, 2, 3 };
-AlchemyConverter.Convert(weights, "cnv /weight:Lb->Kg");
+Alchemy.Transform(weights, "cnv /weight:Lb->Kg");
 // Result: [0.45359237, 0.90718474, 1.36077711]
 ```
 
 ### Combining with sorting
 
 ```csharp
+using SeanOne.Alchemy;
+
 var data = new List<double> { 1000, 1, 0.5 };
-AlchemyConverter.Convert(data, "cnv /sort:is /weight:Kg->G");
+Alchemy.Transform(data, "cnv /sort:is", "/weight:Kg->G");
 // Sorts to [0.5, 1, 1000] then converts to [500, 1000, 1000000]
 ```
 

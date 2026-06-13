@@ -28,40 +28,50 @@ fe /param:value /param2:value ...
 ### Simple comma‑separated list
 
 ```csharp
+using SeanOne.Alchemy;
+
 var numbers = new List<int> { 1, 2, 3, 4, 5 };
-AlchemyFormatter.Format(numbers, "fe /end:\", \"");
+Alchemy.Format(numbers, "fe /end:\", \"");
 // Returns: "1, 2, 3, 4, 5, "
 ```
 
 ### Excluding trailing separator
 
 ```csharp
+using SeanOne.Alchemy;
+
 var items = new[] { "apple", "banana", "cherry" };
-AlchemyFormatter.Format(items, "fe /end:\", \" /exclude-last-end:true");
+Alchemy.Format(items, "fe /end:\", \" /exclude-last-end:true");
 // Returns: "apple, banana, cherry"
 ```
 
 ### Using final‑pair‑separator
 
 ```csharp
+using SeanOne.Alchemy;
+
 var items = new[] { "apple", "banana", "cherry" };
-AlchemyFormatter.Format(items, "fe /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
+Alchemy.Format(items, "fe /end:\", \" /final-pair-separator:\" and \" /exclude-last-end:true");
 // Returns: "apple, banana and cherry"
 ```
 
 ### Formatting numbers with two decimals
 
 ```csharp
+using SeanOne.Alchemy;
+
 var doubles = new List<double> { 1.0, 2.5, 3.14 };
-AlchemyFormatter.Format(doubles, "fe /tostring:F2 /end:\", \"");
+Alchemy.Format(doubles, "fe /tostring:F2 /end:\", \"");
 // Returns: "1.00, 2.50, 3.14, "
 ```
 
 ### Date collection with newlines
 
 ```csharp
+using SeanOne.Alchemy;
+
 var dates = new List<DateTime> { new DateTime(2024,1,1), new DateTime(2024,2,1) };
-AlchemyFormatter.Format(dates, "fe /tostring:yyyy-MM-dd /end:\\n");
+Alchemy.Format(dates, "fe /tostring:yyyy-MM-dd /end:\\n");
 // Returns:
 // 2024-01-01
 // 2024-02-01
