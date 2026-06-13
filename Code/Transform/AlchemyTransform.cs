@@ -13,13 +13,13 @@ namespace SeanOne.Alchemy
     public partial class Alchemy
     {
         /// <summary>
-        /// Converts the specified object according to the provided DSL instruction.
+        /// Transforms the specified object according to the provided DSL instruction.
         /// </summary>
-        /// <param name="obj">The source object to convert.</param>
+        /// <param name="obj">The source object to transform.</param>
         /// <param name="dslInstruction">The DSL instruction string.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
+        /// <returns>An <see cref="AlchemyResult"/> representing the transformed object.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstruction"/> is empty.</exception>
-        public static AlchemyResult Convert(object obj, string dslInstruction)
+        public static AlchemyResult Transform(object obj, string dslInstruction)
         {
             // 檢查 物件 是否是 null
             if (obj == null)
@@ -38,13 +38,13 @@ namespace SeanOne.Alchemy
         }
 
         /// <summary>
-        /// Converts the specified object by sequentially applying multiple DSL instructions.
+        /// Transforms the specified object by sequentially applying multiple DSL instructions.
         /// </summary>
-        /// <param name="obj">The source object to convert.</param>
+        /// <param name="obj">The source object to transform.</param>
         /// <param name="dslInstructions">An array of DSL instruction strings to apply in order.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the final converted object after all instructions.</returns>
+        /// <returns>An <see cref="AlchemyResult"/> representing the final transformed object after all instructions.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstructions"/> is empty.</exception>
-        public static AlchemyResult Convert(object obj, params string[] dslInstructions)
+        public static AlchemyResult Transform(object obj, params string[] dslInstructions)
         {
             // 檢查 物件 是否是 null
             if (obj == null)
@@ -89,40 +89,40 @@ namespace SeanOne.Alchemy
         }
 
         /// <summary>
-        /// Asynchronously converts the specified object according to the provided DSL instruction.
+        /// Asynchronously transforms the specified object according to the provided DSL instruction.
         /// </summary>
-        /// <param name="obj">The source object to convert.</param>
+        /// <param name="obj">The source object to transform.</param>
         /// <param name="dslInstruction">The DSL instruction string.</param>
         /// <returns>
-        /// A task that represents the asynchronous conversion operation.
-        /// The task result contains an <see cref="AlchemyResult"/> representing the converted object.
+        /// A task that represents the asynchronous transformation operation.
+        /// The task result contains an <see cref="AlchemyResult"/> representing the transformed object.
         /// </returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstruction"/> is <c>null</c> or empty.</exception>
-        public static async Task<AlchemyResult> ConvertAsync(object obj, string dslInstruction)
+        public static async Task<AlchemyResult> TransformAsync(object obj, string dslInstruction)
         {
             // 直接引用 Convert，避免程式碼過長或是重複性過高，並將其包在 Task.Run 中，以實現非同步執行
             return await Task.Run(() =>
             {
-                return Convert(obj, dslInstruction);
+                return Transform(obj, dslInstruction);
             });
         }
 
         /// <summary>
-        /// Asynchronously converts the specified object by sequentially applying multiple DSL instructions.
+        /// Asynchronously transforms the specified object by sequentially applying multiple DSL instructions.
         /// </summary>
-        /// <param name="obj">The source object to convert.</param>
+        /// <param name="obj">The source object to transform.</param>
         /// <param name="dslInstructions">An array of DSL instruction strings to apply in order.</param>
         /// <returns>
-        /// A task that represents the asynchronous conversion operation.
-        /// The task result contains an <see cref="AlchemyResult"/> representing the final converted object after all instructions.
+        /// A task that represents the asynchronous transformation operation.
+        /// The task result contains an <see cref="AlchemyResult"/> representing the final transformed object after all instructions.
         /// </returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <c>null</c> or <paramref name="dslInstructions"/> is <c>null</c> or empty.</exception>
-        public static async Task<AlchemyResult> ConvertAsync(object obj, params string[] dslInstructions)
+        public static async Task<AlchemyResult> TransformAsync(object obj, params string[] dslInstructions)
         {
             // 直接引用 Convert，避免程式碼過長或是重複性過高，並將其包在 Task.Run 中，以實現非同步執行
             return await Task.Run(() =>
             {
-                return Convert(obj, dslInstructions);
+                return Transform(obj, dslInstructions);
             });
         }
     }

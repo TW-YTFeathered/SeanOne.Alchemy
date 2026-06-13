@@ -61,34 +61,26 @@ namespace SeanOne.Alchemy
 
         #region Convert/ConvertAsync
         /// <summary>
-        /// Converts the current source object according to the provided DSL instruction.
+        /// Transforms the current source object according to the provided DSL instruction.
         /// </summary>
         /// <param name="dslInstruction">The DSL instruction string.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
-        public AlchemyResult Convert(string dslInstruction)
-        {
-            return Alchemy.Convert(_source, dslInstruction);
-        }
+        /// <returns>An <see cref="AlchemyResult"/> representing the transformed object.</returns>
+        public AlchemyResult Transform(string dslInstruction) =>
+            Alchemy.Transform(_source, dslInstruction);
 
-        public AlchemyResult Convert(params string[] dslInstructions)
-        {
-            return Alchemy.Convert(_source, dslInstructions);
-        }
+        public AlchemyResult Transform(params string[] dslInstructions) =>
+            Alchemy.Transform(_source, dslInstructions);
 
         /// <summary>
-        /// Asynchronously converts the specified object according to the provided DSL instruction.
+        /// Asynchronously transforms the specified object according to the provided DSL instruction.
         /// </summary>
         /// <param name="dslInstruction">The DSL instruction string.</param>
-        /// <returns>An <see cref="AlchemyResult"/> representing the converted object.</returns>
-        public Task<AlchemyResult> ConvertAsync(string dslInstruction)
-        {
-            return Alchemy.ConvertAsync(_source, dslInstruction);
-        }
+        /// <returns>An <see cref="AlchemyResult"/> representing the transformed object.</returns>
+        public Task<AlchemyResult> TransformAsync(string dslInstruction) =>
+            Alchemy.TransformAsync(_source, dslInstruction);
 
-        public Task<AlchemyResult> ConvertAsync(params string[] dslInstructions)
-        {
-            return Alchemy.ConvertAsync(_source, dslInstructions);
-        }
+        public Task<AlchemyResult> TransformAsync(params string[] dslInstructions) =>
+            Alchemy.TransformAsync(_source, dslInstructions);
         #endregion
 
         #region Parse/TryParse

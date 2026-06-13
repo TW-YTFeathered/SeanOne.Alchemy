@@ -9,7 +9,7 @@ namespace SeanOne.Alchemy
     partial class Alchemy
     {
         /// <summary>
-        /// 取得 Convert 相關的同步執行函數字典
+        /// 取得 Transform 相關的同步執行函數字典
         /// </summary>
         /// <remarks>
         /// 字典鍵值對應: 
