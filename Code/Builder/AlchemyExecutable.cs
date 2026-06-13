@@ -36,19 +36,18 @@ namespace SeanOne.Alchemy.Builder
         /// </remarks>
         public string Run(object obj)
         {
-            return AlchemyFormatter.Format(obj, _dsls[0]);
+            return Alchemy.Format(obj, _dsls[0]);
         }
 
 #if BETA
         /// <summary>
-        /// Executes the full DSL pipeline by converting and formatting the input object.
-        /// This method invokes the core conversion engine to process all instructions.
+        /// Executes the transformation pipeline using the stored DSL instructions.
         /// </summary>
         /// <param name="obj">The source object to be processed.</param>
-        /// <returns>The result of the conversion and formatting pipeline.</returns>
-        public AlchemyResult RunAsConvert(object obj)
+        /// <returns>The result of the transformation pipeline.</returns>
+        public AlchemyResult RunAsTransform(object obj)
         {
-            return AlchemyConverter.Convert(obj, _dsls);
+            return Alchemy.Transform(obj, _dsls);
         }
 #endif
 
