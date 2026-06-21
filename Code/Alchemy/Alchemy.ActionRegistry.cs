@@ -27,5 +27,21 @@ namespace SeanOne.Alchemy
                 ["foreach"] = (object copyObj, string dslInstruction) => AlchemyResult.Parse(Format(copyObj, dslInstruction)),
                 ["basic"] = (object copyObj, string dslInstruction) => AlchemyResult.Parse(Format(copyObj, dslInstruction))
             };
+
+        /// <summary>
+        /// 取得 Format 相關的同步執行函數字典
+        /// </summary>
+        /// <remarks>
+        /// 字典鍵值對應: 
+        /// - "fe", "foreach": 執行 FE 函數 (帶對應的類型參數)
+        /// - "basic": 執行 Basic 函數
+        /// </remarks>
+        private static readonly Dictionary<string, Func<object, string, string>> s_FormatActionsSync =
+            new Dictionary<string, Func<object, string, string>>
+            {
+                ["fe"] = (obj, dslInstruction) => FE(obj, dslInstruction, "fe"),
+                ["foreach"] = (obj, dslInstruction) => FE(obj, dslInstruction, "foreach"),
+                ["basic"] = Basic,
+            };
     }
 }
