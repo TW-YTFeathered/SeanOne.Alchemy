@@ -62,7 +62,7 @@ Alchemy.Transform(weights, "cnv /weight:Lb->Kg");
 using SeanOne.Alchemy;
 
 var data = new List<double> { 1000, 1, 0.5 };
-Alchemy.Transform(data, "cnv /sort:is", "/weight:Kg->G");
+Alchemy.Transform(data, "arr /sort:is", "cnv /weight:Kg->G");
 // Sorts to [0.5, 1, 1000] then converts to [500, 1000, 1000000]
 ```
 

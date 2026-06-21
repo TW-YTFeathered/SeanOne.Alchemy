@@ -61,7 +61,7 @@ Alchemy.Transform(lengths, "cnv /length:CM->IN");
 using SeanOne.Alchemy;
 
 var data = new List<double> { 1000, 1, 0.001 };
-Alchemy.Transform(data, "cnv /sort:is", "/length:M->KM");
+Alchemy.Transform(data, "arr /sort:is", "cnv /length:M->KM");
 // Sorts then converts: [0.001, 1, 1000] → [0.000001, 0.001, 1] (meters to kilometers)
 ```
 

@@ -16,7 +16,7 @@
 
 - **Object Formatting** – Convert objects to strings with custom separators, format strings, etc.
 - **Object Conversion** – Sort collections or perform temperature/weight/length unit conversions
-- **DSL Driven** – Describe transformation logic with intuitive string instructions (e.g., `cnv /sort:bubble /temp:C->F`)
+- **DSL Driven** – Describe transformation logic with intuitive string instructions (e.g., `cnv /temp:C->F` or `arr /sort:is`)
 - **Fluent API** – Type‑safe builder with full IntelliSense and compile‑time checks
 - **Async Support** – Both synchronous and asynchronous methods for all operations
 
@@ -50,7 +50,7 @@ using SeanOne.Alchemy;
 
 // Sort a list
 var numbers = new List<int> { 5, 2, 8, 1 };
-var sortedResult = Alchemy.Transform(numbers, "cnv /sort:is");
+var sortedResult = Alchemy.Transform(numbers, "arr /sort:is");
 List<int> sorted = sortedResult.ToObject<List<int>>();
 // Result: [1, 2, 5, 8]
 
@@ -61,7 +61,7 @@ double celsius = Alchemy.Transform(fahrenheit, "cnv /temp:F->C").ToObject<double
 
 // Combine operations
 var temps = new List<double> { 32.0, 212.0, 0.0 };
-var result = Alchemy.Transform(temps, "cnv /sort:bubble", "/temp:F->C");
+var result = Alchemy.Transform(temps, "arr /sort:bubble", "cnv /temp:F->C");
 // Sorts then converts: [-17.777..., 0, 100]
 ```
 
@@ -72,7 +72,7 @@ var result = Alchemy.Transform(temps, "cnv /sort:bubble", "/temp:F->C");
 | Getting Started | [Docs/GettingStarted.md](Docs/GettingStarted.md) |
 | DSL Syntax Reference | [Docs/DSLSyntax.md](Docs/DSLSyntax.md) |
 | Formatting Guide | [Docs/Formatter/](Docs/Formatter/) |
-| Conversion Guide | [Docs/Converter/](Docs/Converter/) |
+| Conversion Guide | [Docs/Transform/](Docs/Transform/) |
 | Fluent API | [Docs/FluentAPI.md](Docs/FluentAPI.md) |
 | Error Handling | [Docs/ErrorHandling.md](Docs/ErrorHandling.md) |
 | FAQ | [Docs/FAQ.md](Docs/FAQ.md) |

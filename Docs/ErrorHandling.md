@@ -1,7 +1,7 @@
 # Error Handling
 
-This document lists common exceptions thrown by `AlchemyFormatter` and how to resolve them.  
-*Note: `AlchemyConverter` error handling is under development and not covered here.*
+This document lists common exceptions thrown by `Alchemy.Format` and how to resolve them.  
+*Note: `Alchemy.Transform` error handling is under development and not covered here.*
 
 ## ArgumentNullException
 

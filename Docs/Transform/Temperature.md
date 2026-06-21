@@ -60,7 +60,7 @@ Alchemy.Transform(temps, "cnv /temp:C->K");
 using SeanOne.Alchemy;
 
 var data = new List<double> { 32.0, 212.0, 0.0 };
-Alchemy.Transform(data, "cnv /sort:is", "/temp:F->C");
+Alchemy.Transform(data, "arr /sort:is", "cnv /temp:F->C");
 // Sorts to [0, 32, 212] then converts to [-17.777..., 0, 100]
 ```
 

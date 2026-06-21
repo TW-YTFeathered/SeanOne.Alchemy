@@ -47,8 +47,6 @@ formatter.Run(12);  // "12.00!"
 | `key-format` | `FeDictParam.KeyFormat` |
 | `value-format` | `FeDictParam.ValueFormat` |
 
-Below is the revised **Conversion Fluent API (Beta)** section in English, written to align with the current codebase (no `AlchemyConverter`, use `Alchemy.Transform` for execution). The API is marked as Beta and subject to change.
-
 ## Conversion Fluent API (Beta)
 
 > ⚠️ **Status**: Beta feature – available only when building with the `BETA` compilation symbol (e.g., select `Beta` configuration in Visual Studio). The API described below may change in future releases.
