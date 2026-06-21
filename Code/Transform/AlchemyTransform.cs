@@ -31,7 +31,7 @@ namespace SeanOne.Alchemy
             // 先進行深層拷貝，避免對原始物件進行修改
             object copy = ReflectionCloner.DeepClone(obj);
 
-            return Decoder(copy, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
+            return TransformDecoder(copy, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SeanOne.Alchemy
 
                 // Decoder 返回 AlchemyResult，透過 ToObject<object>() 取得轉換後的實際物件，
                 // 以便作為下一個指令的輸入。
-                current = Decoder(current, temp).ToObject<object>();
+                current = TransformDecoder(current, temp).ToObject<object>();
             }
 
             // 將最終轉換結果包裝成 AlchemyResult 回傳

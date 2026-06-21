@@ -94,22 +94,20 @@ namespace SeanOne.Alchemy.Definitions
     }
 
     /// <summary>
-    /// 提供轉換 (Convert)相關指令的 DSL 參數名稱常數
+    /// 提供轉換 (Convert) 相關指令的 DSL 參數名稱常數
     /// </summary>
     internal static class CnvParams
     {
-        /// <summary>
-        /// 指定排序方式或排序參數
-        /// DSL 參數: <c>sort</c>
-        /// </summary>
-        public const string Sort = "sort";
-
         /// <summary>
         /// 重量轉換參數
         /// DSL 參數: <c>weight</c>
         /// </summary>
         public const string Weight = "weight";
 
+        /// <summary>
+        /// 長度轉換參數
+        /// DSL 參數: <c>length</c>
+        /// </summary>
         public const string Length = "length";
 
         /// <summary>
@@ -117,5 +115,17 @@ namespace SeanOne.Alchemy.Definitions
         /// DSL 參數: <c>temp</c>
         /// </summary>
         public const string Temp = "temp";
+    }
+
+    /// <summary>
+    /// 提供整理 (Arrange) 相關指令的 DSL 參數名稱常數
+    /// </summary>
+    internal class ArrParams
+    {
+        /// <summary>
+        /// 指定排序方式或排序參數
+        /// DSL 參數: <c>sort</c>
+        /// </summary>
+        public const string Sort = "sort";
     }
 }

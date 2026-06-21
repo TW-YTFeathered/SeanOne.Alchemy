@@ -19,8 +19,10 @@ namespace SeanOne.Alchemy
         private static readonly Dictionary<string, Func<object, string, AlchemyResult>> s_TransformActionsSync =
             new Dictionary<string, Func<object, string, AlchemyResult>>
             {
-                ["cnv"] = CNV,
-                ["convert"] = CNV,
+                ["cnv"] = Cnv,
+                ["convert"] = Cnv,
+                ["arr"] = Arr,
+                ["arrange"] = Arr,
                 ["fe"] = (object copyObj, string dslInstruction) => AlchemyResult.Parse(Format(copyObj, dslInstruction)),
                 ["foreach"] = (object copyObj, string dslInstruction) => AlchemyResult.Parse(Format(copyObj, dslInstruction)),
                 ["basic"] = (object copyObj, string dslInstruction) => AlchemyResult.Parse(Format(copyObj, dslInstruction))
