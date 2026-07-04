@@ -13,108 +13,45 @@ namespace SeanOne.Alchemy
         {
             var comparer = StringComparer.InvariantCultureIgnoreCase;
 
-            InitTemperatureDict(comparer);
-            InitWeightDict(comparer);
-            InitLengthDict(comparer);
+            ActionsTemperature = InitUnitDict<TemperatureUnit>(comparer, TemperatureConverter.Convert);
+            ActionsWeight = InitUnitDict<WeightUnit>(comparer, WeightConverter.Convert);
+            ActionsLength = InitUnitDict<LengthUnit>(comparer, LengthConverter.Convert);
         }
 
-        #region Init Functions
-        private static void InitTemperatureDict(StringComparer comparer)
+        private static Dictionary<string, Func<double, double>> InitUnitDict<T>(StringComparer comparer, Func<double, T, T, double> convertFunc) where T : struct, Enum
         {
             var dict = new Dictionary<string, Func<double, double>>(comparer);
-            var units = Enum.GetValues(typeof(TemperatureUnit));
+            var units = Enum.GetValues(typeof(T));
 
-            foreach (TemperatureUnit from in units)
+            foreach (T from in units)
             {
-                foreach (TemperatureUnit to in units)
+                foreach (T to in units)
                 {
-                    if (from == to) continue;  // 不需要自己轉自己
+                    if (EqualityComparer<T>.Default.Equals(from, to)) continue; // 不需要自己轉自己
 
-                    // 建立轉換委派 (捕獲 from 和 to)
-                    Func<double, double> convert = value => TemperatureConverter.Convert(value, from, to);
+                    Func<double, double> convert = value => convertFunc(value, from, to);
 
-                    // 兩種格式: XtoY 和 X->Y
-                    string keyTo = $"{from}To{to}";
-                    string keyArrow = $"{from}->{to}";
-
-                    dict[keyTo] = convert;
-                    dict[keyArrow] = convert;
+                    dict[$"{from}To{to}"] = convert;
+                    dict[$"{from}->{to}"] = convert;
                 }
             }
 
-            ActionsTemperature = dict;
+            return dict;
         }
-
-        private static void InitWeightDict(StringComparer comparer)
-        {
-            var dict = new Dictionary<string, Func<double, double>>(comparer);
-            var units = Enum.GetValues(typeof(WeightUnit));
-
-            foreach (WeightUnit from in units)
-            {
-                foreach (WeightUnit to in units)
-                {
-                    if (from == to) continue;  // 不需要自己轉自己
-
-                    // 建立轉換委派 (捕獲 from 和 to)
-                    Func<double, double> convert = value => WeightConverter.Convert(value, from, to);
-
-                    // 兩種格式: XtoY 和 X->Y
-                    string keyTo = $"{from}To{to}";
-                    string keyArrow = $"{from}->{to}";
-
-                    dict[keyTo] = convert;
-                    dict[keyArrow] = convert;
-                }
-            }
-
-            ActionsWeight = dict;
-        }
-
-        private static void InitLengthDict(StringComparer comparer)
-        {
-            var dict = new Dictionary<string, Func<double, double>>(comparer);
-            var units = Enum.GetValues(typeof(LengthUnit));
-
-
-            foreach (LengthUnit from in units)
-            {
-                foreach (LengthUnit to in units)
-                {
-                    if (from == to) continue; // 不需要自己轉自己
-
-                    // 建立轉換委派 (捕獲 from 和 to)
-                    Func<double, double> convert = value => LengthConverter.Convert(value, from, to);
-
-                    // 兩種格式: XtoY 和 X->Y
-                    string keyTo = $"{from}To{to}";
-                    string keyArrow = $"{from}->{to}";
-
-                    dict[keyTo] = convert;
-                    dict[keyArrow] = convert;
-                }
-            }
-
-            ActionsLength = dict;
-        }
-        #endregion
 
         /// <summary>
-        /// 溫度轉換指令與對應函數的映射字典
-        /// 支援兩種指令格式: 
-        /// <list type="bullet">
-        /// <item><description>"XtoY" 格式: 例如 "KtoC" (凱氏轉攝氏)、"FtoC" (華氏轉攝氏)</description></item>
-        /// <item><description>"X->Y" 格式: 例如 "K->C"、 "F->C"，使用箭頭符號增強可讀性</description></item>
-        /// </list>
+        /// 處理溫度轉換的字典
         /// </summary>
-        /// <remarks>
-        /// 字典使用 <see cref="StringComparer.InvariantCultureIgnoreCase"/> 進行比較，
-        /// 因此指令不區分大小寫 (例如 "ktoC"、"K->c" 皆可正確匹配)
-        /// </remarks>
         public static IReadOnlyDictionary<string, Func<double, double>> ActionsTemperature { get; private set; }
 
+        /// <summary>
+        /// 處理重量轉換的字典
+        /// </summary>
         public static IReadOnlyDictionary<string, Func<double, double>> ActionsWeight { get; private set; }
 
+        /// <summary>
+        /// 處理長度轉換的字典
+        /// </summary>
         public static IReadOnlyDictionary<string, Func<double, double>> ActionsLength { get; private set; }
     }
 }
