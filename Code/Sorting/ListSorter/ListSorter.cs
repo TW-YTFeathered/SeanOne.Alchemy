@@ -14,14 +14,11 @@ namespace SeanOne.Alchemy.Sorting
         {
             // 嘗試取得函式，並執行
             if (SortCommands.ListSorterActions.TryGetValue(algorithm, out var action))
-            {
                 action(list);
-            }
             else
-            {
-                // 預計之後抱錯
-                throw new ArgumentException("Invalid sorting algorithm.", nameof(algorithm));
-            }
+                throw new ArgumentException(
+                    $"The sorting algorithm '{algorithm}' is not supported."
+                    , nameof(algorithm));
         }
     }
 }
