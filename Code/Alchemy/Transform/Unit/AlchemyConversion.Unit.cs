@@ -58,9 +58,9 @@ namespace SeanOne.Alchemy
             else
             {
                 // 單一數值處理
-                double value = System.Convert.ToDouble(input);
+                double value = Convert.ToDouble(input);
                 double result = ConvertSingleValue(value, instruction, actions);
-                return (T)System.Convert.ChangeType(result, typeof(T));
+                return (T)Convert.ChangeType(result, typeof(T));
             }
         }
 
@@ -115,7 +115,7 @@ namespace SeanOne.Alchemy
                     double result = action(value);
 
                     // 將運算結果轉回原本的元素型別，並更新回清單
-                    list[i] = System.Convert.ChangeType(result, elementType);
+                    list[i] = Convert.ChangeType(result, elementType);
                 }
                 catch (FormatException)
                 {
