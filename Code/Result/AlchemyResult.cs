@@ -59,7 +59,7 @@ namespace SeanOne.Alchemy
             });
         }
 
-        #region Convert/ConvertAsync
+        #region Transform/TransformAsync
         /// <summary>
         /// Transforms the current source object according to the provided DSL instruction.
         /// </summary>
