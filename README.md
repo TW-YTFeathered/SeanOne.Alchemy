@@ -82,7 +82,7 @@ Console.WriteLine(result.ToString()); // Total: $99.99
 |-------|----------|
 | Getting Started | [Docs/GettingStarted.md](Docs/GettingStarted.md) |
 | DSL Syntax Reference | [Docs/DSLSyntax.md](Docs/DSLSyntax.md) |
-| Formatting Guide | [Docs/Formatter/](Docs/Formatter/) |
+| Formatting Guide | [Docs/Format/](Docs/Format/) |
 | Conversion Guide | [Docs/Transform/](Docs/Transform/) |
 | Fluent API | [Docs/FluentAPI.md](Docs/FluentAPI.md) |
 | Error Handling | [Docs/ErrorHandling.md](Docs/ErrorHandling.md) |

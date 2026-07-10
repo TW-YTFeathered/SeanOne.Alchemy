@@ -69,7 +69,7 @@ string output = AlchemyFormatBuilder.SelectBasic()
 ## Next Steps
 
 - Read the [DSL Syntax Reference](DSLSyntax.md) for all parameter rules.
-- Explore [Formatter](Formatter/) and [Transform](Transform/) for detailed examples.
+- Explore [Format](Format/) and [Transform](Transform/) for detailed examples.
 - Check [Error Handling](ErrorHandling.md) when things go wrong.
 - See [FAQ](FAQ.md) for common questions.
 
