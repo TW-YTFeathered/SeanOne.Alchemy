@@ -1,12 +1,12 @@
-﻿using System;
+// Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
+// SeanOne™ - A Professional Project and Brand.
+
+using System;
 using System.Threading.Tasks;
 
 namespace SeanOne.Alchemy
 {
-    /// <summary>
-    /// Transforms objects into formatted strings using a simple DSL syntax.
-    /// </summary>
-    public partial class AlchemyFormatter
+    partial class Alchemy
     {
         /// <summary>
         /// Formats the specified object according to the provided DSL instruction.
@@ -28,7 +28,7 @@ namespace SeanOne.Alchemy
                 throw new ArgumentNullException("Alchemy instruction cannot be null or empty");
 
             dslInstruction = dslInstruction.Trim(); // 去除前後空白
-            return Decoder(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
+            return FormatDecoder(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
         }
 
         /// <summary>
@@ -42,17 +42,10 @@ namespace SeanOne.Alchemy
         /// </exception>
         public static async Task<string> FormatAsync(object obj, string dslInstruction)
         {
-            // 檢查 物件 是否是 null
-            if (obj == null)
-                throw new ArgumentNullException("Input object must not be null.");
-
-            // 檢查 DSL 指令是否為空或 null
-            if (string.IsNullOrWhiteSpace(dslInstruction))
-                throw new ArgumentNullException("Alchemy instruction cannot be null or empty");
-
-            dslInstruction = dslInstruction.Trim(); // 去除前後空白
-
-            return await Decoder_Async(obj, dslInstruction); // 呼叫 Decoder 方法，並回傳結果
+            return await Task.Run(() =>
+            {
+                return Format(obj, dslInstruction);
+            });
         }
     }
 }

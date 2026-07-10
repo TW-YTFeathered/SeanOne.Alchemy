@@ -1,3 +1,8 @@
 <Solution>
+  <Configurations>
+    <BuildType Name="Beta" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+  </Configurations>
   <Project Path="SeanOne.Alchemy.csproj" />
 </Solution>

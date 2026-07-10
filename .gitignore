@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.idea/.idea.SeanOne.Alchemy/.idea/indexLayout.xml
+/.idea/.idea.SeanOne.Alchemy/.idea/vcs.xml
