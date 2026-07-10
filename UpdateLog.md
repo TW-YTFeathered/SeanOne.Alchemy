@@ -4,6 +4,14 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.2
+
+*Focus: Class unification & documentation alignment*
+
+- Unified class naming: `AlchemyFormatter` and `AlchemyConverter` have been consolidated into `Alchemy`, with `AlchemyFormatter` now marked as [Obsolete].
+- Updated Markdown documentation to reflect the new naming conventions.
+- Merged `dev` branch into `main`, integrating recent refactoring and documentation updates.
+
 ## V3.0.0-preview.1
 
 *Focus: Fix documentation errors*
