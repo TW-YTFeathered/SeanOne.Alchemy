@@ -59,17 +59,44 @@ Format: `\uXXXX` (4 hex digits)
 - For **identical output across platforms**: use `\u000A` or `\u000D\u000A`.
 - For special characters: use short sequences where possible.
 
-## Multi‑Instruction Execution
+## Multi-Instruction Execution
 
-When using `Alchemy.Transform`, you can pass multiple instruction strings as an array. Each instruction is executed **independently and sequentially** – the result of the previous instruction becomes the input for the next.
+When using `Alchemy.Transform`, you can pass multiple instruction strings as an array. Each instruction is executed **sequentially** – the transformed result from the previous step becomes the input for the next.
 
-Example:
+**Basic example:**
 
 ```csharp
 using SeanOne.Alchemy;
 
-Alchemy.Transform(data, "cnv /sort:is", "/temp:F->C");
-// First sorts, then converts temperatures.
+var data = new List<double> { 212.0, 32.0, 100.0 };
+
+Alchemy.Transform(data,
+    "arr /sort:is",          // Step 1: sort ascending
+    "cnv /temp:F->C"         // Step 2: convert Fahrenheit to Celsius
+);
+// Result: [-17.77, 37.77, 100.0] (sorted then converted)
 ```
 
-This is different from merging parameters into a single instruction (where internal order may be fixed).
+This differs from merging parameters into a single instruction – each instruction is processed independently and in the order provided.
+
+### Instruction Name Auto-Completion
+
+When chaining multiple instructions, you can **omit the function name** in subsequent instructions if it matches the previous one. The library will automatically reuse the function name from the preceding instruction.
+
+**Example (compatible instructions):**
+
+```csharp
+using SeanOne.Alchemy;
+
+Alchemy.Transform(data,
+    "cnv /temp:F->C",        // function: "cnv"
+    "/weight:Kg->G"          // auto-completes to "cnv /weight:Kg->G"
+);
+// First converts temperature, then converts weight – both within cnv context.
+```
+
+This works for any function name (`cnv`, `arr`, `basic`, `fe`, etc.). When a new instruction explicitly specifies a different function name, auto‑completion resets to that new name.
+
+**⚠️ Important:** Auto‑completion only applies the function name – it does **not** validate whether the parameters are compatible with that function. For example, if you omit the function name after an `arr` instruction and then write `/temp:C->F`, the resulting instruction becomes `arr /temp:C->F`, which will throw an exception because `arr` does not support `/temp`. Always ensure that the parameters you write match the inherited function's capabilities.
+
+**Safe practice:** When in doubt, write the full function name explicitly rather than relying on auto‑completion.
