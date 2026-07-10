@@ -20,6 +20,12 @@
 - **Fluent API** – Type‑safe builder with full IntelliSense and compile‑time checks
 - **Async Support** – Both synchronous and asynchronous methods for all operations
 
+## 🧪 Unified Entry Point
+
+`Alchemy.Transform` is the **primary gateway** for all transformations. It accepts not only conversion instructions (`cnv`, `arr`) but also **formatting instructions** (`basic`, `fe`, `foreach`). This means you can use a single API for both formatting and structural conversion, with the result always wrapped in an `AlchemyResult` for fluent chaining.
+
+> ✅ Formatting via `Transform` returns an `AlchemyResult`, not a raw `string`. Use `.ToString()` or `.GetString()` to extract the string.
+
 ## 📦 Installation
 
 ```bash
@@ -61,8 +67,13 @@ double celsius = Alchemy.Transform(fahrenheit, "cnv /temp:F->C").ToObject<double
 
 // Combine operations
 var temps = new List<double> { 32.0, 212.0, 0.0 };
-var result = Alchemy.Transform(temps, "arr /sort:bubble", "cnv /temp:F->C");
+var result = Alchemy.Transform(temps, "arr /sort:insertion", "cnv /temp:F->C");
 // Sorts then converts: [-17.777..., 0, 100]
+
+// Transform can also format – it routes formatting instructions to Alchemy.Format
+var price = 99.99;
+AlchemyResult result = Alchemy.Transform(price, "/tostring:C2 /prefix:\"Total: \"");
+Console.WriteLine(result.ToString()); // Total: $99.99
 ```
 
 ## 📖 Documentation
