@@ -60,7 +60,10 @@ Example:
 ```csharp
 using SeanOne.Alchemy;
 
-// Formatting via Transform – no need to call Formatter separately
+/*
+* Transform can handle formatting directives too – it internally routes them to Alchemy.Format,
+* so you can use Transform as a single unified entry point instead of calling Format separately.
+*/
 string result = Alchemy.Transform(123.456, "/tostring:F2 /prefix:\"$\"").ToString();
 ```
 
