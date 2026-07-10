@@ -20,6 +20,23 @@ Where `algorithm` is one of the supported algorithm keys, optionally followed by
 | Array.Sort (built‑in) | `as`, `arraysort` | `asd`, `arraysortdesc`, `arraysortdescending` |
 | LINQ Sort | `ls`, `linq`, `linqsort` | `lsd`, `linqsortdesc`, `linqsortdescending` |
 
+## Abbreviation Generation
+
+The library automatically recognizes multiple alias forms for each algorithm. These aliases are derived from the algorithm's full name using the following patterns:
+
+| Derivation Method | Description | Example (`InsertionSort`) |
+|-------------------|-------------|---------------------------|
+| **Acronym** | Takes the uppercase letters from the full name. | `InsertionSort` → `IS` |
+| **First Word** | Uses the first word of the algorithm name. | `InsertionSort` → `insertion` |
+| **Full Name** | The entire algorithm name, case-insensitive. | `insertionsort` |
+
+This applies to all built-in algorithms.
+
+To request **descending** order, simply append `d` (or `desc`) to any of the above forms.  
+For example: `isd`, `insertiondesc`, or `insertiondescending`.
+
+> 💡 **Tip:** When in doubt, the full name (e.g., `insertionsort`) is always a safe choice and works identically to the abbreviations.
+
 ## Examples
 
 ### Ascending insertion sort
