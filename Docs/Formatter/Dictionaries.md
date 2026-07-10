@@ -28,7 +28,7 @@ All parameters below work with dictionaries exactly as they do with sequences (`
 | `/suffix` | `/suffix:}` | Added after the whole result. |
 | `/exclude-last-end` | `/exclude-last-end:true` | If `true`, the `/end` string is **not** appended after the last entry. |
 | `/final-pair-separator` | `/final-pair-separator:" and "` | Replaces the `/end` separator between the last two entries. |
-| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster) but may have compatibility issues with custom dictionaries. |
+| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster). See [FAQ](../FAQ.md#what-are-the-compatibility-risks-of-fe-optrtue) for compatibility notes. |
 
 ## Examples
 

@@ -99,3 +99,31 @@ GitHub repository: [TW-YTFeathered/SeanOne.Alchemy](https://github.com/TW-YTFeat
 ### Is there a changelog?
 
 See `UpdateLog.md` in the repository root.
+
+## Advanced Topics
+
+### What are the compatibility risks of `/fe-opt:true`?
+
+The optimized formatter (`/fe-opt:true`) leverages `Span`-based APIs and `ArrayPool` for better performance. While it works flawlessly for standard BCL collections (`List<T>`, `T[]`, etc.), it may encounter issues with:
+
+- **Custom collections** that do not properly implement `IEnumerator` (e.g., returning a non-disposable enumerator, or throwing exceptions during `MoveNext()` that are not handled).
+- **Non-generic `IEnumerable`** implementations that rely on legacy iteration patterns.
+- In .NET 6+, if the element type does not implement `ISpanFormattable`, the formatter safely falls back to `IFormattable`, so this is rarely a problem.
+
+**What to do if it fails:**  
+Set `/fe-opt:false` (or omit it, as `false` is the default) to use the stable, legacy formatter. If you encounter a failure, please report it with a minimal reproduction so the team can investigate.
+
+### What does `AlchemyResult.ToString()` return?
+
+It depends on the wrapped object:
+
+- If the underlying object is a **`string`**, `.ToString()` returns that string directly.
+- For **any other type**, it returns the base `Object.ToString()` implementation, which typically yields the type name (e.g., `System.Collections.Generic.List`1[System.Int32]`).
+
+**To get the string representation of the wrapped object** (calling its `ToString()` method), use the extension method `.GetString()` provided in `AlchemyConverterExpansions`. This ensures you always get the intended textual representation.
+
+### How does deep cloning handle circular references?
+
+The internal `ReflectionCloner` safely handles circular references (e.g., `Parent` -> `Child` -> `Parent`).
+
+It maintains a `Dictionary<object, object>` (the `visited` lookup) during the cloning process. When the cloner encounters an object reference that has already been cloned, it **reuses the existing cloned instance** instead of recursively re‑entering the same object graph. This prevents infinite recursion and `StackOverflowException`, ensuring that the cloned object graph retains its structural integrity.

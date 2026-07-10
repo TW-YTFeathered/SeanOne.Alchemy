@@ -21,7 +21,7 @@ fe /param:value /param2:value ...
 | `/suffix` | `/suffix:]` | Added after the whole sequence result. |
 | `/exclude-last-end` | `/exclude-last-end:true` | If `true`, the `/end` string is **not** appended after the last element. |
 | `/final-pair-separator` | `/final-pair-separator:" and "` | Replaces the `/end` separator between the last two elements. Useful for English lists (e.g., "A, B and C"). |
-| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster) but may have compatibility issues with custom collections. |
+| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster). See [FAQ](../FAQ.md#what-are-the-compatibility-risks-of-fe-opttrue) for compatibility notes. |
 
 ## Examples
 
