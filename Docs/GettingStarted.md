@@ -37,7 +37,7 @@ Console.WriteLine(result); // $123.46 USD
 using SeanOne.Alchemy;
 
 var numbers = new List<int> { 5, 1, 9, 3 };
-var sorted = Alchemy.Transform(numbers, "cnv /sort:is");
+var sorted = Alchemy.Transform(numbers, "arr /sort:is");
 // sorted contains [1, 3, 5, 9]
 ```
 
@@ -49,7 +49,7 @@ You can pass multiple instructions as an array:
 using SeanOne.Alchemy;
 
 var temps = new List<double> { 32, 212, 0 };
-var result = Alchemy.Transform(temps, "cnv /sort:bubble", "/temp:F->C");
+var result = Alchemy.Transform(temps, "arr /sort:bubble", "cnv /temp:F->C");
 // Sorts then converts Fahrenheit to Celsius
 ```
 
