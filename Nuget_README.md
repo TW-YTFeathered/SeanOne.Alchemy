@@ -1,65 +1,82 @@
 # SeanOne.Alchemy
 
-A lightweight and efficient C# library for fast object-to-string transformation using a simple DSL syntax.
+A lightweight and efficient C# library for fast object transformation using a simple DSL syntax. Format collections, convert units, sort data – all with intuitive string instructions.
 
-## Example Usage
+> 📌 This documentation reflects the upcoming V3.0.0 release.
+
+## Quick Examples
+
+### Formatting a collection
 
 ```csharp
 using SeanOne.Alchemy;
 
-List<int> ints = Enumerable.Range(0, 10).ToList();
+var numbers = Enumerable.Range(0, 10).ToList();
 
-AlchemyFormatter.Format(ints, "fe /tostring:F2 /end:\\n /exclude-last-end:true");
+string result = Alchemy.Format(numbers, 
+    "fe /tostring:F2 /end:\\n /exclude-last-end:true");
 
-/* Return:
-0.00
-1.00
-2.00
-3.00
-4.00
-5.00
-6.00
-7.00
-8.00
-9.00
-*/
+// Output:
+// 0.00
+// 1.00
+// 2.00
+// ...
+// 9.00
 ```
 
-## Fluent API Example Usage
+### Sorting and unit conversion
+
+```csharp
+using SeanOne.Alchemy;
+
+var temps = new List<double> { 32.0, 212.0, 0.0 };
+
+AlchemyResult result = Alchemy.Transform(temps,
+    "arr /sort:is",        // Sort ascending using insertion sort
+    "cnv /temp:F->C"       // Convert Fahrenheit to Celsius
+);
+
+List<double> converted = result.ToObject<List<double>>();
+// Result: [-17.77, 0, 100]
+```
+
+### Fluent API (type‑safe)
 
 ```csharp
 using SeanOne.Alchemy.Builder;
 
-List<int> ints = Enumerable.Range(0, 10).ToList();
+var numbers = Enumerable.Range(0, 10).ToList();
 
-AlchemyFormatBuilder.SelectFeSeq()
-        .With(FeSeqParam.ToString, "F2")
-        .With(FeSeqParam.End, "\\n")
-        .With(FeSeqParam.ExcludeLastEnd, "true")
-        .Build()
-        .Run(ints);
-/* Return:
-0.00
-1.00
-2.00
-3.00
-4.00
-5.00
-6.00
-7.00
-8.00
-9.00
-*/
+string result = AlchemyFormatBuilder.SelectFeSeq()
+    .With(FeSeqParam.ToString, "F2")
+    .With(FeSeqParam.End, "\\n")
+    .With(FeSeqParam.ExcludeLastEnd, true)
+    .BuildRun(numbers);
+
+// Output:
+// 0.00
+// 1.00
+// 2.00
+// ...
+// 9.00
 ```
+
+## Features
+
+- **Formatting** – Custom separators, prefixes, suffixes, and format strings for any object
+- **Conversion** – Sort collections or convert temperature/weight/length units
+- **DSL Driven** – Intuitive string instructions like `/temp:C->F` or `/sort:is`
+- **Fluent API** – Type‑safe builder with full IntelliSense support
+- **Async Support** – All operations available in both sync and async versions
 
 ## Documentation
 
-For complete documentation and more examples, see the [README.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/V2.0.0/README.md) file.
-For more code example, see the [GUIDE.md](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/V2.0.0/GUIDE.md) file.
+- [Full README](https://github.com/TW-YTFeathered/SeanOne.Alchemy/tree/master/README.md)
+- [Getting Started](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/Docs/GettingStarted.md)
 
 ## GitHub Repository
 
-[SeanOne.Alchemy GitHub](https://github.com/TW-YTFeathered/SeanOne.Alchemy/tree/V2.0.0)
+[SeanOne.Alchemy on GitHub](https://github.com/TW-YTFeathered/SeanOne.Alchemy/)
 
 ## License
 
