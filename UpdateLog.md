@@ -4,6 +4,15 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.3
+
+*Focus: Documentation and packaging refinements*
+
+- Added descriptions for `GetX` and `GetXList`.  
+- Updated `icon.png` to better align with V3.0.0.  
+- Updated `Nuget_README.md` to better reflect V3.0.0.  
+- Updated `pack_nuget.ps1` to version V3.0.0-preview.3.
+
 ## V3.0.0-preview.2
 
 *Focus: Class unification & documentation alignment*
