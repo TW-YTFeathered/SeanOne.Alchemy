@@ -41,6 +41,45 @@ var sorted = Alchemy.Transform(numbers, "arr /sort:is");
 // sorted contains [1, 3, 5, 9]
 ```
 
+## Extracting Results
+
+`Alchemy.Transform` returns an `AlchemyResult` object. You can extract the transformed data using the following methods:
+
+### Direct Access (No Conversion)
+
+Use these when you know the exact type of the wrapped object.
+
+| Method | Description |
+| :--- | :--- |
+| `ToObject<T>()` | Returns the wrapped object directly as type `T`. |
+| `ToList<T>()` | If the wrapped object is an `IEnumerable<T>`, returns it as a `List<T>`. |
+
+### Single Value Conversion
+
+Use these to convert the wrapped object into a specific primitive type.
+
+| Method | Description |
+| :--- | :--- |
+| `GetString()` | Calls `ToString()` on the wrapped object and returns the result. |
+| `GetDouble()` | Parses the wrapped object as `double`. |
+| `GetInt32()` | Parses the wrapped object as `int`. |
+| `GetDateTime()` | Parses the wrapped object as `DateTime`. |
+| ... and many more | See `AlchemyConverterExpansions` for the full list. |
+
+### Collection Conversion
+
+Use these to convert every element of a collection into a specific type. Each method iterates the collection and applies the corresponding parser to each element, returning a **new** `List<T>`.
+
+| Method | Description |
+| :--- | :--- |
+| `GetStringList()` | Converts all elements to strings. |
+| `GetDoubleList()` | Converts all elements to doubles. |
+| `GetInt32List()` | Converts all elements to ints. |
+| `GetDateTimeList()` | Converts all elements to `DateTime`. |
+| `GetObjectList()` | Returns a `List<object>` containing all elements. |
+
+> 💡 **Tip:** Use `ToObject<T>()` when you already know the exact type (e.g., `List<double>`). It is more efficient because it avoids creating a new collection. Use `GetXxxList()` when you want to **convert** the elements to a specific type, or when you are unsure of the original collection type.
+
 ## Combining Operations
 
 You can pass multiple instructions as an array:
@@ -49,7 +88,7 @@ You can pass multiple instructions as an array:
 using SeanOne.Alchemy;
 
 var temps = new List<double> { 32, 212, 0 };
-var result = Alchemy.Transform(temps, "arr /sort:bubble", "cnv /temp:F->C");
+var result = Alchemy.Transform(temps, "arr /sort:is", "cnv /temp:F->C");
 // Sorts then converts Fahrenheit to Celsius
 ```
 

@@ -60,6 +60,8 @@ var sortedResult = Alchemy.Transform(numbers, "arr /sort:is");
 List<int> sorted = sortedResult.ToObject<List<int>>();
 // Result: [1, 2, 5, 8]
 
+// You can also use GetStringList(), GetDoubleList(), etc. to convert elements.
+
 // Temperature conversion
 double fahrenheit = 212.0;
 double celsius = Alchemy.Transform(fahrenheit, "cnv /temp:F->C").ToObject<double>();
