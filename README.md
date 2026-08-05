@@ -1,7 +1,7 @@
 # SeanOne.Alchemy
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)  
-![.NET Support](https://img.shields.io/badge/.NET-net6.0%20%7C%20net8.0%20%7C%20net10.0%20%7C%20netstandard2.0%20%7C%20net472%20%7C%20net48-blue)
+![.NET Support](https://img.shields.io/badge/.NET-net8.0%20%7C%20net10.0%20%7C%20netstandard2.0-blue)
 
 **Alchemy** is a lightweight C# library that enables fast and flexible object transformation through concise DSL syntax – a true data alchemy.
 
