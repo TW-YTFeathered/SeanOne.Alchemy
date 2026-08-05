@@ -93,7 +93,7 @@ No internal logging. All issues are reported via exceptions.
 
 ### What .NET versions are supported?
 
-. NET 6.0, 8.0, 10.0, .NET Standard 2.0, .NET Framework 4.7.2 and 4.8.
+.NET Standard 2.0, .NET 8.0, and .NET 10.0 are supported.
 
 ### Where can I report issues or request features?
 
