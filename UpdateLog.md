@@ -4,6 +4,13 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.4
+
+*Focus: Optimize target framework architecture*
+
+- Removed most .NET runtimes, keeping only .NET Standard 2.0 and currently supported LTS versions (.NET 8.0, .NET 10.0)
+- Updated documentation to reflect this update
+
 ## V3.0.0-preview.3
 
 *Focus: Documentation and packaging refinements*
