@@ -637,7 +637,7 @@ namespace SeanOne.Alchemy
                     throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
             }
 
-            if (!Judge.ValidateCodeParameters(dslInstruction, "basic", out var invalidParams))
+            if (!Judge.CodeParameters(dslInstruction, "basic", out var invalidParams))
                 throw new ArgumentException($"Invalid parameters for basic processing: {string.Join(", ", invalidParams)}");
 
             // 格式化對象

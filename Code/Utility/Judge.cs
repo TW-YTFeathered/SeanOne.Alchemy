@@ -97,7 +97,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="dslInstruction"> Dsl 指令(要被檢查的字串) </param>
         /// <param name="methodType"> 方法類型(用字串表示) </param>
         /// <param name="invalidParams"> 要回傳的無效參數列表 </param>
-        public static bool ValidateCodeParameters(string dslInstruction, string methodType, out List<string> invalidParams)
+        public static bool CodeParameters(string dslInstruction, string methodType, out List<string> invalidParams)
         {
             invalidParams = new List<string>();
 
@@ -137,7 +137,7 @@ namespace SeanOne.Alchemy.Utility
         public static bool CodeParametersAuto(string dslInstruction, Type objectType, out List<string> invalidParams)
         {
             string methodType = DetermineMethodType(objectType); // 根據物件類型自動判斷方法
-            return ValidateCodeParameters(dslInstruction, methodType, out invalidParams); // 驗證參數
+            return CodeParameters(dslInstruction, methodType, out invalidParams); // 驗證參數
         }
 
         /// <summary>
