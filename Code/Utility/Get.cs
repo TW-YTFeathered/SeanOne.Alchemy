@@ -22,7 +22,7 @@ namespace SeanOne.Alchemy.Utility
             if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
                 return string.Empty;
 
-            if (Judge.ValidateSingleParameter(dslInstruction, parameterName)) // 檢查參數是否出現多次
+            if (Judge.SingleParameter(dslInstruction, parameterName)) // 檢查參數是否出現多次
             {
                 // 如果參數出現多次，拋出例外
                 throw new ArgumentException($"Parameter '{parameterName}' is specified multiple times.");

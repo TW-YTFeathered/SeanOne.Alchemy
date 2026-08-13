@@ -25,7 +25,7 @@ namespace SeanOne.Alchemy
         {
             foreach (var element in enumerable)
             {
-                if (element != null && !Judge.SafeToString(element))
+                if (element != null && !Judge.CanFormat(element))
                 {
                     var elementType = element.GetType();
                     throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {elementType.Name}");

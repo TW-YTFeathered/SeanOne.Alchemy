@@ -65,7 +65,7 @@ namespace SeanOne.Alchemy
             // 處理字典類型
             if (obj is IDictionary dictionary)
             {
-                if (!Judge.ValidateCodeParametersAuto(dslInstruction, dictionary.GetType(), out var invalidParams))
+                if (!Judge.CodeParametersAuto(dslInstruction, dictionary.GetType(), out var invalidParams))
                     throw new ArgumentException($"Invalid parameters for dictionary processing: {string.Join(", ", invalidParams)}");
 
                 if (fe_opt)
@@ -83,7 +83,7 @@ namespace SeanOne.Alchemy
             }
 
             // 處理普通集合類型
-            if (!Judge.ValidateCodeParametersAuto(dslInstruction, enumerable.GetType(), out var invalidParamsForEnum))
+            if (!Judge.CodeParametersAuto(dslInstruction, enumerable.GetType(), out var invalidParamsForEnum))
                 throw new ArgumentException($"Invalid parameters for enumerable processing: {string.Join(", ", invalidParamsForEnum)}");
 
             if (fe_opt)

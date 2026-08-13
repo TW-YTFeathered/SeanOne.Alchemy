@@ -18,7 +18,7 @@ namespace SeanOne.Alchemy.Utility
         /// 檢查物件是否實作 IFormattable 介面
         /// </summary>
         /// <param name="obj"> 要檢查的物件 </param>
-        public static bool SafeToString(object obj)
+        public static bool CanFormat(object obj)
         {
             return obj is IFormattable;
         }
@@ -28,7 +28,7 @@ namespace SeanOne.Alchemy.Utility
         /// </summary>
         /// <param name="fullStr"> 被檢查的字串 </param>
         /// <param name="searchStr"> 要查詢的字串 </param>
-        public static bool HasString(string fullStr, string searchStr)
+        public static bool ContainsSafe(this string fullStr, string searchStr)
         {
             if (string.IsNullOrWhiteSpace(fullStr) || string.IsNullOrWhiteSpace(searchStr)) // 如果任一字串為空，直接回傳 false
                 return false;
@@ -41,7 +41,7 @@ namespace SeanOne.Alchemy.Utility
         /// </summary>
         /// <param name="dslInstruction"> Dsl 指令(要被檢查的字串) </param>
         /// <param name="parameterName"> 要查找的參數名稱 </param>
-        public static bool ValidateSingleParameter(string dslInstruction, string parameterName)
+        public static bool SingleParameter(string dslInstruction, string parameterName)
         {
             int count = CountParameterOccurrences(dslInstruction, parameterName); // 數數參數出現次數
 
@@ -134,7 +134,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="dslInstruction"> Dsl 指令(要被檢查的字串) </param>
         /// <param name="objectType"> 方法類型(用類型表示) </param>
         /// <param name="invalidParams"> 要回傳的無效參數列表 </param>
-        public static bool ValidateCodeParametersAuto(string dslInstruction, Type objectType, out List<string> invalidParams)
+        public static bool CodeParametersAuto(string dslInstruction, Type objectType, out List<string> invalidParams)
         {
             string methodType = DetermineMethodType(objectType); // 根據物件類型自動判斷方法
             return ValidateCodeParameters(dslInstruction, methodType, out invalidParams); // 驗證參數

@@ -24,12 +24,12 @@ namespace SeanOne.Alchemy
             string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Suffix), string.Empty);
 
             // 提取並驗證 /tostring: 參數
-            if (Judge.HasString(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
+            if (dslInstruction.ContainsSafe(DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
             {
                 format = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
 
                 // 驗證 obj 是否實作 IFormattable
-                if (obj != null && !Judge.SafeToString(obj))
+                if (obj != null && !Judge.CanFormat(obj))
                     throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
             }
 
