@@ -40,7 +40,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 exclude-last-end 參數
             bool exclude_last_end = false;
-            string excludeLastEndValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
+            string excludeLastEndValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
             if (!string.IsNullOrEmpty(excludeLastEndValue) &&
                 bool.TryParse(excludeLastEndValue, out bool parsedEndPrint))
             {
@@ -49,7 +49,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 fe-opt
             bool fe_opt = false;
-            string feOptValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
+            string feOptValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
             if (!string.IsNullOrEmpty(feOptValue) &&
                 bool.TryParse(feOptValue, out bool parsedOptPrint))
             {

@@ -24,7 +24,7 @@ namespace SeanOne.Alchemy
         private static string Decoder(object obj, string dslInstruction)
         {
             // 從 DSL 指令中提取函數名稱
-            string directive = Get.ExtractDirective(dslInstruction);
+            string directive = Get.Directive(dslInstruction);
 
             // 嘗試從字典中獲取對應的執行函數
             if (s_ActionsSync.TryGetValue(directive, out var func))
@@ -76,7 +76,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 exclude-last-end 參數
             bool exclude_last_end = false;
-            string excludeLastEndValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
+            string excludeLastEndValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
             if (!string.IsNullOrEmpty(excludeLastEndValue) &&
                 bool.TryParse(excludeLastEndValue, out bool parsedEndPrint))
             {
@@ -85,7 +85,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 fe-opt
             bool fe_opt = false;
-            string feOptValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
+            string feOptValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
             if (!string.IsNullOrEmpty(feOptValue) &&
                 bool.TryParse(feOptValue, out bool parsedOptPrint))
             {
@@ -630,7 +630,7 @@ namespace SeanOne.Alchemy
             // 提取並驗證 /tostring: 參數
             if (Judge.HasString(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
             {
-                format = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
+                format = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
 
                 // 驗證 obj 是否實作 IFormattable
                 if (obj != null && !Judge.SafeToString(obj))

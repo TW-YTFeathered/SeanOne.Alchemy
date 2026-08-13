@@ -61,7 +61,7 @@ namespace SeanOne.Alchemy
                 var temp = ins.Trim(); // 去除前後空白，但因為 ins 無法被赴值，只能再來一個變數
 
                 // 從 DSL 指令中提取指令名稱
-                string directive = Get.ExtractDirective(temp);
+                string directive = Get.Directive(temp);
 
                 // 若當前指令沒有指定指令名稱，且存在上一個指令名稱，則自動補齊
                 // 例如: ["cnv /sort:as", "/sort:asd"] => 第二個指令會自動變成 "cnv /sort:asd"

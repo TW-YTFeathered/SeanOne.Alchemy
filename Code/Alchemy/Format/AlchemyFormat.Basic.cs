@@ -26,7 +26,7 @@ namespace SeanOne.Alchemy
             // 提取並驗證 /tostring: 參數
             if (Judge.HasString(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
             {
-                format = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
+                format = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
 
                 // 驗證 obj 是否實作 IFormattable
                 if (obj != null && !Judge.SafeToString(obj))

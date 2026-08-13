@@ -17,7 +17,7 @@ namespace SeanOne.Alchemy
         private static string FormatDecoder(object obj, string dslInstruction)
         {
             // 從 DSL 指令中提取函數名稱
-            string directive = Get.ExtractDirective(dslInstruction);
+            string directive = Get.Directive(dslInstruction);
 
             // 嘗試從字典中獲取對應的執行函數
             if (s_FormatActionsSync.TryGetValue(directive, out var func))

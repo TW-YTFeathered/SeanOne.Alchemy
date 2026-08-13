@@ -17,7 +17,7 @@ namespace SeanOne.Alchemy.Utility
         /// </summary>
         /// <param name="dslInstruction"> Dsl 指令(要被提取的字串) </param>
         /// <param name="parameterName"> 要提取的參數名稱 </param>
-        public static string ExtractParameterValue(string dslInstruction, string parameterName)
+        public static string ParameterValue(string dslInstruction, string parameterName)
         {
             if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
                 return string.Empty;
@@ -76,7 +76,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="defaultValue"> 預設值 </param>
         public static string ParameterValueOrDefault(string dslInstruction, string parameterName, string defaultValue)
         {
-            string value = ExtractParameterValue(dslInstruction, parameterName);
+            string value = ParameterValue(dslInstruction, parameterName);
             return string.IsNullOrEmpty(value) ? defaultValue : value;
         }
 
@@ -103,7 +103,7 @@ namespace SeanOne.Alchemy.Utility
         /// 從 dslInstruction 中提取指令的名稱，最前面的那一個字串
         /// </summary>
         /// <param name="dslInstruction"> Dsl 指令(要被提取的字串)，但本身必須要被Trim過一遍 </param>
-        public static string ExtractDirective(string dslInstruction)
+        public static string Directive(string dslInstruction)
         {
             return dslInstruction.Contains(DslSymbols.ParamPrefix) ?
                     dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
