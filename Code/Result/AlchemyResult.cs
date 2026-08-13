@@ -25,27 +25,19 @@ namespace SeanOne.Alchemy
         {
             // 如果對方是集合，直接轉型
             if (_source is IEnumerable<T> enumerable)
-            {
                 return enumerable.ToList();
-            }
-            return new List<T>();
+            throw new InvalidOperationException($"The source object of type '{_source?.GetType().Name ?? "null"}' cannot be converted to List<{typeof(T).Name}>.");
         }
 
         // 轉成指定型別
-        public T ToObject<T>()
-        {
-            return (T)_source;
-        }
+        public T ToObject<T>() => (T)_source;
 
         // 轉為 string
         public override string ToString()
         {
             // 如果原始物件是 string，直接回傳
             if (_source is string str)
-            {
                 return str;
-            }
-
             return base.ToString();
         }
 
@@ -93,11 +85,8 @@ namespace SeanOne.Alchemy
         public static AlchemyResult Parse(object sourceObj)
         {
             if (sourceObj is null)
-            {
-                throw new ArgumentNullException(nameof(sourceObj), "AlchemyResult.Parse requires a non-null source object.");
-            }
-
-            return new AlchemyResult(sourceObj);
+                 throw new ArgumentNullException(nameof(sourceObj), "AlchemyResult.Parse requires a non-null source object.");
+             return new AlchemyResult(sourceObj);
         }
 
         /// <summary>
