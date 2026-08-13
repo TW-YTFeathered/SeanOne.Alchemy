@@ -11,7 +11,7 @@ namespace SeanOne.Alchemy
     /// <summary>
     /// Represents the result of an alchemy transformation, wrapping a source object and providing methods to convert, transform, and access the underlying data.
     /// </summary>
-    public partial class AlchemyResult
+    public class AlchemyResult
     {
         // 儲存原始的物件
         private readonly object _source;
@@ -23,7 +23,7 @@ namespace SeanOne.Alchemy
         public object RawSource => _source;  // 唯讀屬性
 
         // 包裝原始的物件
-        protected AlchemyResult(object source)
+        private AlchemyResult(object source)
         {
             _source = source;
         }
