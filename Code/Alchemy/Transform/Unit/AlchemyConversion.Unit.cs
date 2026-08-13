@@ -42,7 +42,7 @@ namespace SeanOne.Alchemy
         private static T ConvertUnit<T>(T input, string instruction, IReadOnlyDictionary<string, Func<double, double>> actions)
         {
             // 輸入值不能為 null
-            if (input is null)
+            if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
             // 若指令為空或空白，直接回傳原值，不進行轉換
