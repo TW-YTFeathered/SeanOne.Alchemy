@@ -42,7 +42,7 @@ namespace SeanOne.Alchemy
         private static T ConvertUnit<T>(T input, string instruction, IReadOnlyDictionary<string, Func<double, double>> actions)
         {
             // 輸入值不能為 null
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             // 若指令為空或空白，直接回傳原值，不進行轉換
@@ -107,7 +107,7 @@ namespace SeanOne.Alchemy
                 try
                 {
                     // 元素為 null 時無法轉換
-                    if (list[i] == null)
+                    if (list[i] is null)
                         throw new InvalidOperationException($"Element at index {i} is null, cannot convert");
 
                     // 將元素轉為 double 進行數值運算

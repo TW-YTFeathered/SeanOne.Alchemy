@@ -32,7 +32,7 @@ namespace SeanOne.Alchemy.Utility
         /// <returns> 複製後的新物件 </returns>
         private static object DeepCloneInternal(object obj, IDictionary<object, object> visited)
         {
-            if (obj == null) return null;
+            if (obj is null) return null;
 
             var type = obj.GetType();
 

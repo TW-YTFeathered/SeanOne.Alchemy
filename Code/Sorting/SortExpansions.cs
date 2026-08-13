@@ -20,7 +20,7 @@ namespace SeanOne.Alchemy.Sorting
         /// </remarks>
         public static void Swap(this IList list, int index, ref bool swapped)
         {
-            if (list == null) throw new ArgumentNullException(nameof(list));
+            if (list is null) throw new ArgumentNullException(nameof(list));
             if (index < 1 || index >= list.Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             object temp = list[index - 1];

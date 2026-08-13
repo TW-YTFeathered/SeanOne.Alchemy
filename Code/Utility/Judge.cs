@@ -146,7 +146,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="objectType"> 要判斷的物件類型 </param>
         private static string DetermineMethodType(Type objectType)
         {
-            if (objectType == null)
+            if (objectType is null)
                 return "basic"; // 預設為 basic
 
             // 如果是字典類型

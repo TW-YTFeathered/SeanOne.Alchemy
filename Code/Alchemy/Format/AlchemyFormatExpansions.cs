@@ -41,7 +41,7 @@ namespace SeanOne.Alchemy
         private static string FormatObject(object obj, string format)
         {
             // 如果對象為null，返回空字符串
-            if (obj == null) return string.Empty;
+            if (obj is null) return string.Empty;
 
             // 如果提供了格式且對象實現了IFormattable，則使用該格式
             if (!string.IsNullOrEmpty(format) && obj is IFormattable formattable)
@@ -93,7 +93,7 @@ namespace SeanOne.Alchemy
         private static void AppendObj(ref char[] buf, ref int len, object obj,
             string format, bool hasFormat)
         {
-            if (obj == null) return;
+            if (obj is null) return;
 
             if (hasFormat && obj is ISpanFormattable sf)
             {

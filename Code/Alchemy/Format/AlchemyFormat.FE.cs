@@ -20,7 +20,7 @@ namespace SeanOne.Alchemy
         /// <param name="commandName"> 呼叫時的指令名稱(僅用做 throw 時) </param>
         private static string FE(object obj, string dslInstruction, string commandName)
         {
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException($"Target object cannot be null for '{commandName}' directive");
             if (obj is string)
                 throw new ArgumentException($"String is not supported for '{commandName}' directive");

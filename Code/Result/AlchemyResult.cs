@@ -174,7 +174,7 @@ namespace SeanOne.Alchemy
         /// </returns>
         public static bool TryParse(object sourceObj, out AlchemyResult result)
         {
-            if (sourceObj == null)
+            if (sourceObj is null)
             {
                 result = null; // 失敗時設為 null
                 return false;

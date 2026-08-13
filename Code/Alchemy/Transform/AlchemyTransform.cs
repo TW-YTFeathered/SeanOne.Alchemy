@@ -19,7 +19,7 @@ namespace SeanOne.Alchemy
         public static AlchemyResult Transform(object obj, string dslInstruction)
         {
             // 檢查 物件 是否是 null
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException("Input object must not be null.");
 
             // 檢查 DSL 指令是否為空或 null
@@ -44,7 +44,7 @@ namespace SeanOne.Alchemy
         public static AlchemyResult Transform(object obj, params string[] dslInstructions)
         {
             // 檢查 物件 是否是 null
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException("Input object must not be null.");
 
             // 檢查 DSL 指令是否為空或 null
