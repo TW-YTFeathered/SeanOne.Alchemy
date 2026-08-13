@@ -30,7 +30,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="searchStr"> 要查詢的字串 </param>
         public static bool ContainsSafe(this string fullStr, string searchStr)
         {
-            if (string.IsNullOrWhiteSpace(fullStr) || string.IsNullOrWhiteSpace(searchStr)) // 如果任一字串為空，直接回傳 false
+            if (fullStr is null || searchStr is null) // 如果任一字串為空，直接回傳 false
                 return false;
 
             return fullStr.Contains(searchStr);
