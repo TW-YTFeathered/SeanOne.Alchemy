@@ -10,7 +10,7 @@
 > Please use the new unified entry points:  
 > - `Alchemy.Format` for formatting objects to strings.  
 > - `Alchemy.Transform` for conversions (sorting, unit conversion, etc.) and combined operations.  
-> Both methods return an `AlchemyResult` which provides fluent conversion and chaining.
+> `Alchemy.Format` returns a `string`, while `Alchemy.Transform` returns an `AlchemyResult` – the latter provides fluent conversion and chaining.
 
 ## ✨ Core Features
 
