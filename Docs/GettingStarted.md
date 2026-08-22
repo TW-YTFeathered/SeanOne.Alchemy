@@ -52,7 +52,7 @@ Use these when you know the exact type of the wrapped object.
 | Method | Description |
 | :--- | :--- |
 | `ToObject<T>()` | Returns the wrapped object directly as type `T`. |
-| `ToList<T>()` | If the wrapped object is an `IEnumerable<T>`, returns it as a `List<T>`. |
+| `ToList<T>()` | Only works when the wrapped object already implements `IEnumerable<T>` exactly. Returns a `List<T>` without converting element types. If you need to convert element types (e.g., from `ArrayList` to `List<int>`), use the `GetXxxList()` methods below instead. |
 
 ### Single Value Conversion
 
