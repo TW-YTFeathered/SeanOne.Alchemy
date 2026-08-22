@@ -12,7 +12,12 @@ This document describes the common syntax rules for Alchemy DSL instructions, sh
 - Parameters begin with `/` followed by the parameter name and a colon `:`.
 - Parameter names are **case-sensitive**.
 - Values containing spaces or special characters (like `/`) must be enclosed in double quotes `" "`.
+- If the value itself needs to contain a double quote, escape it as `\"` or use the Unicode sequence `\u0022`.
 - Multiple instructions can be passed as an array; they execute sequentially.
+
+> 📘 **C# Source Code Note:**  
+> To produce the `\"` sequence in memory, escape the backslash in C#:  
+> `"/prefix:\"He said \\\"Hello\\\"\""`
 
 ## Parameter Naming Conventions
 
