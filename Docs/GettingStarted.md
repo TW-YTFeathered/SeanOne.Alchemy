@@ -37,7 +37,7 @@ Console.WriteLine(result); // $123.46 USD
 using SeanOne.Alchemy;
 
 var numbers = new List<int> { 5, 1, 9, 3 };
-var sorted = Alchemy.Transform(numbers, "arr /sort:is");
+var sorted = Alchemy.Transform(numbers, "arr /sort:is").ToObject<List<int>>();
 // sorted contains [1, 3, 5, 9]
 ```
 
