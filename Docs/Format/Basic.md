@@ -1,6 +1,6 @@
 # Basic Formatting
 
-Use the `basic` function for formatting single objects (non‑collections).
+Use the `basic` function for formatting any object without iterating over its elements. For collections, this applies formatting to the collection object as a whole, not to individual items.
 
 ## DSL Syntax
 
