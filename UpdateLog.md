@@ -26,7 +26,7 @@
 
 - Unified class naming: `AlchemyFormatter` and `AlchemyConverter` have been consolidated into `Alchemy`, with `AlchemyFormatter` now marked as [Obsolete].
 - Updated Markdown documentation to reflect the new naming conventions.
-- Merged `dev` branch into `main`, integrating recent refactoring and documentation updates.
+- Merged `dev` branch into `master`, integrating recent refactoring and documentation updates.
 
 ## V3.0.0-preview.1
 
