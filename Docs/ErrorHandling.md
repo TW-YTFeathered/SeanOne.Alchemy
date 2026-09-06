@@ -22,9 +22,9 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 |--------------------|---------------|-------------|
 | `String is not supported for 'fe' directive` (or `'foreach'`) | You tried to format a `string` with `fe`. | Use `basic` instead, or wrap the string in a collection like `new[] { myString }`. |
 | `Object must implement IEnumerable for 'fe' directive` | You used `fe` on a non‑collection object. | Use `basic` for single objects. If you intended a collection, ensure it implements `IEnumerable`. |
-| `Invalid parameters for basic processing: ...` | The DSL instruction contains parameter(s) not allowed for `basic`. | Check the list of allowed parameters for `basic` (`/tostring`, `/prefix`, `/suffix`, `/begin`, `/end`). Remove unsupported ones. |
-| `Invalid parameters for enumerable processing: ...` | The DSL contains parameters that are not allowed for sequences (e.g., `/dict-format` used on a list). | Only use dictionary‑specific parameters (`/dict-format`, `/key-format`, `/value-format`) when the input is actually an `IDictionary`. |
-| `Invalid parameters for dictionary processing: ...` | The DSL contains parameters not allowed for dictionaries (e.g., `/final-pair-separator` might not be applicable – check current parameter table). | Use valid dictionary parameters: `/dict-format`, `/key-format`, `/value-format`, `/begin`, `/end`, `/prefix`, `/suffix`, `/exclude-last-end` (and optionally `/fe-opt`). |
+| `Invalid parameters for basic processing: invalid, unknown` | The DSL instruction contains parameter(s) not allowed for `basic`. | Check the list of allowed parameters for `basic` (`tostring`, `prefix`, `suffix`, `begin`, `end`). Remove unsupported ones. |
+| `Invalid parameters for enumerable processing: dict-format` | The DSL contains parameters that are not allowed for sequences (e.g., `/dict-format` used on a list). | Only use dictionary‑specific parameters (`dict-format`, `key-format`, `value-format`) when the input is actually an `IDictionary`. |
+| `Invalid parameters for dictionary processing: sort` | The DSL contains parameters not allowed for dictionaries (e.g., `/sort` is not valid for dictionaries). | Use valid dictionary parameters: `dict-format`, `key-format`, `value-format`, `begin`, `end`, `prefix`, `suffix`, `exclude-last-end` (and optionally `fe-opt`). |
 | `Collection elements must implement IFormattable for 'tostring'. Found: {TypeName}` | You used `/tostring` but one of the elements (or the object itself in `basic`) does not implement `IFormattable`. Common example: trying to format a `string` with `/tostring:F2`. | Remove `/tostring` if you don't need custom formatting. If you need numeric formatting, ensure the collection contains numeric types (like `int`, `double`, `DateTime`, etc.), not `string`. |
 | `Parameter '/xxx:' is specified multiple times.` | The same parameter (e.g., `/tostring`) appears more than once in the same instruction. | Use each parameter only once. Combine or remove duplicates. |
 
@@ -43,6 +43,7 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 | Exception | Scenario |
 |-----------|----------|
 | `ArgumentNullException` | The input object is `null`, or the DSL instruction string is `null` or empty. |
+| `ArgumentException` (parameter validation) | The DSL instruction contains parameters not allowed for the requested operation. The error message will indicate which operation (`arr`, `cnv`, `enumerable`, `dictionary`) and list the invalid parameters (e.g., `Invalid parameters for arr processing: sortx, unknown`). |
 
 ### Unit Conversion (`/weight`, `/length`, `/temp`)
 
@@ -83,6 +84,7 @@ When extracting data from an `AlchemyResult`, some methods have strict type requ
 
 ## Additional Notes
 
+- DSL parameters are written with a leading `/` and a `:` separator, e.g., `/tostring:F2`. In error messages, parameter names are shown **without** the leading `/` for brevity.
 - `Alchemy.FormatAsync` and `Alchemy.TransformAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
 - `null` elements inside a collection are formatted as empty strings – they **do not** cause exceptions.
 - `Alchemy.Format` does **not** modify the input object (no cloning). Only `Alchemy.Transform` performs deep cloning.
