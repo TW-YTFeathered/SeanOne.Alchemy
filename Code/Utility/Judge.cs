@@ -88,8 +88,33 @@ namespace SeanOne.Alchemy.Utility
                 FeParams.FeOpt,
                 IDictionaryParams.DictFormat, IDictionaryParams.KeyFormat, IDictionaryParams.ValueFormat,
                 CommonParams.Prefix, CommonParams.Suffix
+            },
+            ["arr"] = new HashSet<string> {
+
+            },
+            ["cnv"] = new HashSet<string> {
+
             }
         };
+
+        /// <summary>
+        /// 檢查 DSL 指令的參數是否有效，若無效則直接拋出例外。
+        /// </summary>
+        /// <param name="dslInstruction">DSL 指令字串</param>
+        /// <param name="methodType">指令名稱 (如 "basic", "arr", "fe")</param>
+        /// <param name="targetType">目標物件的型別 (用於 CodeParametersAuto)，若為 null 則使用 CodeParameters</param>
+        public static void EnsureParameters(string dslInstruction, string methodType, Type targetType = null)
+        {
+            bool hasInvalid = false;
+            List<string> invalid = null;
+            if (targetType is null)
+                hasInvalid = !CodeParameters(dslInstruction, methodType, out invalid);
+            else
+                hasInvalid = !CodeParametersAuto(dslInstruction, targetType, out invalid);
+
+            if (hasInvalid)
+                throw new ArgumentException($"Invalid parameters for {methodType} processing: {string.Join(", ", invalid)}");
+        }
 
         /// <summary>
         /// 根據方法類型驗證參數
@@ -120,9 +145,7 @@ namespace SeanOne.Alchemy.Utility
             {
                 string paramName = match.Groups[1].Value;
                 if (!validParams.Contains(paramName))
-                {
                     invalidParams.Add(paramName);
-                }
             }
 
             return invalidParams.Count == 0;

@@ -16,6 +16,8 @@ namespace SeanOne.Alchemy
         /// <param name="dslInstruction"> Dsl 指令 </param>
         private static string Basic(object obj, string dslInstruction)
         {
+            Judge.EnsureParameters(dslInstruction, "basic");
+
             string format = string.Empty;
 
             string begin = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Begin), string.Empty);
@@ -32,9 +34,6 @@ namespace SeanOne.Alchemy
                 if (obj != null && !Judge.CanFormat(obj))
                     throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
             }
-
-            if (!Judge.CodeParameters(dslInstruction, "basic", out var invalidParams))
-                throw new ArgumentException($"Invalid parameters for basic processing: {string.Join(", ", invalidParams)}");
 
             // 格式化對象
             string result = FormatObject(obj, format);
