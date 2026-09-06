@@ -4,6 +4,17 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.5
+
+*Focus: API documentation completion, error behavior hardening, and asset updates*
+
+- Completed XML documentation comments for the `AlchemyResult` class, improving IntelliSense and developer experience.
+- Updated `AlchemyResult.ToList<T>()` to explicitly throw exceptions for unsupported types instead of silently returning empty or default results, making error conditions more transparent.
+- Expanded and revised documentation to align with the latest behavioral changes.
+- Updated `icon.png` to refine the visual identity.
+- Added Copyright metadata embedded in the compiled DLL for better attribution and compliance.
+- Fixed an issue where `cnv` and `arr` parameters failed to report errors for unsupported parameters, now providing clear exception messages.
+  
 ## V3.0.0-preview.4
 
 *Focus: Optimize target framework architecture*
