@@ -16,8 +16,9 @@ This document describes the common syntax rules for Alchemy DSL instructions, sh
 - Multiple instructions can be passed as an array; they execute sequentially.
 
 > 📘 **C# Source Code Note:**  
-> To produce the `\"` sequence in memory, escape the backslash in C#:  
-> `"/prefix:\"He said \\u0022Hello\\u0022\""`
+> To include a literal double quote (`"`) inside a parameter value, use the Unicode escape `\u0022` in your C# string:  
+> `"/prefix:\"He said \\u0022Hello\\u0022\""`  
+> This ensures the double quote is correctly preserved after Alchemy's parsing.
 
 ## Parameter Naming Conventions
 
