@@ -90,10 +90,12 @@ namespace SeanOne.Alchemy.Utility
                 CommonParams.Prefix, CommonParams.Suffix
             },
             ["arr"] = new HashSet<string> {
-
+                ArrParams.Sort
             },
             ["cnv"] = new HashSet<string> {
-
+                CnvParams.Length,
+                CnvParams.Weight,
+                CnvParams.Temp
             }
         };
 
