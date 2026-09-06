@@ -17,7 +17,7 @@ This document describes the common syntax rules for Alchemy DSL instructions, sh
 
 > 📘 **C# Source Code Note:**  
 > To produce the `\"` sequence in memory, escape the backslash in C#:  
-> `"/prefix:\"He said \\\"Hello\\\"\""`
+> `"/prefix:\"He said \\u0022Hello\\u0022\""`
 
 ## Parameter Naming Conventions
 
