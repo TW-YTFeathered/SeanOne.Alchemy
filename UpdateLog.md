@@ -4,6 +4,12 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.6
+
+*Focus: Fix DeepClone issue*
+
+- Fixed an issue in `DeepClone` that could cause incorrect cloning behavior.
+
 ## V3.0.0-preview.5
 
 *Focus: API documentation completion, error behavior hardening, and asset updates*
