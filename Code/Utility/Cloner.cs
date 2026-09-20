@@ -4,6 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+#if !NET5_0_OR_GREATER
+using System.Runtime.Serialization;
+#endif
 
 namespace SeanOne.Alchemy.Utility
 {
@@ -58,7 +62,7 @@ namespace SeanOne.Alchemy.Utility
             }
 
             // 建立新物件
-            var clone = Activator.CreateInstance(type);
+            var clone = CreateInstance(type);
             visited[obj] = clone;
 
             // 複製所有欄位 (包含 private)
@@ -70,6 +74,33 @@ namespace SeanOne.Alchemy.Utility
             }
 
             return clone;
+        }
+
+        /// <summary>
+        /// 建立型別實例。若沒有無參數建構子，則建立未初始化物件 (不會執行建構子)
+        /// </summary>
+        private static object CreateInstance(Type type)
+        {
+            // 值型別直接用 Activator 即可
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+
+            // 優先找無參數建構子 (public / non-public)
+            var ctor = type.GetConstructor(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                Type.EmptyTypes,
+                null
+            );
+
+            if (!(ctor is null))
+                return ctor.Invoke(null);
+
+#if NET5_0_OR_GREATER
+            return RuntimeHelpers.GetUninitializedObject(type);
+#else
+            return FormatterServices.GetUninitializedObject(type);
+#endif
         }
 
         /// <summary>
@@ -91,7 +122,7 @@ namespace SeanOne.Alchemy.Utility
             /// </summary>
             /// <param name="obj"> 要計算雜湊碼的物件 </param>
             /// <returns> 物件的雜湊碼 </returns>
-            public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
+            public int GetHashCode(object obj) => RuntimeHelpers.GetHashCode(obj);
         }
     }
 }
