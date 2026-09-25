@@ -1,6 +1,6 @@
 # Formatting Dictionaries (IDictionary)
 
-Use the `fe` function to format dictionaries.
+Use the `fe` (or `foreach`) function to format dictionaries.
 
 ## DSL Syntax
 
@@ -28,7 +28,7 @@ All parameters below work with dictionaries exactly as they do with sequences (`
 | `/suffix` | `/suffix:}` | Added after the whole result. |
 | `/exclude-last-end` | `/exclude-last-end:true` | If `true`, the `/end` string is **not** appended after the last entry. |
 | `/final-pair-separator` | `/final-pair-separator:" and "` | Replaces the `/end` separator between the last two entries. |
-| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster). See [FAQ](../FAQ.md#what-are-the-compatibility-risks-of-fe-optrtue) for compatibility notes. |
+| `/fe-opt` | `/fe-opt:true` | Enables optimized formatter (~1.5x faster). See [FAQ](../FAQ.md#what-are-the-compatibility-risks-of-fe-opttrue) for compatibility notes. |
 
 ## Examples
 
@@ -101,9 +101,9 @@ AlchemyFormatBuilder.SelectFeDict()
     .With(FeDictParam.DictFormat, "{0} -> {1}")
     .With(FeDictParam.KeyFormat, "F2")
     .With(FeDictParam.ValueFormat, "F2")
-    .With(FeSeqParam.End, ", ")
-    .With(FeSeqParam.ExcludeLastEnd, true)
-    .With(FeSeqParam.FinalPairSeparator, " and ")
+    .With(FeDictParam.End, ", ")
+    .With(FeDictParam.ExcludeLastEnd, true)
+    .With(FeDictParam.FinalPairSeparator, " and ")
     .BuildRun(myDictionary);
 ```
 
