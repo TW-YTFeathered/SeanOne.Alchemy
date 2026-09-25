@@ -44,6 +44,8 @@ For example: `isd`, `insertiondesc`, or `insertiondescending`.
 ### Ascending insertion sort
 
 ```csharp
+using SeanOne.Alchemy;
+
 var numbers = new List<int> { 5, 2, 8, 1 };
 Alchemy.Transform(numbers, "arr /sort:is");
 // Result list: [1, 2, 5, 8]
@@ -52,6 +54,8 @@ Alchemy.Transform(numbers, "arr /sort:is");
 ### Descending array sort
 
 ```csharp
+using SeanOne.Alchemy;
+
 int[] array = { 9, 3, 7, 2 };
 Alchemy.Transform(array, "arr /sort:asd");
 // Result: [9, 7, 3, 2]
@@ -60,6 +64,8 @@ Alchemy.Transform(array, "arr /sort:asd");
 ### LINQ sort ascending
 
 ```csharp
+using SeanOne.Alchemy;
+
 var list = new ArrayList { 3, 1, 4, 1, 5 };
 Alchemy.Transform(list, "arr /sort:ls");
 // Result: [1, 1, 3, 4, 5]

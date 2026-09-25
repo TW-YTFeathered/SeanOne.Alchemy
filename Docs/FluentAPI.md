@@ -18,6 +18,8 @@ string result = AlchemyFormatBuilder.SelectBasic()
 ## Reusable Formatter
 
 ```csharp
+using SeanOne.Alchemy.Builder;
+
 var formatter = AlchemyFormatBuilder.SelectBasic()
     .With(BasicParam.End, "!")
     .With(BasicParam.ToString, "F2")
@@ -32,6 +34,8 @@ formatter.Run(12);  // "12.00!"
 `BuildToString()` is a shortcut for `Build().ToString()`. It returns the generated DSL instruction without executing it.
 
 ```csharp
+using SeanOne.Alchemy.Builder;
+
 string dsl = AlchemyFormatBuilder.SelectBasic()
     .With(BasicParam.ToString, "F2")
     .BuildToString();
@@ -91,7 +95,7 @@ The `AlchemyExecutable` returned by `Build()` provides two ways to execute the c
 using SeanOne.Alchemy;
 
 var data = new List<double> { 0, 100, 25 };
-AlchemyResult result = executable.RunAsTransform(data);
+var result = executable.RunAsTransform(data);
 double first = result.ToObject<List<double>>()[0];
 ```
 
@@ -102,9 +106,9 @@ double first = result.ToObject<List<double>>()[0];
 ```csharp
 using SeanOne.Alchemy;
 
-AlchemyResult result = Alchemy.Transform(data, executable.ToString());
+var result = Alchemy.Transform(data, executable.ToString());
 // Or for multiple instructions:
-AlchemyResult result = Alchemy.Transform(data, executable.GetDsls());
+var result = Alchemy.Transform(data, executable.GetDsls());
 ```
 
 ### Pipeline Builder (Beta)
@@ -112,6 +116,8 @@ AlchemyResult result = Alchemy.Transform(data, executable.GetDsls());
 Combine multiple instructions into a pipeline:
 
 ```csharp
+using SeanOne.Alchemy.Builder;
+
 var pipeline = AlchemyBuilder.CreatePipeline()
     .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Sort, "as"))
     .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Temp, "F->C"))
