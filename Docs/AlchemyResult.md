@@ -111,7 +111,7 @@ var values = await Alchemy.TransformAsync(data, "arr /sort:is")
 
 ## Construction (Internal-Oriented)
 
-> ⚠️ The members below are **publicly accessible** but are intended primarily for internal use by the library. Their signature and behavior may change in future versions without notice. Prefer the `Alchemy.Transform` / `Alchemy.Format` entry points instead of calling `Parse` / `TryParse` directly.
+> ⚠️ The members below are **publicly accessible** but are intended primarily for internal use by the library. Their signature and behavior may change in future versions without notice. Prefer the `Alchemy.Transform` entry point instead of calling `Parse` / `TryParse` directly.
 
 ### `Parse(object sourceObj)`
 
