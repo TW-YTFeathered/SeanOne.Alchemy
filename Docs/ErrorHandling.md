@@ -51,6 +51,7 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 |-----------|------------------|
 | `ArgumentException` | Unknown unit code (e.g., `/temp:X->Y`). <br> Negative value for length or weight. <br> Temperature below absolute zero (0 K). <br> Unable to determine element type of the list (non-generic collections without clear type). |
 | `InvalidOperationException` | A collection element is `null` and cannot be converted. <br> An element cannot be cast to a numeric type (`double`). <br> The conversion result overflows the target element type (e.g., converting a huge `double` to `int`). |
+| `OverflowException` | A single-value conversion result exceeds the range of the input type (e.g., `Transform(1e20, "cnv /temp:C->F")` on an `int`). Collections wrap this as `InvalidOperationException` instead. |
 
 ### Sorting (`/sort`)
 
