@@ -72,6 +72,18 @@ Alchemy.Transform(data, "arr /sort:is", "cnv /length:M->KM");
 - Single numeric: `int`, `double`, `decimal`, `float`, etc.
 - Collection of numerics: any `IEnumerable` where each element can be converted to `double`.
 
+## Return Type
+
+The output type matches the input type.
+
+```csharp
+int m = 1000;
+int km = Alchemy.Transform(m, "cnv /length:M->KM").ToObject<int>();   // 1
+
+var ms = new List<int> { 1000, 2000 };
+Alchemy.Transform(ms, "cnv /length:M->KM");                            // List<int> { 1, 2 }
+```
+
 ## Important Notes
 
 - Length values **cannot be negative** – passing a negative number throws `ArgumentException`.

@@ -73,6 +73,18 @@ Alchemy.Transform(data, "arr /sort:is", "cnv /weight:Kg->G");
 - Single numeric: `int`, `double`, `decimal`, `float`, etc.
 - Collection of numerics: any `IEnumerable` where each element can be converted to `double`.
 
+## Return Type
+
+The output type matches the input type.
+
+```csharp
+int kg = 25;
+int g = Alchemy.Transform(kg, "cnv /weight:Kg->G").ToObject<int>();   // 25000
+
+var kgs = new List<int> { 1, 2 };
+Alchemy.Transform(kgs, "cnv /weight:Kg->G");                           // List<int> { 1000, 2000 }
+```
+
 ## Important Notes
 
 - Weight values **cannot be negative** – passing a negative number throws `ArgumentException`.
