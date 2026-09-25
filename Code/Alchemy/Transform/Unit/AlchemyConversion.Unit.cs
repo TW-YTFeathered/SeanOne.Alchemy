@@ -60,7 +60,7 @@ namespace SeanOne.Alchemy
                 // 單一數值處理
                 double value = Convert.ToDouble(input);
                 double result = ConvertSingleValue(value, instruction, actions);
-                return (T)Convert.ChangeType(result, typeof(T));
+                return (T)Convert.ChangeType(result, input.GetType());
             }
         }
 
