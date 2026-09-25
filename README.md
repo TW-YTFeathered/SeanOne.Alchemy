@@ -87,6 +87,7 @@ Console.WriteLine(result.ToString()); // Total: $99.99
 | Formatting Guide | [Docs/Format/](Docs/Format/) |
 | Conversion Guide | [Docs/Transform/](Docs/Transform/) |
 | Fluent API | [Docs/FluentAPI.md](Docs/FluentAPI.md) |
+| AlchemyResult API | [Docs/AlchemyResult.md](Docs/AlchemyResult.md) |
 | Error Handling | [Docs/ErrorHandling.md](Docs/ErrorHandling.md) |
 | FAQ | [Docs/FAQ.md](Docs/FAQ.md) |
 

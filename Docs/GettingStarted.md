@@ -111,5 +111,6 @@ string output = AlchemyFormatBuilder.SelectBasic()
 - Explore [Format](Format/) and [Transform](Transform/) for detailed examples.
 - Check [Error Handling](ErrorHandling.md) when things go wrong.
 - See [FAQ](FAQ.md) for common questions.
+- See [AlchemyResult.md](AlchemyResult.md) for chaining and async helpers.
 
 Happy alchemizing!
