@@ -1,5 +1,7 @@
 # Sorting with Alchemy.Transform
 
+Use the `arr` (or `arrange`) function to sort collections.
+
 The `/sort` parameter sorts collections **in‑place** on a deep‑cloned copy. Input must implement `IList` (e.g., arrays, `List<T>`, `ArrayList`).
 
 > **Note:** All algorithm keys are **case‑insensitive** – `isd`, `ISD`, `IsD` all work.  

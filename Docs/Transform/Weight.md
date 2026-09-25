@@ -1,5 +1,7 @@
 # Weight Conversion with Alchemy.Transform
 
+Use the `cnv` (or `convert`) function to perform weight conversion.
+
 The `/weight` parameter converts numeric values between different weight (mass) units.
 
 ## DSL Syntax

@@ -1,5 +1,7 @@
 # Length Conversion with Alchemy.Transform
 
+Use the `cnv` (or `convert`) function to perform length conversion.
+
 The `/length` parameter converts numeric values between different length units.
 
 ## DSL Syntax
@@ -14,7 +16,7 @@ or
 cnv /length:sourceTotarget
 ```
 
-Parameter value is **case‑insensitive** – `KgToG`, `kgtog`, `KGTOG` all work the same.
+Parameter value is **case‑insensitive** – `CmToM`, `cmtom`, `CMTOM` all work the same.
 
 ## Supported Units
 

@@ -1,5 +1,7 @@
 # Temperature Conversion with Alchemy.Transform
 
+Use the `cnv` (or `convert`) function to perform temperature conversion.
+
 The `/temp` parameter converts numeric values between Celsius, Fahrenheit, and Kelvin.
 
 ## DSL Syntax
