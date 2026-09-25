@@ -4,6 +4,18 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0-preview.7
+
+*Focus: Fix `cnv` single-value return type and fill documentation gaps*
+
+- Fixed `cnv` single-value conversion returning a boxed `double` regardless of the input type. The result is now cast back to the actual input type (e.g., `int` → `int`), aligning with the collection path.
+- Added a `## Return Type` section to `Temperature.md`, `Weight.md`, and `Length.md` documenting the matching-type behavior.
+- Documented DSL function aliases across the relevant pages: `cnv` / `convert`, `arr` / `arrange`, `fe` / `foreach`.
+- Added `Docs/AlchemyResult.md`, covering chaining (`Transform` / `TransformAsync`), async helpers (`AlchemyResultTaskExtensions`), and internal-oriented members (`Parse`, `TryParse`, `RawSource`).
+- Documented `BuildToString()` in `FluentAPI.md`.
+- Linked `AlchemyResult.md` from the `README.md` documentation table and `GettingStarted.md`'s Next Steps.
+- Fixed broken FAQ anchor and incorrect enum types (`FeSeqParam` → `FeDictParam`) in `Dictionaries.md`.
+
 ## V3.0.0-preview.6
 
 *Focus: Fix DeepClone issue*
