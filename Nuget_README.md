@@ -2,7 +2,19 @@
 
 A lightweight and efficient C# library for fast object transformation using a simple DSL syntax. Format collections, convert units, sort data – all with intuitive string instructions.
 
-> 📌 This documentation reflects the upcoming V3.0.0 release.
+> 📌 This documentation reflects the stable **V3.0.0** release.
+
+## Installation
+
+```bash
+dotnet add package SeanOne.Alchemy --version 3.0.0
+```
+
+Or via Package Manager Console:
+
+```
+Install-Package SeanOne.Alchemy -Version 3.0.0
+```
 
 ## Quick Examples
 
@@ -71,7 +83,7 @@ string result = AlchemyFormatBuilder.SelectFeSeq()
 
 ## Documentation
 
-- [Full README](https://github.com/TW-YTFeathered/SeanOne.Alchemy/tree/master/README.md)
+- [Full README](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/README.md)
 - [Getting Started](https://github.com/TW-YTFeathered/SeanOne.Alchemy/blob/master/Docs/GettingStarted.md)
 
 ## GitHub Repository
