@@ -4,6 +4,21 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0
+
+*Focus: First stable release of the unified transformation framework*
+
+- **Unified entry point** – `AlchemyFormatter` is consolidated into `Alchemy`. `AlchemyFormatter` is now marked `[Obsolete]`.
+  - `Alchemy.Format` – object → string formatting, returns `string`.
+  - `Alchemy.Transform` – object → object transformations (sorting, unit conversion), also routes formatting instructions to `Format`. Returns an `AlchemyResult` supporting chaining, async helpers, and typed extraction.
+- **Conversion functions**
+  - `cnv` / `convert` with `/temp`, `/weight`, `/length` parameters. Unit codes are case-insensitive.
+  - `arr` / `arrange` with `/sort` for collection sorting (insertion sort, `Array.Sort`, LINQ sort; ascending/descending).
+- **Formatting enhancements** – `/begin` parameter; `/fe-opt` for optimized collection/dictionary formatting; `/prefix` / `/suffix` for whole-result decoration.
+- **Target frameworks** – .NET Standard 2.0, .NET 8.0, .NET 10.0.
+- **Performance** – Optimized the collection/dictionary formatting path (`/fe-opt`) to reduce allocations; static readonly dictionaries reduce allocations.
+- **Documentation** – Restructured into a multi-file system under `Docs/`, including `AlchemyResult.md`, DSL syntax reference, error handling, FAQ, and per-feature guides.
+
 ## V3.0.0-preview.7
 
 *Focus: Fix `cnv` single-value return type and fill documentation gaps*
