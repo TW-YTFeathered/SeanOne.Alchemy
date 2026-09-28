@@ -112,11 +112,13 @@ See `UpdateLog.md` in the repository root.
 
 ### What are the compatibility risks of `/fe-opt:true`?
 
-The optimized formatter (`/fe-opt:true`) leverages `Span`-based APIs and `ArrayPool` for better performance. While it works flawlessly for standard BCL collections (`List<T>`, `T[]`, etc.), it may encounter issues with:
+On **.NET 6.0+**, the optimized formatter (`/fe-opt:true`) leverages `Span`-based APIs and `ArrayPool<char>` for better performance. On **.NET Standard 2.0**, a fallback implementation is used instead.
+
+While the optimized path works flawlessly for standard BCL collections (`List<T>`, `T[]`, etc.), it may encounter issues with:
 
 - **Custom collections** that do not properly implement `IEnumerator` (e.g., returning a non-disposable enumerator, or throwing exceptions during `MoveNext()` that are not handled).
 - **Non-generic `IEnumerable`** implementations that rely on legacy iteration patterns.
-- In .NET 6+, if the element type does not implement `ISpanFormattable`, the formatter safely falls back to `IFormattable`, so this is rarely a problem.
+- If the element type does not implement `ISpanFormattable`, the formatter safely falls back to `IFormattable`, so this is rarely a problem.
 
 **What to do if it fails:**  
 Set `/fe-opt:false` (or omit it, as `false` is the default) to use the stable, legacy formatter. If you encounter a failure, please report it with a minimal reproduction so the team can investigate.
