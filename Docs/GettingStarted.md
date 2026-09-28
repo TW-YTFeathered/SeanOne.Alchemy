@@ -5,12 +5,12 @@ Alchemy is a lightweight C# library that transforms objects using concise DSL in
 ## Installation
 
 ```bash
-dotnet add package SeanOne.Alchemy --version 2.0.0
+dotnet add package SeanOne.Alchemy --version 3.0.0
 ```
 
 Or via Package Manager Console:
 ```
-Install-Package SeanOne.Alchemy -Version 2.0.0
+Install-Package SeanOne.Alchemy -Version 3.0.0
 ```
 
 ## Basic Concepts
