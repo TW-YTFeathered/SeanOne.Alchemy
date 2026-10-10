@@ -20,7 +20,7 @@ namespace SeanOne.Alchemy
         /// <param name="commandName"> 呼叫時的指令名稱(僅用做 throw 時) </param>
         private static string FE(object obj, string dslInstruction, string commandName)
         {
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException($"Target object cannot be null for '{commandName}' directive");
             if (obj is string)
                 throw new ArgumentException($"String is not supported for '{commandName}' directive");
@@ -40,7 +40,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 exclude-last-end 參數
             bool exclude_last_end = false;
-            string excludeLastEndValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
+            string excludeLastEndValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
             if (!string.IsNullOrEmpty(excludeLastEndValue) &&
                 bool.TryParse(excludeLastEndValue, out bool parsedEndPrint))
             {
@@ -49,7 +49,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 fe-opt
             bool fe_opt = false;
-            string feOptValue = Get.ExtractParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
+            string feOptValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
             if (!string.IsNullOrEmpty(feOptValue) &&
                 bool.TryParse(feOptValue, out bool parsedOptPrint))
             {
@@ -65,8 +65,7 @@ namespace SeanOne.Alchemy
             // 處理字典類型
             if (obj is IDictionary dictionary)
             {
-                if (!Judge.ValidateCodeParametersAuto(dslInstruction, dictionary.GetType(), out var invalidParams))
-                    throw new ArgumentException($"Invalid parameters for dictionary processing: {string.Join(", ", invalidParams)}");
+                Judge.EnsureParameters(dslInstruction, "dictionary", dictionary.GetType());
 
                 if (fe_opt)
                     return FE_ProcessDictionary_Optimized(dictionary,
@@ -83,8 +82,7 @@ namespace SeanOne.Alchemy
             }
 
             // 處理普通集合類型
-            if (!Judge.ValidateCodeParametersAuto(dslInstruction, enumerable.GetType(), out var invalidParamsForEnum))
-                throw new ArgumentException($"Invalid parameters for enumerable processing: {string.Join(", ", invalidParamsForEnum)}");
+            Judge.EnsureParameters(dslInstruction, "enumerable", enumerable.GetType());
 
             if (fe_opt)
                 return FE_ProcessEnumerable_Optimized(enumerable,

@@ -1,5 +1,7 @@
 # Length Conversion with Alchemy.Transform
 
+Use the `cnv` (or `convert`) function to perform length conversion.
+
 The `/length` parameter converts numeric values between different length units.
 
 ## DSL Syntax
@@ -14,7 +16,7 @@ or
 cnv /length:sourceTotarget
 ```
 
-Parameter value is **case‑insensitive** – `KgToG`, `kgtog`, `KGTOG` all work the same.
+Parameter value is **case‑insensitive** – `CmToM`, `cmtom`, `CMTOM` all work the same.
 
 ## Supported Units
 
@@ -69,6 +71,18 @@ Alchemy.Transform(data, "arr /sort:is", "cnv /length:M->KM");
 
 - Single numeric: `int`, `double`, `decimal`, `float`, etc.
 - Collection of numerics: any `IEnumerable` where each element can be converted to `double`.
+
+## Return Type
+
+The output type matches the input type.
+
+```csharp
+int m = 1000;
+int km = Alchemy.Transform(m, "cnv /length:M->KM").ToObject<int>();   // 1
+
+var ms = new List<int> { 1000, 2000 };
+Alchemy.Transform(ms, "cnv /length:M->KM");                            // List<int> { 1, 2 }
+```
 
 ## Important Notes
 

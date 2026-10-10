@@ -1,7 +1,7 @@
 # Error Handling
 
-This document lists common exceptions thrown by `Alchemy.Format` and how to resolve them.  
-*Note: This document covers exceptions for both `Alchemy.Format` and `Alchemy.Transform`. Errors are grouped by operation type to help you quickly locate the cause.*
+This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Transform`, and `AlchemyResult`, and how to resolve them.  
+**Note: This document covers exceptions for `Alchemy.Format`, `Alchemy.Transform`, and `AlchemyResult`.**
 
 ## `Alchemy.Format` Exceptions
 
@@ -22,9 +22,9 @@ This document lists common exceptions thrown by `Alchemy.Format` and how to reso
 |--------------------|---------------|-------------|
 | `String is not supported for 'fe' directive` (or `'foreach'`) | You tried to format a `string` with `fe`. | Use `basic` instead, or wrap the string in a collection like `new[] { myString }`. |
 | `Object must implement IEnumerable for 'fe' directive` | You used `fe` on a non‑collection object. | Use `basic` for single objects. If you intended a collection, ensure it implements `IEnumerable`. |
-| `Invalid parameters for basic processing: ...` | The DSL instruction contains parameter(s) not allowed for `basic`. | Check the list of allowed parameters for `basic` (`/tostring`, `/prefix`, `/suffix`, `/begin`, `/end`). Remove unsupported ones. |
-| `Invalid parameters for enumerable processing: ...` | The DSL contains parameters that are not allowed for sequences (e.g., `/dict-format` used on a list). | Only use dictionary‑specific parameters (`/dict-format`, `/key-format`, `/value-format`) when the input is actually an `IDictionary`. |
-| `Invalid parameters for dictionary processing: ...` | The DSL contains parameters not allowed for dictionaries (e.g., `/final-pair-separator` might not be applicable – check current parameter table). | Use valid dictionary parameters: `/dict-format`, `/key-format`, `/value-format`, `/begin`, `/end`, `/prefix`, `/suffix`, `/exclude-last-end` (and optionally `/fe-opt`). |
+| `Invalid parameters for basic processing: invalid, unknown` | The DSL instruction contains parameter(s) not allowed for `basic`. | Check the list of allowed parameters for `basic` (`tostring`, `prefix`, `suffix`, `begin`, `end`). Remove unsupported ones. |
+| `Invalid parameters for enumerable processing: dict-format` | The DSL contains parameters that are not allowed for sequences (e.g., `/dict-format` used on a list). | Only use dictionary‑specific parameters (`dict-format`, `key-format`, `value-format`) when the input is actually an `IDictionary`. |
+| `Invalid parameters for dictionary processing: sort` | The DSL contains parameters not allowed for dictionaries (e.g., `/sort` is not valid for dictionaries). | Use valid dictionary parameters: `dict-format`, `key-format`, `value-format`, `begin`, `end`, `prefix`, `suffix`, `exclude-last-end` (and optionally `fe-opt`). |
 | `Collection elements must implement IFormattable for 'tostring'. Found: {TypeName}` | You used `/tostring` but one of the elements (or the object itself in `basic`) does not implement `IFormattable`. Common example: trying to format a `string` with `/tostring:F2`. | Remove `/tostring` if you don't need custom formatting. If you need numeric formatting, ensure the collection contains numeric types (like `int`, `double`, `DateTime`, etc.), not `string`. |
 | `Parameter '/xxx:' is specified multiple times.` | The same parameter (e.g., `/tostring`) appears more than once in the same instruction. | Use each parameter only once. Combine or remove duplicates. |
 
@@ -43,6 +43,7 @@ This document lists common exceptions thrown by `Alchemy.Format` and how to reso
 | Exception | Scenario |
 |-----------|----------|
 | `ArgumentNullException` | The input object is `null`, or the DSL instruction string is `null` or empty. |
+| `ArgumentException` (parameter validation) | The DSL instruction contains parameters not allowed for the requested operation. The error message will indicate which operation (`arr`, `cnv`, `enumerable`, `dictionary`) and list the invalid parameters (e.g., `Invalid parameters for arr processing: sortx, unknown`). |
 
 ### Unit Conversion (`/weight`, `/length`, `/temp`)
 
@@ -50,6 +51,7 @@ This document lists common exceptions thrown by `Alchemy.Format` and how to reso
 |-----------|------------------|
 | `ArgumentException` | Unknown unit code (e.g., `/temp:X->Y`). <br> Negative value for length or weight. <br> Temperature below absolute zero (0 K). <br> Unable to determine element type of the list (non-generic collections without clear type). |
 | `InvalidOperationException` | A collection element is `null` and cannot be converted. <br> An element cannot be cast to a numeric type (`double`). <br> The conversion result overflows the target element type (e.g., converting a huge `double` to `int`). |
+| `OverflowException` | A single-value conversion result exceeds the range of the input type (e.g., `Transform(1e20, "cnv /temp:C->F")` on an `int`). Collections wrap this as `InvalidOperationException` instead. |
 
 ### Sorting (`/sort`)
 
@@ -62,8 +64,28 @@ This document lists common exceptions thrown by `Alchemy.Format` and how to reso
 
 When `Transform` receives a formatting instruction (`basic`, `fe`, `foreach`, or an instruction starting with `/`), it internally routes the call to `Alchemy.Format`. In these cases, **all exceptions listed in the [Alchemy.Format Errors](#alchemyformat-errors) section** apply identically (e.g., invalid parameters, unsupported `/tostring` on strings, etc.).
 
+## `AlchemyResult` Exceptions
+
+When extracting data from an `AlchemyResult`, some methods have strict type requirements that can throw exceptions if not met.
+
+### InvalidCastException
+
+| Scenario | What it means | How to fix |
+|----------|---------------|------------|
+| `Unable to cast object of type '{ActualType}' to type '{TargetType}'.` | You called `ToObject<T>()` on a wrapped object that is not actually of type `T` (or a derived type). For example, trying `ToObject<int>()` when the wrapped object is a `string`. | Use the correct type for `T`, or use a conversion method (e.g., `GetInt32()`, `GetDouble()`) if you want to parse the value. |
+| `Cannot convert {TypeName} to any enumerable type.` | You called `GetObjectList()` or any `GetXxxList()` on a wrapped object that is not an `IEnumerable` (e.g., a single `int`). | Use single-value conversion methods instead, or ensure the object is a collection before using collection methods. |
+
+### InvalidOperationException
+
+| Scenario | What it means | How to fix |
+|----------|---------------|------------|
+| `The source object of type '{TypeName}' cannot be converted to List<{T}>.` | You called `ToList<T>()` on a wrapped object that does **not** exactly implement `IEnumerable<T>`. Common cases: using `ArrayList` (non-generic), or trying to convert `List<int>` to `List<object>`. | Use the appropriate `GetXxxList()` extension method instead (e.g., `GetInt32List()`, `GetDoubleList()`, `GetStringList()`). These methods iterate and convert each element. Alternatively, use `ToObject<T>()` and manually cast/convert. |
+| `Item at index {i} is null and cannot be converted.` | You called a `GetXxxList()` method (e.g., `GetDoubleList()`) on a collection that contains a `null` element, and `null` cannot be parsed to that value type. | Either ensure the collection contains no `null` values before conversion, or handle `null` elements upstream. |
+| `Failed to convert item at index {i}: '{item}'` | An element inside the collection failed to parse to the target type (e.g., `"abc"` cannot be parsed to `int`). | Verify the data types of your collection elements. Use `GetStringList()` if you only need string representations, or clean your data before conversion. |
+
 ## Additional Notes
 
+- DSL parameters are written with a leading `/` and a `:` separator, e.g., `/tostring:F2`. In error messages, parameter names are shown **without** the leading `/` for brevity.
 - `Alchemy.FormatAsync` and `Alchemy.TransformAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
 - `null` elements inside a collection are formatted as empty strings – they **do not** cause exceptions.
 - `Alchemy.Format` does **not** modify the input object (no cloning). Only `Alchemy.Transform` performs deep cloning.

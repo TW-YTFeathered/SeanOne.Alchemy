@@ -4,6 +4,66 @@
 > including versions developed in the original repository (now closed)
 > and all subsequent releases under the new name `SeanOne.Alchemy`.
 
+## V3.0.0
+
+*Focus: First stable release of the unified transformation framework*
+
+- **Unified entry point** – `AlchemyFormatter` is consolidated into `Alchemy`. `AlchemyFormatter` is now marked `[Obsolete]`.
+  - `Alchemy.Format` – object → string formatting, returns `string`.
+  - `Alchemy.Transform` – object → object transformations (sorting, unit conversion), also routes formatting instructions to `Format`. Returns an `AlchemyResult` supporting chaining, async helpers, and typed extraction.
+- **Conversion functions**
+  - `cnv` / `convert` with `/temp`, `/weight`, `/length` parameters. Unit codes are case-insensitive.
+  - `arr` / `arrange` with `/sort` for collection sorting (insertion sort, `Array.Sort`, LINQ sort; ascending/descending).
+- **Formatting enhancements** – `/begin` parameter; `/fe-opt` for optimized collection/dictionary formatting; `/prefix` / `/suffix` for whole-result decoration.
+- **Target frameworks** – .NET Standard 2.0, .NET 8.0, .NET 10.0.
+- **Performance** – Optimized the collection/dictionary formatting path (`/fe-opt`) to reduce allocations; static readonly dictionaries reduce allocations.
+- **Documentation** – Restructured into a multi-file system under `Docs/`, including `AlchemyResult.md`, DSL syntax reference, error handling, FAQ, and per-feature guides.
+
+## V3.0.0-preview.7
+
+*Focus: Fix `cnv` single-value return type and fill documentation gaps*
+
+- Fixed `cnv` single-value conversion returning a boxed `double` regardless of the input type. The result is now cast back to the actual input type (e.g., `int` → `int`), aligning with the collection path.
+- Added a `## Return Type` section to `Temperature.md`, `Weight.md`, and `Length.md` documenting the matching-type behavior.
+- Documented DSL function aliases across the relevant pages: `cnv` / `convert`, `arr` / `arrange`, `fe` / `foreach`.
+- Added `Docs/AlchemyResult.md`, covering chaining (`Transform` / `TransformAsync`), async helpers (`AlchemyResultTaskExtensions`), and internal-oriented members (`Parse`, `TryParse`, `RawSource`).
+- Documented `BuildToString()` in `FluentAPI.md`.
+- Linked `AlchemyResult.md` from the `README.md` documentation table and `GettingStarted.md`'s Next Steps.
+- Fixed broken FAQ anchor and incorrect enum types (`FeSeqParam` → `FeDictParam`) in `Dictionaries.md`.
+
+## V3.0.0-preview.6
+
+*Focus: Fix DeepClone issue*
+
+- Fixed an issue in `DeepClone` that could cause incorrect cloning behavior.
+
+## V3.0.0-preview.5
+
+*Focus: API documentation completion, error behavior hardening, and asset updates*
+
+- Completed XML documentation comments for the `AlchemyResult` class, improving IntelliSense and developer experience.
+- Updated `AlchemyResult.ToList<T>()` to explicitly throw exceptions for unsupported types instead of silently returning empty or default results, making error conditions more transparent.
+- Expanded and revised documentation to align with the latest behavioral changes.
+- Updated `icon.png` to refine the visual identity.
+- Added Copyright metadata embedded in the compiled DLL for better attribution and compliance.
+- Fixed an issue where `cnv` and `arr` parameters failed to report errors for unsupported parameters, now providing clear exception messages.
+  
+## V3.0.0-preview.4
+
+*Focus: Optimize target framework architecture*
+
+- Removed most .NET runtimes, keeping only .NET Standard 2.0 and currently supported LTS versions (.NET 8.0, .NET 10.0)
+- Updated documentation to reflect this update
+
+## V3.0.0-preview.3
+
+*Focus: Documentation and packaging refinements*
+
+- Added descriptions for `GetX` and `GetXList`.  
+- Updated `icon.png` to better align with V3.0.0.  
+- Updated `Nuget_README.md` to better reflect V3.0.0.  
+- Updated `pack_nuget.ps1` to version V3.0.0-preview.3.
+
 ## V3.0.0-preview.2
 
 *Focus: Class unification & documentation alignment*

@@ -18,6 +18,8 @@ string result = AlchemyFormatBuilder.SelectBasic()
 ## Reusable Formatter
 
 ```csharp
+using SeanOne.Alchemy.Builder;
+
 var formatter = AlchemyFormatBuilder.SelectBasic()
     .With(BasicParam.End, "!")
     .With(BasicParam.ToString, "F2")
@@ -26,6 +28,23 @@ var formatter = AlchemyFormatBuilder.SelectBasic()
 formatter.Run(5);   // "5.00!"
 formatter.Run(12);  // "12.00!"
 ```
+
+## Inspecting the DSL String
+
+`BuildToString()` is a shortcut for `Build().ToString()`. It returns the generated DSL instruction without executing it.
+
+```csharp
+using SeanOne.Alchemy.Builder;
+
+string dsl = AlchemyFormatBuilder.SelectBasic()
+    .With(BasicParam.ToString, "F2")
+    .BuildToString();
+// dsl == "basic /tostring:\"F2\""
+```
+
+This is useful for logging, debugging, or when you want to pass the built instruction to `Alchemy.Format` / `Alchemy.Transform` as a plain DSL string.
+
+> 💡 `BuildRun(obj)` is the complementary shortcut — it builds and immediately executes against `obj`. See [Basic Usage](#basic-usage-formatting).
 
 ## SelectXx Methods
 
@@ -76,7 +95,7 @@ The `AlchemyExecutable` returned by `Build()` provides two ways to execute the c
 using SeanOne.Alchemy;
 
 var data = new List<double> { 0, 100, 25 };
-AlchemyResult result = executable.RunAsTransform(data);
+var result = executable.RunAsTransform(data);
 double first = result.ToObject<List<double>>()[0];
 ```
 
@@ -85,9 +104,11 @@ double first = result.ToObject<List<double>>()[0];
 #### 2. Using `Alchemy.Transform` with the DSL string(s)
 
 ```csharp
-AlchemyResult result = Alchemy.Transform(data, executable.ToString());
+using SeanOne.Alchemy;
+
+var result = Alchemy.Transform(data, executable.ToString());
 // Or for multiple instructions:
-AlchemyResult result = Alchemy.Transform(data, executable.GetDsls());
+var result = Alchemy.Transform(data, executable.GetDsls());
 ```
 
 ### Pipeline Builder (Beta)
@@ -95,6 +116,8 @@ AlchemyResult result = Alchemy.Transform(data, executable.GetDsls());
 Combine multiple instructions into a pipeline:
 
 ```csharp
+using SeanOne.Alchemy.Builder;
+
 var pipeline = AlchemyBuilder.CreatePipeline()
     .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Sort, "as"))
     .Add(AlchemyBuilder.SelectCnv().With(CnvParam.Temp, "F->C"))

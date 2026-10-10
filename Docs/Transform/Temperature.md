@@ -1,5 +1,7 @@
 # Temperature Conversion with Alchemy.Transform
 
+Use the `cnv` (or `convert`) function to perform temperature conversion.
+
 The `/temp` parameter converts numeric values between Celsius, Fahrenheit, and Kelvin.
 
 ## DSL Syntax
@@ -68,6 +70,18 @@ Alchemy.Transform(data, "arr /sort:is", "cnv /temp:F->C");
 
 - Single numeric: `int`, `double`, `decimal`, `float`, etc.
 - Collection of numerics: any `IEnumerable` where each element can be converted to `double`.
+
+## Return Type
+
+The output type matches the input type.
+
+```csharp
+int c = 25;
+int f = Alchemy.Transform(c, "cnv /temp:C->F").ToObject<int>();   // 77
+
+var ints = new List<int> { 0, 100 };
+Alchemy.Transform(ints, "cnv /temp:C->K");                        // List<int> { 273, 373 }
+```
 
 ## Important Notes
 

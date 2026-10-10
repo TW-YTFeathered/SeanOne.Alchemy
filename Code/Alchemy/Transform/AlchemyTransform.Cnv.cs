@@ -3,6 +3,7 @@
 
 using SeanOne.Alchemy.Definitions;
 using SeanOne.Alchemy.Utility;
+using System;
 
 namespace SeanOne.Alchemy
 {
@@ -10,6 +11,8 @@ namespace SeanOne.Alchemy
     {
         private static AlchemyResult Cnv(object copyObj, string dslInstruction)
         {
+            Judge.EnsureParameters(dslInstruction, "cnv");
+
             // 溫度轉換部分
             string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Temp), string.Empty);
             copyObj = ConvertTemperature(copyObj, tempCnvIns);

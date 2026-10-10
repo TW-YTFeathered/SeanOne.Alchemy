@@ -60,7 +60,7 @@ namespace SeanOne.Alchemy
                 // 單一數值處理
                 double value = Convert.ToDouble(input);
                 double result = ConvertSingleValue(value, instruction, actions);
-                return (T)Convert.ChangeType(result, typeof(T));
+                return (T)Convert.ChangeType(result, input.GetType());
             }
         }
 
@@ -107,7 +107,7 @@ namespace SeanOne.Alchemy
                 try
                 {
                     // 元素為 null 時無法轉換
-                    if (list[i] == null)
+                    if (list[i] is null)
                         throw new InvalidOperationException($"Element at index {i} is null, cannot convert");
 
                     // 將元素轉為 double 進行數值運算

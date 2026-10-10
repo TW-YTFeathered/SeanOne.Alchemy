@@ -9,7 +9,7 @@ namespace SeanOne.Alchemy.Sorting
     {
         public static void InsertionSortList(IList list, bool isDescending)
         {
-            if (list == null || list.Count <= 1)
+            if (list is null || list.Count <= 1)
                 return;
 
             int n = list.Count;

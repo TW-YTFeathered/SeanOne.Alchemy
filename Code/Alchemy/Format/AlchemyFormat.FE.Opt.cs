@@ -54,7 +54,7 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
-            if (dictionary == null) return prefix + suffix;
+            if (dictionary is null) return prefix + suffix;
             if (string.IsNullOrEmpty(dictFormat))
                 throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
@@ -144,7 +144,7 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
-            if (dictionary == null) return prefix + suffix;
+            if (dictionary is null) return prefix + suffix;
             if (string.IsNullOrEmpty(dictFormat))
                 throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
@@ -250,7 +250,7 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
-            if (enumerable == null) return prefix + suffix;
+            if (enumerable is null) return prefix + suffix;
 
             bool hasFormat = !string.IsNullOrEmpty(format);
             bool hasFps = !string.IsNullOrEmpty(final_pair_separator);
@@ -322,7 +322,7 @@ namespace SeanOne.Alchemy
             string prefix, string suffix,
             bool exclude_last_end)
         {
-            if (enumerable == null) return prefix + suffix;
+            if (enumerable is null) return prefix + suffix;
 
             bool hasFps = !string.IsNullOrEmpty(final_pair_separator);
 

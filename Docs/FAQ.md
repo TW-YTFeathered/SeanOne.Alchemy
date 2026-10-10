@@ -8,7 +8,10 @@ Alchemy's `\n` is converted to `Environment.NewLine` at runtime. On Windows that
 
 ### Does Alchemy modify my original object?
 
-No. All operations are performed on a **deep clone** of the input object. The original remains unchanged.
+- **`Alchemy.Format`**: No. It works directly on the original object without modifying it. No cloning is performed.
+- **`Alchemy.Transform`**: No. All operations are performed on a **deep clone** of the input object. The original remains unchanged.
+
+If you only need formatting, use `Alchemy.Format` to avoid the performance cost of cloning.
 
 ### Are the methods thread‑safe?
 
@@ -22,7 +25,9 @@ For large collections (thousands of elements), `/fe-opt:true` can be ~1.5x faste
 
 ### How expensive is deep cloning?
 
-Cloning is done via reflection, recursively copying all fields (including private ones). For very large objects, consider working on a copy you create yourself, or use the Fluent API to avoid cloning by design? Actually the library always clones. If performance is critical, you might want to contribute an option to disable cloning.
+Cloning is performed **only in `Alchemy.Transform`** – it uses reflection to recursively copy all fields (including private ones). `Alchemy.Format` does **not** clone the input object; it works directly on the original without modifying it.
+
+For very large objects, the cloning overhead in `Alchemy.Transform` can be significant. If you only need formatting, use `Alchemy.Format` to avoid the cost of cloning entirely.
 
 ## Formatting
 
@@ -93,7 +98,7 @@ No internal logging. All issues are reported via exceptions.
 
 ### What .NET versions are supported?
 
-. NET 6.0, 8.0, 10.0, .NET Standard 2.0, .NET Framework 4.7.2 and 4.8.
+.NET Standard 2.0, .NET 8.0, and .NET 10.0 are supported.
 
 ### Where can I report issues or request features?
 
@@ -107,11 +112,13 @@ See `UpdateLog.md` in the repository root.
 
 ### What are the compatibility risks of `/fe-opt:true`?
 
-The optimized formatter (`/fe-opt:true`) leverages `Span`-based APIs and `ArrayPool` for better performance. While it works flawlessly for standard BCL collections (`List<T>`, `T[]`, etc.), it may encounter issues with:
+On **.NET 6.0+**, the optimized formatter (`/fe-opt:true`) leverages `Span`-based APIs and `ArrayPool<char>` for better performance. On **.NET Standard 2.0**, a fallback implementation is used instead.
+
+While the optimized path works flawlessly for standard BCL collections (`List<T>`, `T[]`, etc.), it may encounter issues with:
 
 - **Custom collections** that do not properly implement `IEnumerator` (e.g., returning a non-disposable enumerator, or throwing exceptions during `MoveNext()` that are not handled).
 - **Non-generic `IEnumerable`** implementations that rely on legacy iteration patterns.
-- In .NET 6+, if the element type does not implement `ISpanFormattable`, the formatter safely falls back to `IFormattable`, so this is rarely a problem.
+- If the element type does not implement `ISpanFormattable`, the formatter safely falls back to `IFormattable`, so this is rarely a problem.
 
 **What to do if it fails:**  
 Set `/fe-opt:false` (or omit it, as `false` is the default) to use the stable, legacy formatter. If you encounter a failure, please report it with a minimal reproduction so the team can investigate.
@@ -123,7 +130,9 @@ It depends on the wrapped object:
 - If the underlying object is a **`string`**, `.ToString()` returns that string directly.
 - For **any other type**, it returns the base `Object.ToString()` implementation, which typically yields the type name (e.g., `System.Collections.Generic.List`1[System.Int32]`).
 
-**To get the string representation of the wrapped object** (calling its `ToString()` method), use the extension method `.GetString()` provided in `AlchemyConverterExpansions`. This ensures you always get the intended textual representation.
+**To get the string representation of the wrapped object** (calling its `ToString()` method):
+- If you know the wrapped object is a `string` (e.g., after using `Transform` with formatting instructions), `.ToString()` is sufficient.
+- For other cases, the `.GetString()` extension method is available as a convenience – it simply calls `ToString()` on the wrapped object and is provided for symmetry with `GetStringList()`.
 
 ### How does deep cloning handle circular references?
 

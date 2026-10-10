@@ -144,7 +144,7 @@ namespace SeanOne.Alchemy
         /// <returns>轉換後的 List</returns>
         private static List<T> GetList<T>(this AlchemyResult result, Func<string, T> converter)
         {
-            if (converter == null)
+            if (converter is null)
                 throw new ArgumentNullException(nameof(converter));
 
             // 如果已經是 IEnumerable<T>，直接轉換 (此時元素型別完全符合)
@@ -184,13 +184,13 @@ namespace SeanOne.Alchemy
 
         private static string GetItemString(object item)
         {
-            if (item == null)
+            if (item is null)
                 throw new InvalidCastException("Item is null and cannot be converted.");
             return item.ToString();
         }
         private static string GetItemString(object item, int index)
         {
-            if (item == null)
+            if (item is null)
                 throw new InvalidCastException($"Item at index {index} is null and cannot be converted.");
             return item.ToString();
         }

@@ -1,7 +1,7 @@
 # SeanOne.Alchemy
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)  
-![.NET Support](https://img.shields.io/badge/.NET-net6.0%20%7C%20net8.0%20%7C%20net10.0%20%7C%20netstandard2.0%20%7C%20net472%20%7C%20net48-blue)
+![.NET Support](https://img.shields.io/badge/.NET-net8.0%20%7C%20net10.0%20%7C%20netstandard2.0-blue)
 
 **Alchemy** is a lightweight C# library that enables fast and flexible object transformation through concise DSL syntax – a true data alchemy.
 
@@ -10,7 +10,7 @@
 > Please use the new unified entry points:  
 > - `Alchemy.Format` for formatting objects to strings.  
 > - `Alchemy.Transform` for conversions (sorting, unit conversion, etc.) and combined operations.  
-> Both methods return an `AlchemyResult` which provides fluent conversion and chaining.
+> `Alchemy.Format` returns a `string`, while `Alchemy.Transform` returns an `AlchemyResult` – the latter provides fluent conversion and chaining.
 
 ## ✨ Core Features
 
@@ -60,6 +60,8 @@ var sortedResult = Alchemy.Transform(numbers, "arr /sort:is");
 List<int> sorted = sortedResult.ToObject<List<int>>();
 // Result: [1, 2, 5, 8]
 
+// You can also use GetStringList(), GetDoubleList(), etc. to convert elements.
+
 // Temperature conversion
 double fahrenheit = 212.0;
 double celsius = Alchemy.Transform(fahrenheit, "cnv /temp:F->C").ToObject<double>();
@@ -85,6 +87,7 @@ Console.WriteLine(result.ToString()); // Total: $99.99
 | Formatting Guide | [Docs/Format/](Docs/Format/) |
 | Conversion Guide | [Docs/Transform/](Docs/Transform/) |
 | Fluent API | [Docs/FluentAPI.md](Docs/FluentAPI.md) |
+| AlchemyResult API | [Docs/AlchemyResult.md](Docs/AlchemyResult.md) |
 | Error Handling | [Docs/ErrorHandling.md](Docs/ErrorHandling.md) |
 | FAQ | [Docs/FAQ.md](Docs/FAQ.md) |
 

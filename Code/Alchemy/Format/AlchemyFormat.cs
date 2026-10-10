@@ -20,7 +20,7 @@ namespace SeanOne.Alchemy
         public static string Format(object obj, string dslInstruction)
         {
             // 檢查 物件 是否是 null
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException("Input object must not be null.");
 
             // 檢查 DSL 指令是否為空或 null
