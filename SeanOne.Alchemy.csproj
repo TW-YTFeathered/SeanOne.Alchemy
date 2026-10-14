@@ -12,6 +12,7 @@
 	<PackageReadmeFile>Nuget_README.md</PackageReadmeFile>
 	<PackageIcon>icon.png</PackageIcon>
 	<Configurations>Debug;Release;Beta</Configurations>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
