@@ -6,19 +6,18 @@ using SeanOne.Alchemy.Sorting;
 using SeanOne.Alchemy.Utility;
 using System;
 
-namespace SeanOne.Alchemy
+namespace SeanOne.Alchemy;
+
+partial class Alchemy
 {
-    partial class Alchemy
+    private static AlchemyResult Arr(object copyObj, string dslInstruction)
     {
-        private static AlchemyResult Arr(object copyObj, string dslInstruction)
-        {
-            Judge.EnsureParameters(dslInstruction, "arr");
+        Judge.EnsureParameters(dslInstruction, "arr");
 
-            // 排序部分
-            string sortStr = dslInstruction.ParamField(ArrParams.Sort);
-            Sort.Entry(copyObj, sortStr);
+        // 排序部分
+        string sortStr = dslInstruction.ParamField(ArrParams.Sort);
+        Sort.Entry(copyObj, sortStr);
 
-            return AlchemyResult.Parse(copyObj);
-        }
+        return AlchemyResult.Parse(copyObj);
     }
 }

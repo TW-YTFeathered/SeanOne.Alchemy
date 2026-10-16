@@ -4,21 +4,20 @@
 using System;
 using System.Collections;
 
-namespace SeanOne.Alchemy.Sorting
-{
-    internal partial class ListSorter
-    {
-        private static readonly Comparer s_Comparer = Comparer.Default;
+namespace SeanOne.Alchemy.Sorting;
 
-        public static void Sort(IList list, string algorithm)
-        {
-            // 嘗試取得函式，並執行
-            if (SortCommands.ListSorterActions.TryGetValue(algorithm, out var action))
-                action(list);
-            else
-                throw new ArgumentException(
-                    $"The sorting algorithm '{algorithm}' is not supported."
-                    , nameof(algorithm));
-        }
+internal partial class ListSorter
+{
+    private static readonly Comparer s_Comparer = Comparer.Default;
+
+    public static void Sort(IList list, string algorithm)
+    {
+        // 嘗試取得函式，並執行
+        if (SortCommands.ListSorterActions.TryGetValue(algorithm, out var action))
+            action(list);
+        else
+            throw new ArgumentException(
+                $"The sorting algorithm '{algorithm}' is not supported."
+                , nameof(algorithm));
     }
 }

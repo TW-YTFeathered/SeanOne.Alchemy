@@ -5,106 +5,105 @@ using SeanOne.Alchemy.Definitions;
 using System;
 using System.Text.RegularExpressions;
 
-namespace SeanOne.Alchemy.Utility
+namespace SeanOne.Alchemy.Utility;
+
+/// <summary>
+/// DSL 指令解析工具，提供從指令字串取出指令名與參數欄位值的方法。
+/// </summary>
+internal static class Get
 {
     /// <summary>
-    /// DSL 指令解析工具，提供從指令字串取出指令名與參數欄位值的方法。
+    /// 從 dslInstruction 中提取參數的值
     /// </summary>
-    internal static class Get
+    /// <param name="dslInstruction"> Dsl 指令(要被提取的字串) </param>
+    /// <param name="parameterName"> 要提取的參數名稱 </param>
+    private static string ParameterValue(string dslInstruction, string parameterName)
     {
-        /// <summary>
-        /// 從 dslInstruction 中提取參數的值
-        /// </summary>
-        /// <param name="dslInstruction"> Dsl 指令(要被提取的字串) </param>
-        /// <param name="parameterName"> 要提取的參數名稱 </param>
-        private static string ParameterValue(string dslInstruction, string parameterName)
+        if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
+            return string.Empty;
+
+        // 檢查參數是否重複出現，若有則拋出例外
+        if (Judge.SingleParameter(dslInstruction, parameterName))
+            throw new ArgumentException($"Parameter '{parameterName}' is specified multiple times.");
+
+        int startIndex = dslInstruction.IndexOf(parameterName); // 找到參數名稱的位置
+        if (startIndex == -1) // 如果找不到參數名稱，回傳空字串
+            return string.Empty;
+
+        startIndex += parameterName.Length;
+
+        // 跳過空白字符
+        while (startIndex < dslInstruction.Length && char.IsWhiteSpace(dslInstruction[startIndex]))
+            startIndex++;
+
+        if (startIndex >= dslInstruction.Length) // 如果已經到達字串末尾，回傳空字串
+            return string.Empty;
+
+        // 檢查是否以引號開頭
+        if (dslInstruction[startIndex] == '"')
         {
-            if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
-                return string.Empty;
+            startIndex++; // 跳過開頭的引號
+            int endIndex = dslInstruction.IndexOf('"', startIndex);
 
-            // 檢查參數是否重複出現，若有則拋出例外
-            if (Judge.SingleParameter(dslInstruction, parameterName))
-                throw new ArgumentException($"Parameter '{parameterName}' is specified multiple times.");
+            // 如果找不到結尾的引號，則取到字串末尾
+            if (endIndex == -1)
+                endIndex = dslInstruction.Length;
 
-            int startIndex = dslInstruction.IndexOf(parameterName); // 找到參數名稱的位置
-            if (startIndex == -1) // 如果找不到參數名稱，回傳空字串
-                return string.Empty;
-
-            startIndex += parameterName.Length;
-
-            // 跳過空白字符
-            while (startIndex < dslInstruction.Length && char.IsWhiteSpace(dslInstruction[startIndex]))
-                startIndex++;
-
-            if (startIndex >= dslInstruction.Length) // 如果已經到達字串末尾，回傳空字串
-                return string.Empty;
-
-            // 檢查是否以引號開頭
-            if (dslInstruction[startIndex] == '"')
-            {
-                startIndex++; // 跳過開頭的引號
-                int endIndex = dslInstruction.IndexOf('"', startIndex);
-                
-                // 如果找不到結尾的引號，則取到字串末尾
-                if (endIndex == -1)
-                    endIndex = dslInstruction.Length;
-
-                string value = dslInstruction.Substring(startIndex, endIndex - startIndex); // 擷取參數值
-                value = ConvertToUnicode.DecodeUnicodeEscapes(value); // 轉換 Unicode
-                return ConvertToUnicode.Unescape(value); // 處理轉義字元
-            }
-            else
-            {
-                // 非引號開頭，取到下一個空白或 '/' 為止
-                int endIndex = FindNextTerminator(dslInstruction, startIndex); // 尋找終止符位置
-                string value = dslInstruction.Substring(startIndex, endIndex - startIndex); // 擷取參數值
-                value = ConvertToUnicode.DecodeUnicodeEscapes(value); // 轉換 Unicode
-                return ConvertToUnicode.Unescape(value); // 處理轉義字元
-            }
+            string value = dslInstruction.Substring(startIndex, endIndex - startIndex); // 擷取參數值
+            value = ConvertToUnicode.DecodeUnicodeEscapes(value); // 轉換 Unicode
+            return ConvertToUnicode.Unescape(value); // 處理轉義字元
         }
-
-        /// <summary>
-        /// 從 DSL 指令字串中，以參數常數取出對應的欄位值，若該欄位不存在或值為空，則回傳指定的預設值。
-        /// </summary>
-        /// <param name="dslIns"> DSL 指令字串 </param>
-        /// <param name="paramKey"> 參數名稱常數 (如 <see cref="CommonParams.Begin"/>) </param>
-        /// <param name="def"> 找不到或值為空時回傳的預設值，預設為空字串 </param>
-        /// <returns> 該參數對應的值: 找不到時為 <paramref name="def"/> </returns>
-        public static string ParamField(this string dslIns, string paramKey, string def = "")
+        else
         {
-            string param = DslSyntaxBuilder.BuildParamKey(paramKey);
-            string res = ParameterValue(dslIns, param);
-            return string.IsNullOrEmpty(res) ? def : res;
+            // 非引號開頭，取到下一個空白或 '/' 為止
+            int endIndex = FindNextTerminator(dslInstruction, startIndex); // 尋找終止符位置
+            string value = dslInstruction.Substring(startIndex, endIndex - startIndex); // 擷取參數值
+            value = ConvertToUnicode.DecodeUnicodeEscapes(value); // 轉換 Unicode
+            return ConvertToUnicode.Unescape(value); // 處理轉義字元
         }
+    }
 
-        /// <summary>
-        /// 尋找下一個終止字元 (空格或“/”)
-        /// </summary>
-        /// <param name="dslInstruction"> Dsl 指令(要被查找的字串) </param>
-        /// <param name="startIndex"> 開始查找的位置 </param>
-        private static int FindNextTerminator(string dslInstruction, int startIndex)
-        {
-            // 如果要查找的位置大於字串本身長度，直接返回字串長度
-            if (startIndex >= dslInstruction.Length)
-                return dslInstruction.Length;
+    /// <summary>
+    /// 從 DSL 指令字串中，以參數常數取出對應的欄位值，若該欄位不存在或值為空，則回傳指定的預設值。
+    /// </summary>
+    /// <param name="dslIns"> DSL 指令字串 </param>
+    /// <param name="paramKey"> 參數名稱常數 (如 <see cref="CommonParams.Begin"/>) </param>
+    /// <param name="def"> 找不到或值為空時回傳的預設值，預設為空字串 </param>
+    /// <returns> 該參數對應的值: 找不到時為 <paramref name="def"/> </returns>
+    public static string ParamField(this string dslIns, string paramKey, string def = "")
+    {
+        string param = DslSyntaxBuilder.BuildParamKey(paramKey);
+        string res = ParameterValue(dslIns, param);
+        return string.IsNullOrEmpty(res) ? def : res;
+    }
 
-            // 從 startIndex 開始取子字串
-            string sub = dslInstruction.Substring(startIndex);
+    /// <summary>
+    /// 尋找下一個終止字元 (空格或“/”)
+    /// </summary>
+    /// <param name="dslInstruction"> Dsl 指令(要被查找的字串) </param>
+    /// <param name="startIndex"> 開始查找的位置 </param>
+    private static int FindNextTerminator(string dslInstruction, int startIndex)
+    {
+        // 如果要查找的位置大於字串本身長度，直接返回字串長度
+        if (startIndex >= dslInstruction.Length)
+            return dslInstruction.Length;
 
-            // 使用正則尋找第一個空白或 '/'
-            var match = Regex.Match(sub, $@"[\s{Regex.Escape(DslSymbols.ParamPrefix)}]");
-            return match.Success ? startIndex + match.Index : dslInstruction.Length; // 如果沒有找到終止符，則回傳字串的結尾
-        }
+        // 從 startIndex 開始取子字串
+        string sub = dslInstruction.Substring(startIndex);
 
-        /// <summary>
-        /// 從 dslInstruction 中提取指令的名稱，最前面的那一個字串
-        /// </summary>
-        /// <param name="dslInstruction"> Dsl 指令(要被提取的字串)，但本身必須要被Trim過一遍 </param>
-        public static string Directive(string dslInstruction)
-        {
-            return dslInstruction.Contains(DslSymbols.ParamPrefix) ?
-                    dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
-                    : dslInstruction;
-        }
+        // 使用正則尋找第一個空白或 '/'
+        var match = Regex.Match(sub, $@"[\s{Regex.Escape(DslSymbols.ParamPrefix)}]");
+        return match.Success ? startIndex + match.Index : dslInstruction.Length; // 如果沒有找到終止符，則回傳字串的結尾
+    }
+
+    /// <summary>
+    /// 從 dslInstruction 中提取指令的名稱，最前面的那一個字串
+    /// </summary>
+    /// <param name="dslInstruction"> Dsl 指令(要被提取的字串)，但本身必須要被Trim過一遍 </param>
+    public static string Directive(string dslInstruction)
+    {
+        return dslInstruction.Contains(DslSymbols.ParamPrefix) ?
+                dslInstruction.Substring(0, dslInstruction.IndexOf(DslSymbols.ParamPrefix)).Trim()
+                : dslInstruction;
     }
 }

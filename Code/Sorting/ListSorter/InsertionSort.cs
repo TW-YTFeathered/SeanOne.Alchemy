@@ -3,34 +3,33 @@
 
 using System.Collections;
 
-namespace SeanOne.Alchemy.Sorting
+namespace SeanOne.Alchemy.Sorting;
+
+partial class ListSorter
 {
-    partial class ListSorter
+    public static void InsertionSortList(IList list, bool isDescending)
     {
-        public static void InsertionSortList(IList list, bool isDescending)
+        if (list is null || list.Count <= 1)
+            return;
+
+        int n = list.Count;
+
+        for (int i = 1; i < n; i++)
         {
-            if (list is null || list.Count <= 1)
-                return;
+            object key = list[i];
+            int j = i - 1;
 
-            int n = list.Count;
-
-            for (int i = 1; i < n; i++)
+            // 根據升降序決定移動條件
+            while (j >= 0)
             {
-                object key = list[i];
-                int j = i - 1;
+                int comparison = s_Comparer.Compare(list[j], key);
+                bool needMove = isDescending ? comparison < 0 : comparison > 0;
+                if (!needMove) break;
 
-                // 根據升降序決定移動條件
-                while (j >= 0)
-                {
-                    int comparison = s_Comparer.Compare(list[j], key);
-                    bool needMove = isDescending ? comparison < 0 : comparison > 0;
-                    if (!needMove) break;
-
-                    list[j + 1] = list[j];
-                    j--;
-                }
-                list[j + 1] = key;
+                list[j + 1] = list[j];
+                j--;
             }
+            list[j + 1] = key;
         }
     }
 }
