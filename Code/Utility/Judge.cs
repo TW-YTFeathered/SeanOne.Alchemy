@@ -3,6 +3,7 @@
 
 using SeanOne.Alchemy.Definitions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -175,22 +176,13 @@ namespace SeanOne.Alchemy.Utility
                 return "basic"; // 預設為 basic
 
             // 如果是字典類型
-            if (objectType.IsGenericType &&
-                (objectType.GetGenericTypeDefinition() == typeof(Dictionary<,>) ||
-                 objectType.GetGenericTypeDefinition() == typeof(IDictionary<,>) ||
-                 objectType.GetInterfaces().Any(i => i.IsGenericType &&
-                     i.GetGenericTypeDefinition() == typeof(IDictionary<,>))))
-            {
+            if (objectType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)) ||
+                  (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
                 return "FE_ProcessDictionary";
-            }
 
             // 如果是可枚舉類型 (但不是字符串)
-            if (objectType != typeof(string) &&
-                (objectType.GetInterfaces().Contains(typeof(System.Collections.IEnumerable)) ||
-                 objectType.IsArray))
-            {
+            if (objectType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(objectType))
                 return "FE_ProcessEnumerable";
-            }
 
             // 預設為 basic
             return "basic";
