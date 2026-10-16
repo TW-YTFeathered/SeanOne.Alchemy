@@ -14,15 +14,15 @@ namespace SeanOne.Alchemy
             Judge.EnsureParameters(dslInstruction, "cnv");
 
             // 溫度轉換部分
-            string tempCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Temp), string.Empty);
+            string tempCnvIns = dslInstruction.ParamField(CnvParams.Temp);
             copyObj = ConvertTemperature(copyObj, tempCnvIns);
 
             // 重量轉換部分
-            string weightCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Weight), string.Empty);
+            string weightCnvIns = dslInstruction.ParamField(CnvParams.Weight);
             copyObj = ConvertWeight(copyObj, weightCnvIns);
 
             // 長度轉換部分
-            string lengthCnvIns = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CnvParams.Length), string.Empty);
+            string lengthCnvIns = dslInstruction.ParamField(CnvParams.Length);
             copyObj = ConvertLength(copyObj, lengthCnvIns);
 
             return AlchemyResult.Parse(copyObj);

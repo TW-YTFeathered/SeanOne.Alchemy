@@ -64,19 +64,19 @@ namespace SeanOne.Alchemy
                 throw new ArgumentException($"Object must implement IEnumerable for '{commandName}' directive");
 
             // 提前提取所有參數
-            string begin = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Begin), string.Empty);
-            string end = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.End), string.Empty);
-            string final_pair_separator = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.FinalPairSeparator), string.Empty);
-            string format = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring), string.Empty);
-            string dictFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(IDictionaryParams.DictFormat), string.Empty);
-            string keyFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(IDictionaryParams.KeyFormat), string.Empty);
-            string valueFormat = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(IDictionaryParams.ValueFormat), string.Empty);
-            string prefix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Prefix), string.Empty);
-            string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Suffix), string.Empty);
+            string begin = dslInstruction.ParamField(CommonParams.Begin);
+            string end = dslInstruction.ParamField(CommonParams.End);
+            string final_pair_separator = dslInstruction.ParamField(IEnumerableParams.FinalPairSeparator);
+            string format = dslInstruction.ParamField(CommonParams.Tostring);
+            string dictFormat = dslInstruction.ParamField(IDictionaryParams.DictFormat);
+            string keyFormat = dslInstruction.ParamField(IDictionaryParams.KeyFormat);
+            string valueFormat = dslInstruction.ParamField(IDictionaryParams.ValueFormat);
+            string prefix = dslInstruction.ParamField(CommonParams.Prefix);
+            string suffix = dslInstruction.ParamField(CommonParams.Suffix);
 
             // 提取並解析 exclude-last-end 參數
             bool exclude_last_end = false;
-            string excludeLastEndValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(IEnumerableParams.ExcludeLastEnd));
+            string excludeLastEndValue = dslInstruction.ParamField(IEnumerableParams.ExcludeLastEnd);
             if (!string.IsNullOrEmpty(excludeLastEndValue) &&
                 bool.TryParse(excludeLastEndValue, out bool parsedEndPrint))
             {
@@ -85,7 +85,7 @@ namespace SeanOne.Alchemy
 
             // 提取並解析 fe-opt
             bool fe_opt = false;
-            string feOptValue = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(FeParams.FeOpt));
+            string feOptValue = dslInstruction.ParamField(FeParams.FeOpt);
             if (!string.IsNullOrEmpty(feOptValue) &&
                 bool.TryParse(feOptValue, out bool parsedOptPrint))
             {
@@ -622,15 +622,15 @@ namespace SeanOne.Alchemy
         {
             string format = string.Empty;
 
-            string begin = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Begin), string.Empty);
-            string end = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.End), string.Empty);
-            string prefix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Prefix), string.Empty);
-            string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Suffix), string.Empty);
+            string begin = dslInstruction.ParamField(CommonParams.Begin);
+            string end = dslInstruction.ParamField(CommonParams.End);
+            string prefix = dslInstruction.ParamField(CommonParams.Prefix);
+            string suffix = dslInstruction.ParamField(CommonParams.Suffix);
 
             // 提取並驗證 /tostring: 參數
             if (dslInstruction.ContainsSafe(DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
             {
-                format = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
+                format = dslInstruction.ParamField(CommonParams.Tostring);
 
                 // 驗證 obj 是否實作 IFormattable
                 if (obj != null && !Judge.CanFormat(obj))

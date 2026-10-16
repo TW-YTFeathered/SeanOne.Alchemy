@@ -15,7 +15,7 @@ namespace SeanOne.Alchemy
             Judge.EnsureParameters(dslInstruction, "arr");
 
             // 排序部分
-            string sortStr = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(ArrParams.Sort), string.Empty);
+            string sortStr = dslInstruction.ParamField(ArrParams.Sort);
             Sort.Entry(copyObj, sortStr);
 
             return AlchemyResult.Parse(copyObj);

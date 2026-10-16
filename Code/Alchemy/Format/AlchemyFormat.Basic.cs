@@ -10,7 +10,7 @@ namespace SeanOne.Alchemy
     partial class Alchemy
     {
         /// <summary>
-        /// 處理單個對象的格式化 (非同步)
+        /// 處理單個對象的格式化
         /// </summary>
         /// <param name="obj"> 目標物件 </param>
         /// <param name="dslInstruction"> Dsl 指令 </param>
@@ -18,22 +18,16 @@ namespace SeanOne.Alchemy
         {
             Judge.EnsureParameters(dslInstruction, "basic");
 
-            string format = string.Empty;
+            string begin = dslInstruction.ParamField(CommonParams.Begin);
+            string end = dslInstruction.ParamField(CommonParams.End);
+            string prefix = dslInstruction.ParamField(CommonParams.Prefix);
+            string suffix = dslInstruction.ParamField(CommonParams.Suffix);
 
-            string begin = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Begin), string.Empty);
-            string end = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.End), string.Empty);
-            string prefix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Prefix), string.Empty);
-            string suffix = Get.ParameterValueOrDefault(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Suffix), string.Empty);
+            string format = dslInstruction.ParamField(CommonParams.Tostring);
 
-            // 提取並驗證 /tostring: 參數
-            if (dslInstruction.ContainsSafe(DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring)))
-            {
-                format = Get.ParameterValue(dslInstruction, DslSyntaxBuilder.BuildParamKey(CommonParams.Tostring));
-
-                // 驗證 obj 是否實作 IFormattable
-                if (obj != null && !Judge.CanFormat(obj))
-                    throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
-            }
+            // 驗證 obj 是否實作 IFormattable
+            if (!string.IsNullOrEmpty(format) && obj != null && !Judge.CanFormat(obj))
+                throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
 
             // 格式化對象
             string result = FormatObject(obj, format);

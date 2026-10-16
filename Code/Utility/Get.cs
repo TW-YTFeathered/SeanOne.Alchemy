@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace SeanOne.Alchemy.Utility
 {
     /// <summary>
-    /// 取得 DSL 指令的值
+    /// DSL 指令解析工具，提供從指令字串取出指令名與參數欄位值的方法。
     /// </summary>
     internal static class Get
     {
@@ -17,7 +17,7 @@ namespace SeanOne.Alchemy.Utility
         /// </summary>
         /// <param name="dslInstruction"> Dsl 指令(要被提取的字串) </param>
         /// <param name="parameterName"> 要提取的參數名稱 </param>
-        public static string ParameterValue(string dslInstruction, string parameterName)
+        private static string ParameterValue(string dslInstruction, string parameterName)
         {
             if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
                 return string.Empty;
@@ -69,15 +69,17 @@ namespace SeanOne.Alchemy.Utility
         }
 
         /// <summary>
-        /// 取得參數值，如果未找到參數或參數為空，則傳回預設值
+        /// 從 DSL 指令字串中，以參數常數取出對應的欄位值，若該欄位不存在或值為空，則回傳指定的預設值。
         /// </summary>
-        /// <param name="dslInstruction"> Dsl 指令(要被提取的字串) </param>
-        /// <param name="parameterName"> 要提取的參數名稱 </param>
-        /// <param name="defaultValue"> 預設值 </param>
-        public static string ParameterValueOrDefault(string dslInstruction, string parameterName, string defaultValue)
+        /// <param name="dslIns"> DSL 指令字串 </param>
+        /// <param name="paramKey"> 參數名稱常數 (如 <see cref="CommonParams.Begin"/>) </param>
+        /// <param name="def"> 找不到或值為空時回傳的預設值，預設為空字串 </param>
+        /// <returns> 該參數對應的值: 找不到時為 <paramref name="def"/> </returns>
+        public static string ParamField(this string dslIns, string paramKey, string def = "")
         {
-            string value = ParameterValue(dslInstruction, parameterName);
-            return string.IsNullOrEmpty(value) ? defaultValue : value;
+            string param = DslSyntaxBuilder.BuildParamKey(paramKey);
+            string res = ParameterValue(dslIns, param);
+            return string.IsNullOrEmpty(res) ? def : res;
         }
 
         /// <summary>
