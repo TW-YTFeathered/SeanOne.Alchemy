@@ -55,9 +55,7 @@ namespace SeanOne.Alchemy.Utility
                 var cloned = Array.CreateInstance(type.GetElementType(), array.Length);
                 visited[obj] = cloned;
                 for (int i = 0; i < array.Length; i++)
-                {
                     cloned.SetValue(DeepCloneInternal(array.GetValue(i), visited), i);
-                }
                 return cloned;
             }
 

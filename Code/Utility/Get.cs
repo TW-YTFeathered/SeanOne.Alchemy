@@ -34,9 +34,7 @@ namespace SeanOne.Alchemy.Utility
 
             // 跳過空白字符
             while (startIndex < dslInstruction.Length && char.IsWhiteSpace(dslInstruction[startIndex]))
-            {
                 startIndex++;
-            }
 
             if (startIndex >= dslInstruction.Length) // 如果已經到達字串末尾，回傳空字串
                 return string.Empty;
