@@ -69,35 +69,35 @@ namespace SeanOne.Alchemy.Utility
         // 定義每個方法支援的參數
         private static readonly Dictionary<string, HashSet<string>> s_MethodParameters = new Dictionary<string, HashSet<string>>
         {
-            ["basic"] = new HashSet<string> {
+            ["basic"] = [
                 CommonParams.Begin, CommonParams.End,
                 CommonParams.Tostring,
                 CommonParams.Prefix, CommonParams.Suffix
-            },
-            ["FE_ProcessEnumerable"] = new HashSet<string> {
+            ],
+            ["FE_ProcessEnumerable"] = [
                 CommonParams.Begin, CommonParams.End,
                 IEnumerableParams.FinalPairSeparator,
                 IEnumerableParams.ExcludeLastEnd,
                 FeParams.FeOpt,
                 CommonParams.Tostring,
                 CommonParams.Prefix, CommonParams.Suffix
-            },
-            ["FE_ProcessDictionary"] = new HashSet<string> {
+            ],
+            ["FE_ProcessDictionary"] = [
                 CommonParams.Begin, CommonParams.End,
                 IEnumerableParams.FinalPairSeparator,
                 IEnumerableParams.ExcludeLastEnd,
                 FeParams.FeOpt,
                 IDictionaryParams.DictFormat, IDictionaryParams.KeyFormat, IDictionaryParams.ValueFormat,
                 CommonParams.Prefix, CommonParams.Suffix
-            },
-            ["arr"] = new HashSet<string> {
+            ],
+            ["arr"] = [
                 ArrParams.Sort
-            },
-            ["cnv"] = new HashSet<string> {
+            ],
+            ["cnv"] = [
                 CnvParams.Length,
                 CnvParams.Weight,
                 CnvParams.Temp
-            }
+            ]
         };
 
         /// <summary>
