@@ -169,11 +169,9 @@ namespace SeanOne.Alchemy
 
                         if (!options.exclude_last_end) results.Append(options.end);
                     }
+                    // 中間元素
                     else
-                    {
-                        // 中間元素
                         results.Append(options.begin).Append(formatted).Append(options.end);
-                    }
 
                     currentItem = nextItem;
                 }

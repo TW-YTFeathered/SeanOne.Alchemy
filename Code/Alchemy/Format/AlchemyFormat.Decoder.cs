@@ -19,25 +19,17 @@ namespace SeanOne.Alchemy
             // 從 DSL 指令中提取函數名稱
             string directive = Get.Directive(dslInstruction);
 
-            // 嘗試從字典中獲取對應的執行函數
+            // 嘗試執行對應的格式化函式
             if (s_FormatActionsSync.TryGetValue(directive, out var func))
-            {
-                // 找到並執行函數
                 return func(obj, dslInstruction);
-            }
+            
+            // 如果指令以 DSL 定義的參數前綴符號 (目前為 '/')開頭，則執行 Basic 方法
+            if (dslInstruction.StartsWith(DslSymbols.ParamPrefix))
+                return Basic(obj, dslInstruction);
+            
+            // 未知指令拋出異常
             else
-            {
-                // 如果指令以 DSL 定義的參數前綴符號 (目前為 '/')開頭，則執行 Basic 方法
-                if (dslInstruction.StartsWith(DslSymbols.ParamPrefix))
-                {
-                    return Basic(obj, dslInstruction);
-                }
-                else
-                {
-                    // 未知指令拋出異常
-                    throw new MissingMethodException($"Unknown functions directive: {directive}");
-                }
-            }
+                throw new MissingMethodException($"Unknown functions directive: {directive}");
         }
     }
 }

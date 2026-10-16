@@ -22,11 +22,9 @@ namespace SeanOne.Alchemy.Utility
             if (string.IsNullOrEmpty(dslInstruction) || string.IsNullOrEmpty(parameterName)) // 如果任一字串為空，直接回傳空字串
                 return string.Empty;
 
-            if (Judge.SingleParameter(dslInstruction, parameterName)) // 檢查參數是否出現多次
-            {
-                // 如果參數出現多次，拋出例外
+            // 檢查參數是否重複出現，若有則拋出例外
+            if (Judge.SingleParameter(dslInstruction, parameterName))
                 throw new ArgumentException($"Parameter '{parameterName}' is specified multiple times.");
-            }
 
             int startIndex = dslInstruction.IndexOf(parameterName); // 找到參數名稱的位置
             if (startIndex == -1) // 如果找不到參數名稱，回傳空字串
@@ -48,11 +46,10 @@ namespace SeanOne.Alchemy.Utility
             {
                 startIndex++; // 跳過開頭的引號
                 int endIndex = dslInstruction.IndexOf('"', startIndex);
+                
+                // 如果找不到結尾的引號，則取到字串末尾
                 if (endIndex == -1)
-                {
-                    // 如果找不到結尾的引號，則取到字串末尾
                     endIndex = dslInstruction.Length;
-                }
 
                 string value = dslInstruction.Substring(startIndex, endIndex - startIndex); // 擷取參數值
                 value = ConvertToUnicode.DecodeUnicodeEscapes(value); // 轉換 Unicode

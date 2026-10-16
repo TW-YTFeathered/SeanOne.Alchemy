@@ -76,9 +76,7 @@ namespace SeanOne.Alchemy.Utility
                     i++;
                 }
                 else
-                {
                     sb.Append(thisChar); // 非轉義字符，直接添加
-                }
             }
 
             return sb.ToString(); // 回傳轉換結果

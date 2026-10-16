@@ -66,15 +66,11 @@ namespace SeanOne.Alchemy
                 // 若當前指令沒有指定指令名稱，且存在上一個指令名稱，則自動補齊
                 // 例如: ["cnv /sort:as", "/sort:asd"] => 第二個指令會自動變成 "cnv /sort:asd"
                 if (string.IsNullOrWhiteSpace(directive) && !string.IsNullOrWhiteSpace(oldDirective))
-                {
                     temp = oldDirective + temp;
-                }
 
                 // 更新 oldDirective 為當前有效的指令名稱
                 if (!string.IsNullOrEmpty(directive))
-                {
                     oldDirective = directive;
-                }
 
                 // Decoder 返回 AlchemyResult，透過 ToObject<object>() 取得轉換後的實際物件，
                 // 以便作為下一個指令的輸入。
