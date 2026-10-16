@@ -67,7 +67,7 @@ namespace SeanOne.Alchemy.Utility
         }
 
         // 定義每個方法支援的參數
-        private static readonly Dictionary<string, HashSet<string>> s_MethodParameters = new Dictionary<string, HashSet<string>>
+        private static readonly Dictionary<string, HashSet<string>> s_MethodParameters = new()
         {
             ["basic"] = [
                 CommonParams.Begin, CommonParams.End,
@@ -127,7 +127,7 @@ namespace SeanOne.Alchemy.Utility
         /// <param name="invalidParams"> 要回傳的無效參數列表 </param>
         public static bool CodeParameters(string dslInstruction, string methodType, out List<string> invalidParams)
         {
-            invalidParams = new List<string>();
+            invalidParams = new();
 
             if (string.IsNullOrWhiteSpace(dslInstruction))
                 return true;

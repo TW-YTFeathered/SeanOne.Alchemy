@@ -63,7 +63,7 @@ namespace SeanOne.Alchemy
             if (string.IsNullOrEmpty(options.dict_format))
                 throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
-            var results = new StringBuilder();
+            StringBuilder results = new();
 
             // 獲取字典的鍵集合
             ICollection keys = dictionary.Keys;
@@ -108,7 +108,7 @@ namespace SeanOne.Alchemy
         private static string FE_ProcessEnumerable(IEnumerable enumerable, in FeOptions options)
         {
             // 用來存儲格式化後的結果
-            var results = new StringBuilder();
+            StringBuilder results = new();
 
             // 將 IEnumerable 轉成 IList 以支援索引存取
             var list = enumerable.Cast<object>().ToList();

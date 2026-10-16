@@ -20,7 +20,7 @@ namespace SeanOne.Alchemy
 
         private static Dictionary<string, Func<double, double>> InitUnitDict<T>(StringComparer comparer, Func<double, T, T, double> convertFunc) where T : struct, Enum
         {
-            var dict = new Dictionary<string, Func<double, double>>(comparer);
+            Dictionary<string, Func<double, double>> dict = new(comparer);
             var units = Enum.GetValues(typeof(T));
 
             foreach (T from in units)

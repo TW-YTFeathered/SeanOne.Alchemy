@@ -45,7 +45,7 @@ namespace SeanOne.Alchemy.Utility
             // 如果為空，直接返回 string.Empty
             if (string.IsNullOrEmpty(input)) return string.Empty;
 
-            var sb = new StringBuilder(); // 用於存放結果的字串
+            StringBuilder sb = new(); // 用於存放結果的字串
 
             int count = input.Count(); // 取得字串長度
 

@@ -64,7 +64,7 @@ namespace SeanOne.Alchemy
                         ).AsSpan());
                     if (!options.exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
                     AppendSpan(ref buf, ref len, options.suffix.AsSpan());
-                    return new string(buf, 0, len);
+                    return new(buf, 0, len);
                 }
 
                 AppendSpan(ref buf, ref len, beginSpan);
@@ -102,7 +102,7 @@ namespace SeanOne.Alchemy
                 }
 
                 AppendSpan(ref buf, ref len, options.suffix.AsSpan());
-                return new string(buf, 0, len);
+                return new(buf, 0, len);
             }
             finally
             {
@@ -117,7 +117,7 @@ namespace SeanOne.Alchemy
             if (string.IsNullOrEmpty(options.dict_format))
                 throw new ArgumentNullException("'dict-format' parameter is required when processing dictionaries.");
 
-            var results = new StringBuilder();
+            StringBuilder results = new();
             var enumerator = dictionary.GetEnumerator();
 
             try
@@ -230,7 +230,7 @@ namespace SeanOne.Alchemy
                     AppendObj(ref buf, ref len, currentItem, options.tostring, hasFormat);
                     if (!options.exclude_last_end) AppendSpan(ref buf, ref len, endSpan);
                     AppendSpan(ref buf, ref len, options.suffix.AsSpan());
-                    return new string(buf, 0, len); // finally 會清理 buf
+                    return new(buf, 0, len); // finally 會清理 buf
                 }
 
                 AppendSpan(ref buf, ref len, beginSpan);
@@ -256,7 +256,7 @@ namespace SeanOne.Alchemy
                 }
 
                 AppendSpan(ref buf, ref len, options.suffix.AsSpan());
-                return new string(buf, 0, len);
+                return new(buf, 0, len);
             }
             finally
             {
@@ -272,7 +272,7 @@ namespace SeanOne.Alchemy
 
             bool hasFps = !string.IsNullOrEmpty(options.final_pair_separator);
 
-            var result = new StringBuilder();
+            StringBuilder result = new();
             var enumerator = enumerable.GetEnumerator();
 
             try

@@ -52,7 +52,7 @@ namespace SeanOne.Alchemy
         }
 
         private static readonly Regex _placeholderRegex =
-            new Regex(@"\{(\d+)\}", RegexOptions.Compiled);
+            new(@"\{(\d+)\}", RegexOptions.Compiled);
         /// <summary>
         /// 格式化字典
         /// </summary>

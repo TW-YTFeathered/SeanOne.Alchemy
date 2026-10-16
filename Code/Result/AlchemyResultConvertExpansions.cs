@@ -124,7 +124,7 @@ namespace SeanOne.Alchemy
 
             if (result.RawSource is IEnumerable nonGenericEnumerable)
             {
-                var list = new List<object>();
+                List<object> list = new();
                 foreach (var item in nonGenericEnumerable)
                     list.Add(item);
                 return list;
@@ -159,7 +159,7 @@ namespace SeanOne.Alchemy
                 if (objects is ICollection col)
                     capacity = col.Count;
 
-                var results = capacity > 0 ? new List<T>(capacity) : new List<T>();
+                List<T> results = capacity > 0 ? new(capacity) : new();
                 int index = 0;
 
                 foreach (var item in objects)

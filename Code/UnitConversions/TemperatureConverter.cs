@@ -47,14 +47,14 @@ namespace SeanOne.Alchemy.UnitConversions
                 new Dictionary<TemperatureUnit, ConversionRule>
                 {
                     // 攝氏: K = C + 273.15 (比例為 1)
-                    [TemperatureUnit.C] = new ConversionRule(1.0, KelvinOffset),
+                    [TemperatureUnit.C] = new(1.0, KelvinOffset),
 
                     // 華氏: K = (F - 32) / 1.8 + 273.15
                     // 拆解成: F * (1/1.8) + (273.15 - 32/1.8)
-                    [TemperatureUnit.F] = new ConversionRule(1.0 / FahrenheitFactor, KelvinOffset - (FahrenheitOffset / FahrenheitFactor)),
+                    [TemperatureUnit.F] = new(1.0 / FahrenheitFactor, KelvinOffset - (FahrenheitOffset / FahrenheitFactor)),
 
                     // 凱氏: K = K * 1 + 0
-                    [TemperatureUnit.K] = new ConversionRule(1.0, 0.0)
+                    [TemperatureUnit.K] = new(1.0, 0.0)
                 };
 
             /// <summary> 檢查是否為有效凱氏溫度 (非 NaN、非無限大，且不低於絕對零度)</summary>

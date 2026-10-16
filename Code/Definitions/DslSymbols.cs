@@ -55,7 +55,7 @@ namespace SeanOne.Alchemy.Definitions
         /// <param name="value"> 要解析的字串 </param>
         public static string EscapeDslValue(string value)
         {
-            StringBuilder escaped = new StringBuilder();
+            StringBuilder escaped = new();
 
             foreach (char ch in value)
             {

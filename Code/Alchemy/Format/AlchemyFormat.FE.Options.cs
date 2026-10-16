@@ -31,7 +31,7 @@ namespace SeanOne.Alchemy
                 static bool B(string dsl, string p, bool d = false) =>
                     bool.TryParse(S(dsl, p), out var v) ? v : d;
 
-                return new FeOptions(
+                return new(
                     begin: S(dsl, CommonParams.Begin),
                     end: S(dsl, CommonParams.End),
                     final_pair_separator: S(dsl, IEnumerableParams.FinalPairSeparator),

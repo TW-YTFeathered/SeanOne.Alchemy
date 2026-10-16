@@ -23,15 +23,15 @@ namespace SeanOne.Alchemy.Sorting
 
         private static void InitListSorterDict(StringComparer comparer)
         {
-            var searchTruncation = new Regex(@"^[A-Z][a-z]*");
+            Regex searchTruncation = new(@"^[A-Z][a-z]*");
 
-            var dict = new Dictionary<string, Action<IList>>(comparer);
+            Dictionary<string, Action<IList>> dict = new(comparer);
 
             foreach (var item in s_SortAlgorithmMap)
             {
                 string key = item.Key;
 
-                string abbreviation = new string(key.Where(char.IsUpper).ToArray());
+                string abbreviation = new(key.Where(char.IsUpper).ToArray());
                 string abbreviationDesc = abbreviation + "d";
 
                 string truncation = searchTruncation.Match(key).Value;

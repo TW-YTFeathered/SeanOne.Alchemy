@@ -17,7 +17,7 @@ namespace SeanOne.Alchemy
         /// - "fe", "foreach", "basic": 執行 AlchemyFormatter 格式化
         /// </remarks>
         private static readonly Dictionary<string, Func<object, string, AlchemyResult>> s_TransformActionsSync =
-            new Dictionary<string, Func<object, string, AlchemyResult>>
+            new()
             {
                 ["cnv"] = Cnv,
                 ["convert"] = Cnv,
@@ -37,7 +37,7 @@ namespace SeanOne.Alchemy
         /// - "basic": 執行 Basic 函數
         /// </remarks>
         private static readonly Dictionary<string, Func<object, string, string>> s_FormatActionsSync =
-            new Dictionary<string, Func<object, string, string>>
+            new()
             {
                 ["fe"] = (obj, dslInstruction) => FE(obj, dslInstruction, "fe"),
                 ["foreach"] = (obj, dslInstruction) => FE(obj, dslInstruction, "foreach"),

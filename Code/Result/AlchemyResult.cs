@@ -157,7 +157,7 @@ namespace SeanOne.Alchemy
         {
             if (sourceObj is null)
                  throw new ArgumentNullException(nameof(sourceObj), "AlchemyResult.Parse requires a non-null source object.");
-            return new AlchemyResult(sourceObj);
+            return new(sourceObj);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace SeanOne.Alchemy
                 return false;
             }
 
-            result = new AlchemyResult(sourceObj);
+            result = new(sourceObj);
             return true;
         }
         #endregion
