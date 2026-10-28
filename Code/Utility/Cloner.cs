@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 #if !NET5_0_OR_GREATER
@@ -17,16 +18,39 @@ namespace SeanOne.Alchemy.Utility;
 /// </summary>
 internal class ReflectionCloner
 {
+    // 循環參考比較器 (單例，省下每次 new 的分配)
+    private static readonly IEqualityComparer<object> _refComparer = new ReferenceEqualityComparer();
+
+    // 內建不可變物件
+    private static readonly HashSet<Type> _immutableTypes = [
+        typeof(Guid), typeof(TimeSpan), typeof(DateTimeOffset), typeof(IntPtr), typeof(UIntPtr), 
+        typeof(Version), typeof(Uri), typeof(BigInteger)
+    ];
+
+    /// <summary>
+    /// 判斷型別是否為不可變型別
+    /// </summary>
+    public static bool IsImmutableType(Type type)
+    {
+        if (type is null)
+            throw new ArgumentNullException(nameof(type));
+
+        // 快路徑: TypeCode 非 Object
+        // 涵蓋 primitive / enum / string / decimal / DateTime / DBNull
+        if (Type.GetTypeCode(type) != TypeCode.Object)
+            return true;
+
+        return _immutableTypes.Contains(type) || typeof(Type).IsAssignableFrom(type);
+    }
+
     /// <summary>
     /// 深度複製物件
     /// </summary>
     /// <typeparam name="T"> 物件的型別，不需特別指定，編譯器會自動推斷 </typeparam>
     /// <param name="obj"> 要複製的物件 </param>
     /// <returns> 複製後的新物件，與原始物件內容相同但為不同參考 </returns>
-    public static T DeepClone<T>(T obj)
-    {
-        return (T)DeepCloneInternal(obj, new Dictionary<object, object>(new ReferenceEqualityComparer()));
-    }
+    public static T DeepClone<T>(T obj) =>
+        (T)DeepCloneInternal(obj, new Dictionary<object, object>(_refComparer));
 
     /// <summary>
     /// 深度複製的主體邏輯
@@ -40,8 +64,8 @@ internal class ReflectionCloner
 
         var type = obj.GetType();
 
-        // 基本型別或不可變型別直接回傳
-        if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal))
+        // 快路徑，避免將不可變型別進入遞迴
+        if (IsImmutableType(type))
             return obj;
 
         // 如果已經複製過，避免循環參考
@@ -75,7 +99,10 @@ internal class ReflectionCloner
     }
 
     /// <summary>
-    /// 建立型別實例。若沒有無參數建構子，則建立未初始化物件 (不會執行建構子)
+    /// 建立型別實例。
+    /// 值型別：透過 Activator 建立 (使用預設建構子／零初始化)
+    /// 參考型別：若存在無參數建構子（public 或 non-public）則呼叫它；
+    /// 否則建立未初始化物件 (不執行任何建構子與欄位初始化器)
     /// </summary>
     private static object CreateInstance(Type type)
     {
@@ -91,7 +118,7 @@ internal class ReflectionCloner
             null
         );
 
-        if (!(ctor is null))
+        if (ctor is not null)
             return ctor.Invoke(null);
 
 #if NET5_0_OR_GREATER
