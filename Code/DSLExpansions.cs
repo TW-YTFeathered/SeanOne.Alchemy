@@ -18,7 +18,7 @@ internal static class ConvertToUnicode
     /// 將字串中的所有 \uXXXX 轉義序列轉換為其對應的 Unicode 字符
     /// </summary>
     /// <param name="input"> 要被轉換的字串 </param>
-    public static string DecodeUnicodeEscapes(string input)
+    public static string DecodeUnicodeEscapes(this string input)
     {
         // 使用正則表達式來尋找所有的 \\uXXXX 序列
         return Regex.Replace(input, @"\\u([0-9a-fA-F]{4})", match =>
@@ -40,7 +40,7 @@ internal static class ConvertToUnicode
     /// 將字串中的所有 \X 轉義序列轉換為其對應的 Unicode 字符
     /// </summary>
     /// <param name="input"> 要被轉換的字串 </param>
-    public static string Unescape(string input)
+    public static string Unescape(this string input)
     {
         // 如果為空，直接返回 string.Empty
         if (string.IsNullOrEmpty(input)) return string.Empty;
