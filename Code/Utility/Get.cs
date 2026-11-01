@@ -49,7 +49,7 @@ internal static class Get
             while (endIndex < length)
             {
                 char c = dslInstruction[endIndex];
-                if (c == '\\')
+                if (c == DslSymbols.EscapeChar)
                 {
                     // 跳過被轉義的字元
                     endIndex += 2;
@@ -103,7 +103,7 @@ internal static class Get
 
             if (escaped)
                 escaped = false;
-            else if (c == '\\')
+            else if (c == DslSymbols.EscapeChar)
                 escaped = true;
             else if (c == q0 && MatchAt(text, i, quote))
             {
