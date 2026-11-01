@@ -37,35 +37,6 @@ internal static class Judge
         return fullStr.Contains(searchStr);
     }
 
-    /// <summary>
-    /// 檢查某個 參數 是否在 dslInstruction 中出現多次
-    /// </summary>
-    /// <param name="dslInstruction"> Dsl 指令(要被檢查的字串) </param>
-    /// <param name="parameterName"> 要查找的參數名稱 </param>
-    public static bool SingleParameter(string dslInstruction, string parameterName)
-    {
-        int count = CountParameterOccurrences(dslInstruction, parameterName); // 數數參數出現次數
-
-        return count > 1;
-    }
-
-    /// <summary>
-    /// 計算 參數 在 dslInstruction 中出現的次數 (使用正則表達式)
-    /// </summary>
-    /// <param name="dslInstruction"> Dsl 指令(要被檢查的字串) </param>
-    /// <param name="parameterName"> 要查找的參數名稱 </param>
-    private static int CountParameterOccurrences(string dslInstruction, string parameterName)
-    {
-        if (string.IsNullOrWhiteSpace(dslInstruction) || string.IsNullOrWhiteSpace(parameterName))
-            return 0;
-
-        // 移除所有 "..." 之間的內容 (非貪婪)
-        string withoutQuotes = Regex.Replace(dslInstruction, "\\\".*?\\\"", string.Empty);
-
-        // 直接匹配參數名稱子串
-        return Regex.Matches(withoutQuotes, Regex.Escape(parameterName)).Count;
-    }
-
     // 定義每個方法支援的參數
     private static readonly Dictionary<string, HashSet<string>> s_MethodParameters = new()
     {
