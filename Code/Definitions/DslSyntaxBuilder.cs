@@ -34,12 +34,21 @@ internal static class DslSyntaxBuilder
     /// <param name="value"> 要解析的字串 </param>
     public static string EscapeDslValue(string value)
     {
+        // 如果 value 是空的則直接回傳
+        if (string.IsNullOrEmpty(value))
+            return value;
+
+        char q0 = DslSymbols.QuoteSymbol[0];
+        if (value.IndexOf(q0) < 0)
+            return value; // 沒命中就直接回傳
+
         StringBuilder escaped = new();
 
         foreach (char ch in value)
         {
-            if (ch == '\"')
-                escaped.Append("\\u0022");
+            if (ch == q0)
+                escaped.Append(DslSymbols.UnicodeEscapePrefix)
+                    .Append(((int)ch).ToString($"X{DslSymbols.UnicodeEscapeHexDigits}"));
             else
                 escaped.Append(ch);
         }
