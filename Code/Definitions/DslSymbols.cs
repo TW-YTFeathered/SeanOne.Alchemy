@@ -9,9 +9,24 @@ namespace SeanOne.Alchemy.Definitions;
 internal class DslSymbols
 {
     /// <summary>
+    /// 用於字串轉義操作的轉義字元。
+    /// </summary>
+    public const char EscapeChar = '\\';
+
+    /// <summary>
     /// 引號符號，用於包裹字串值，標示其開始與結束。
     /// </summary>
     public const string QuoteSymbol = "\"";
+
+    /// <summary>
+    /// Unicode 轉義前綴。編碼 (EscapeDslValue) 與解碼 (DecodeUnicodeEscapes)。
+    /// </summary>
+    public const string UnicodeEscapePrefix = "\\u";
+
+    /// <summary>
+    /// Unicode 轉義的十六進位位數。
+    /// </summary>
+    public const int UnicodeEscapeHexDigits = 4;
 
     /// <summary>
     /// 參數前綴符號，用於標示 DSL 參數的起始。
