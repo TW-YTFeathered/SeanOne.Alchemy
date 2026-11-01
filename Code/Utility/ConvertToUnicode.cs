@@ -1,8 +1,8 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using SeanOne.Alchemy.Definitions;
 using System;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,6 +14,11 @@ namespace SeanOne.Alchemy.Utility;
 /// </summary>
 internal static class ConvertToUnicode
 {
+    private static readonly Regex s_UnicodeEscapeRegex = new(
+        Regex.Escape(DslSymbols.UnicodeEscapePrefix) + 
+        $"([0-9a-fA-F]{{{DslSymbols.UnicodeEscapeHexDigits}}})"
+    );
+
     /// <summary>
     /// 將字串中的所有 \uXXXX 轉義序列轉換為其對應的 Unicode 字符
     /// </summary>
@@ -21,7 +26,7 @@ internal static class ConvertToUnicode
     public static string DecodeUnicodeEscapes(this string input)
     {
         // 使用正則表達式來尋找所有的 \\uXXXX 序列
-        return Regex.Replace(input, @"\\u([0-9a-fA-F]{4})", match =>
+        return s_UnicodeEscapeRegex.Replace(input, match =>
         {
             try
             {
@@ -47,13 +52,13 @@ internal static class ConvertToUnicode
 
         StringBuilder sb = new(); // 用於存放結果的字串
 
-        int count = input.Count(); // 取得字串長度
+        int count = input.Length; // 取得字串長度
 
         for (int i = 0; i < count; i++)
         {
             char thisChar = input[i]; // 取得當前字符
 
-            if (thisChar == '\\' && i + 1 < count)
+            if (thisChar == DslSymbols.EscapeChar && i + 1 < count)
             {
                 char nextChar = input[i + 1]; // 取得下一個字符
 
