@@ -2,6 +2,7 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using SeanOne.Alchemy.Definitions;
+using System.Collections.Generic;
 
 namespace SeanOne.Alchemy.Utility;
 
@@ -85,4 +86,58 @@ internal static class DslScanner
 
         return count;
     }
+
+    /// <summary>
+    /// 單次掃描：列出所有 '引號外' 的參數名稱（/ 後接 [\w-]+）。
+    /// </summary>
+    /// <param name="source"> 要被掃描的 DSL 字串 </param>
+    public static IEnumerable<string> ExtractParameterNames(this string source)
+    {
+        if (string.IsNullOrEmpty(source))
+            yield break;
+
+        string quote = DslSymbols.QuoteSymbol;
+        string prefix = DslSymbols.ParamPrefix;
+        char q0 = quote[0];
+        bool quoted = false;
+        bool escaped = false;
+
+        for (int i = 0; i < source.Length; i++)
+        {
+            char c = source[i];
+
+            if (escaped)
+            {
+                escaped = false;
+                continue;
+            }
+            if (c == DslSymbols.EscapeChar)
+            {
+                escaped = true;
+                continue;
+            }
+            if (c == q0 && source.MatchAt(i, quote))
+            {
+                quoted = !quoted;
+                i += quote.Length - 1;
+                continue;
+            }
+            if (!quoted && source.MatchAt(i , prefix))
+            {
+                int start = i + prefix.Length;
+                int j = start;
+                while (j < source.Length && IsParamNameChar(source[j]))
+                    j++;
+
+                if (j > start)
+                {
+                    yield return source.Substring(start, j - start);
+                    i = j - 1; // 讓外層迴圈的 i++ 可以直接跳到參數尾端之後
+                }
+            }
+        }
+    }
+
+    private static bool IsParamNameChar(char c)
+        => char.IsLetterOrDigit(c) || c == '_' || c == '-';
 }

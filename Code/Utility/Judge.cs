@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SeanOne.Alchemy.Utility;
 
@@ -108,16 +107,8 @@ internal static class Judge
 
         var validParams = s_MethodParameters[methodType];
 
-        // 1. 移除所有引號內的內容 (允許跳脫字元)
-        string withoutQuotes = Regex.Replace(dslInstruction, "\"(?:\\\\.|[^\"])*\"", string.Empty);
-
-        // 2. 正則匹配引號外的參數
-        var parameterPattern = @"(?<=/)([\w-]+)(?::([^/\s]*))?";
-        var matches = Regex.Matches(withoutQuotes, parameterPattern);
-
-        foreach (Match match in matches)
+        foreach (string paramName in dslInstruction.ExtractParameterNames())
         {
-            string paramName = match.Groups[1].Value;
             if (!validParams.Contains(paramName))
                 invalidParams.Add(paramName);
         }
