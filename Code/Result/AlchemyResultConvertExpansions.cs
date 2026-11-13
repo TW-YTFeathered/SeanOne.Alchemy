@@ -52,21 +52,12 @@ public static class AlchemyConverterExpansions
         public List<TimeSpan> GetTimeSpanList() => result.GetList(TimeSpan.Parse);
 
         // GetObjects 特殊處理 (保留原有邏輯)
-        public List<object> GetObjectList()
+        public List<object> GetObjectList() => result.RawSource switch
         {
-            if (result.RawSource is IEnumerable<object> objects)
-                return objects.ToList();
-
-            if (result.RawSource is IEnumerable nonGenericEnumerable)
-            {
-                List<object> list = new();
-                foreach (var item in nonGenericEnumerable)
-                    list.Add(item);
-                return list;
-            }
-
-            throw new InvalidCastException($"Expected IEnumerable, but got {result.RawSource?.GetType()}");
-        }
+            IEnumerable<object> objects => objects.ToList(),
+            IEnumerable nonGenericEnumerable => [.. nonGenericEnumerable],
+            _ => throw new InvalidCastException($"Expected IEnumerable, but got {result.RawSource?.GetType()?.Name}")
+        };
 
         /// <summary>
         /// 將結果中的集合轉換為 List，使用自訂的轉換器。 
@@ -87,11 +78,8 @@ public static class AlchemyConverterExpansions
             if (result.RawSource is IEnumerable objects)
             {
                 // 嘗試取得容量 (如果支援 ICollection)
-                int capacity = 0;
-                if (objects is ICollection col)
-                    capacity = col.Count;
-
-                List<T> results = capacity > 0 ? new(capacity) : new();
+                int capacity = objects is ICollection col ? col.Count : 0;
+                List<T> results = new(capacity);
                 int index = 0;
 
                 foreach (var item in objects)
@@ -100,9 +88,9 @@ public static class AlchemyConverterExpansions
                     {
                         results.Add(converter(GetItemString(item, index)));
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        ThrowConversionFailed(item, index);
+                        throw new InvalidCastException($"Failed to convert item at index {index}: '{item}'", ex);
                     }
 
                     index++;
@@ -116,20 +104,16 @@ public static class AlchemyConverterExpansions
     }
 
     #region Private Method
-    private static string GetItemString(object item)
+    private static string GetItemString(object item) => item switch
     {
-        if (item is null)
-            throw new InvalidCastException("Item is null and cannot be converted.");
-        return item.ToString();
-    }
-    private static string GetItemString(object item, int index)
-    {
-        if (item is null)
-            throw new InvalidCastException($"Item at index {index} is null and cannot be converted.");
-        return item.ToString();
-    }
+        null => throw new InvalidCastException("Item is null and cannot be converted."),
+        _ => item.ToString()
+    };
 
-    private static void ThrowConversionFailed(object item, int idx) =>
-        throw new InvalidCastException($"Failed to convert item at index {idx}: '{item}'");
+    private static string GetItemString(object item, int index) => item switch
+    {
+        null => throw new InvalidCastException($"Item at index {index} is null and cannot be converted."),
+        _ => item.ToString()
+    };
     #endregion
 }
