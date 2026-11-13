@@ -25,7 +25,7 @@ partial class Alchemy
     {
         foreach (var element in enumerable)
         {
-            if (element != null && !Judge.CanFormat(element))
+            if (element is not null && !Judge.CanFormat(element))
             {
                 var elementType = element.GetType();
                 throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {elementType.Name}");

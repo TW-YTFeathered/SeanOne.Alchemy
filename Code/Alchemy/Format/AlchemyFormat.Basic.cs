@@ -26,7 +26,7 @@ partial class Alchemy
         string format = dslInstruction.ParamField(CommonParams.Tostring);
 
         // 驗證 obj 是否實作 IFormattable
-        if (!string.IsNullOrEmpty(format) && obj != null && !Judge.CanFormat(obj))
+        if (!string.IsNullOrEmpty(format) && obj is not null && !Judge.CanFormat(obj))
             throw new ArgumentException($"Collection elements must implement IFormattable for 'tostring'. Found: {obj.GetType().Name}");
 
         // 格式化對象
