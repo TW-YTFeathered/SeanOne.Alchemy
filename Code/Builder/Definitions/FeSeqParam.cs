@@ -4,7 +4,7 @@
 namespace SeanOne.Alchemy.Builder;
 
 /// <summary>
-/// Defines the parameter options used by <c>ISequenceAlchemyFunction</c> (fe).
+/// Defines the parameter options used by <c>FeSequenceFunctionBuilder</c> (fe).
 /// Handles sequence-specific DSL parameters and formatting logic.
 /// </summary>
 public enum FeSeqParam
@@ -16,7 +16,7 @@ public enum FeSeqParam
     Begin,
 
     /// <summary>
-    /// Appends a string after each value.
+    /// Appends a string after each element in the sequence.
     /// DSL param: <c>end</c>.
     /// </summary>
     End,
@@ -34,7 +34,8 @@ public enum FeSeqParam
     FinalPairSeparator,
 
     /// <summary>
-    /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
+    /// Format string applied to each element. Each element must implement <c>IFormattable</c>.
+    /// Do not use on string elements.
     /// DSL param: <c>tostring</c>.
     /// </summary>
     ToString,

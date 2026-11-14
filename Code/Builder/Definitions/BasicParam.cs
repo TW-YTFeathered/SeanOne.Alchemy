@@ -4,7 +4,7 @@
 namespace SeanOne.Alchemy.Builder;
 
 /// <summary>
-/// Defines the parameter options used by <c>IBasicAlchemyFunction</c> (basic).
+/// Defines the parameter options used by <c>BasicFunctionBuilder</c> (basic).
 /// Handles basic DSL parameters and formatting logic.
 /// </summary>
 public enum BasicParam
@@ -16,13 +16,14 @@ public enum BasicParam
     Begin,
 
     /// <summary>
-    /// Appends a string after each value.
+    /// Appends a string immediately after the formatted value (before suffix).
     /// DSL param: <c>end</c>.
     /// </summary>
     End,
 
     /// <summary>
-    /// Applies formatting to items implementing <c>IFormattable</c>. Not applicable to dictionaries. Use C#'s <c>ToString()</c> method.
+    /// Format string applied to the value. The value must implement <c>IFormattable</c>
+    /// (e.g. <c>"F2"</c>). Do not use for <c>string</c>.
     /// DSL param: <c>tostring</c>.
     /// </summary>
     ToString,

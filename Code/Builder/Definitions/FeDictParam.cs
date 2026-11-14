@@ -4,13 +4,14 @@
 namespace SeanOne.Alchemy.Builder;
 
 /// <summary>
-/// Defines the parameter options used by <c>IDictionaryAlchemyFunction</c> (fe).
+/// Defines the parameter options used by <c>FeDictionaryFunctionBuilder</c> (fe).
 /// Handles dictionary-specific DSL parameters and formatting logic.
 /// </summary>
 public enum FeDictParam
 {
     /// <summary>
     /// Format string for dictionary entries. 
+    /// <para>This parameter is <b>required</b> when formatting a dictionary.</para>
     /// Use <c>{0}</c> to represent the key and <c>{1}</c> to represent the value.
     /// DSL param: <c>dict-format</c>.
     /// </summary>
@@ -23,7 +24,7 @@ public enum FeDictParam
     Begin,
 
     /// <summary>
-    /// Appends a string after each value.
+    /// Appends a string after each dictionary entry.
     /// DSL param: <c>end</c>.
     /// </summary>
     End,
@@ -35,7 +36,7 @@ public enum FeDictParam
     ExcludeLastEnd,
 
     /// <summary>
-    /// Replaces the separator between the last two items in the sequence. Falls back to `end` if not specified.
+    /// Replaces the separator between the last two items in the dictionary. Falls back to <c>end</c> if not specified.
     /// DSL param: <c>final-pair-separator</c>.
     /// </summary>
     FinalPairSeparator,
@@ -53,13 +54,13 @@ public enum FeDictParam
     ValueFormat,
 
     /// <summary>
-    /// Prepends a string before the sequence. Note: Adds to entire result, not each element.
+    /// Prepends a string before the whole result.
     /// DSL param: <c>prefix</c>.
     /// </summary>
     Prefix,
 
     /// <summary>
-    /// Appends a string after the sequence. Note: Adds to entire result, not each element.
+    /// Appends a string after the whole result.
     /// DSL param: <c>suffix</c>.
     /// </summary>
     Suffix,
