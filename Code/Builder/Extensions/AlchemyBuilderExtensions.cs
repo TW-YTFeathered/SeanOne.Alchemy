@@ -11,8 +11,4 @@ public static class AlchemyBuilderExtensions
         public FeDictionaryFunctionBuilder ThenFeDict() => new(pb);
         public FeSequenceFunctionBuilder ThenFeSeq() => new(pb);
     }
-
-    public static BasicFunctionBuilder SelectBasic() => AlchemyBuilder.Create().ThenBasic();
-    public static FeSequenceFunctionBuilder SelectFeSeq() => AlchemyBuilder.Create().ThenFeSeq();
-    public static FeDictionaryFunctionBuilder SelectFeDict() => AlchemyBuilder.Create().ThenFeDict();
 }

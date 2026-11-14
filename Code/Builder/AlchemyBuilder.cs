@@ -20,4 +20,8 @@ public class AlchemyBuilder
     }
 
     public AlchemyExecutable Build() => new(_commands.ToArray());
+
+    public static BasicFunctionBuilder SelectBasic() => Create().ThenBasic();
+    public static FeSequenceFunctionBuilder SelectFeSeq() => Create().ThenFeSeq();
+    public static FeDictionaryFunctionBuilder SelectFeDict() => Create().ThenFeDict();
 }
