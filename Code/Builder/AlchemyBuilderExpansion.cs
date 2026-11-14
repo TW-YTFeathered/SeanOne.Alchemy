@@ -4,81 +4,45 @@
 using SeanOne.Alchemy.Definitions;
 using System;
 
-namespace SeanOne.Alchemy.Builder
+namespace SeanOne.Alchemy.Builder;
+
+static class AlchemyBuilderExpansion
 {
-    static class AlchemyBuilderExpansion
+    public static string ToBasicParamString(this BasicParam param) => param switch
     {
-        public static string ToBasicParamString(this BasicParam param)
-        {
-            switch (param)
-            {
-                case BasicParam.ToString:
-                    return CommonParams.Tostring;
-                case BasicParam.Begin:
-                    return CommonParams.Begin;
-                case BasicParam.End:
-                    return CommonParams.End;
-                case BasicParam.Prefix:
-                    return CommonParams.Prefix;
-                case BasicParam.Suffix:
-                    return CommonParams.Suffix;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
-        }
+        BasicParam.ToString => CommonParams.Tostring,
+        BasicParam.Begin => CommonParams.Begin,
+        BasicParam.End => CommonParams.End,
+        BasicParam.Prefix => CommonParams.Prefix,
+        BasicParam.Suffix => CommonParams.Suffix,
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
 
-        public static string ToFeSeqParamString(this FeSeqParam param)
-        {
-            switch (param)
-            {
-                case FeSeqParam.Begin:
-                    return CommonParams.Begin;
-                case FeSeqParam.End:
-                    return CommonParams.End;
-                case FeSeqParam.ExcludeLastEnd:
-                    return IEnumerableParams.ExcludeLastEnd;
-                case FeSeqParam.ToString:
-                    return CommonParams.Tostring;
-                case FeSeqParam.FinalPairSeparator:
-                    return IEnumerableParams.FinalPairSeparator;
-                case FeSeqParam.Prefix:
-                    return CommonParams.Prefix;
-                case FeSeqParam.Suffix:
-                    return CommonParams.Suffix;
-                case FeSeqParam.FeOpt:
-                    return FeParams.FeOpt;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
-        }
+    public static string ToFeSeqParamString(this FeSeqParam param) => param switch
+    {
+        FeSeqParam.Begin => CommonParams.Begin,
+        FeSeqParam.End => CommonParams.End,
+        FeSeqParam.ExcludeLastEnd => IEnumerableParams.ExcludeLastEnd,
+        FeSeqParam.ToString => CommonParams.Tostring,
+        FeSeqParam.FinalPairSeparator => IEnumerableParams.FinalPairSeparator,
+        FeSeqParam.Prefix => CommonParams.Prefix,
+        FeSeqParam.Suffix => CommonParams.Suffix,
+        FeSeqParam.FeOpt => FeParams.FeOpt,
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
 
-        public static string ToFeDictParamString(this FeDictParam param)
-        {
-            switch (param)
-            {
-                case FeDictParam.DictFormat:
-                    return IDictionaryParams.DictFormat;
-                case FeDictParam.Begin:
-                    return CommonParams.Begin;
-                case FeDictParam.End:
-                    return CommonParams.End;
-                case FeDictParam.ExcludeLastEnd:
-                    return IEnumerableParams.ExcludeLastEnd;
-                case FeDictParam.FinalPairSeparator:
-                    return IEnumerableParams.FinalPairSeparator;
-                case FeDictParam.KeyFormat:
-                    return IDictionaryParams.KeyFormat;
-                case FeDictParam.ValueFormat:
-                    return IDictionaryParams.ValueFormat;
-                case FeDictParam.Prefix:
-                    return CommonParams.Prefix;
-                case FeDictParam.Suffix:
-                    return CommonParams.Suffix;
-                case FeDictParam.FeOpt:
-                    return FeParams.FeOpt;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(param), param, null);
-            }
-        }
-    }
+    public static string ToFeDictParamString(this FeDictParam param) => param switch
+    {
+        FeDictParam.DictFormat => IDictionaryParams.DictFormat,
+        FeDictParam.Begin => CommonParams.Begin,
+        FeDictParam.End => CommonParams.End,
+        FeDictParam.ExcludeLastEnd => IEnumerableParams.ExcludeLastEnd,
+        FeDictParam.FinalPairSeparator => IEnumerableParams.FinalPairSeparator,
+        FeDictParam.KeyFormat => IDictionaryParams.KeyFormat,
+        FeDictParam.ValueFormat => IDictionaryParams.ValueFormat,
+        FeDictParam.Prefix => CommonParams.Prefix,
+        FeDictParam.Suffix => CommonParams.Suffix,
+        FeDictParam.FeOpt => FeParams.FeOpt,
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
 }
