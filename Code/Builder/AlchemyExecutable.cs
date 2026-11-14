@@ -38,7 +38,7 @@ public class AlchemyExecutable
     /// Get DSL string.
     /// </summary>
     /// <returns>DSL string.</returns>
-    public override string ToString() => string.Join(" ", _dsls);
+    public override string ToString() => string.Join(" | ", _dsls);
 }
 
 /// <summary>
