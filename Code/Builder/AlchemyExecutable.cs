@@ -39,18 +39,6 @@ namespace SeanOne.Alchemy.Builder
             return Alchemy.Format(obj, _dsls[0]);
         }
 
-#if BETA
-        /// <summary>
-        /// Executes the transformation pipeline using the stored DSL instructions.
-        /// </summary>
-        /// <param name="obj">The source object to be processed.</param>
-        /// <returns>The result of the transformation pipeline.</returns>
-        public AlchemyResult RunAsTransform(object obj)
-        {
-            return Alchemy.Transform(obj, _dsls);
-        }
-#endif
-
         /// <summary>
         /// Get DSL string.
         /// </summary>

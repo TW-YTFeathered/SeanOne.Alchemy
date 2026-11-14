@@ -3,13 +3,6 @@
 
 namespace SeanOne.Alchemy.Builder
 {
-#if BETA
-    public enum CnvParam { Sort, Temp }
-    public enum DirParam { Basic, FeSeq, FeDict, Cnv }
-    public enum TemperatureUnit { C, F, K }
-    public enum SortAlgorithm { Bubble, Insertion, ArraySort, Linq }
-#endif
-
     /// <summary>
     /// Defines the parameter options used by <c>IBasicAlchemyFunction</c> (basic).
     /// Handles basic DSL parameters and formatting logic.
