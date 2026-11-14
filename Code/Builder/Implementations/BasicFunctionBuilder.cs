@@ -3,7 +3,7 @@
 
 namespace SeanOne.Alchemy.Builder;
 
-public sealed class BasicFunctionBuilder :AlchemyFunctionBuilder<BasicFunctionBuilder, BasicParam>
+public sealed class BasicFunctionBuilder : AlchemyFunctionBuilder<BasicFunctionBuilder, BasicParam>
 {
     internal BasicFunctionBuilder(AlchemyBuilder pb) : base(pb, "basic") { }
 
