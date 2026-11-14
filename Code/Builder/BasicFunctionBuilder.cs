@@ -1,3 +1,6 @@
+// Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
+// SeanOne™ - A Professional Project and Brand.
+
 namespace SeanOne.Alchemy.Builder;
 
 public sealed class BasicFunctionBuilder :AlchemyFunctionBuilder<BasicFunctionBuilder, BasicParam>
