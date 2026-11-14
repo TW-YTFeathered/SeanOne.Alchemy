@@ -41,10 +41,6 @@ public abstract class AlchemyFunctionBuilder<TSelf, TParam>(AlchemyBuilder pb, s
         return ParentBuilder;
     }
 
-    public BasicFunctionBuilder ThenBasic() => Step().ThenBasic();
-    public FeSequenceFunctionBuilder ThenFeSeq() => Step().ThenFeSeq();
-    public FeDictionaryFunctionBuilder ThenFeDict() => Step().ThenFeDict();
-
     public AlchemyExecutable Build() => Step().Build();
     public AlchemyResult Execute(object obj) => Build().Execute(obj);
     public override string ToString() => Build().ToString();

@@ -13,14 +13,6 @@ public class AlchemyBuilder
 
     public static AlchemyBuilder Create() => new();
 
-    public static BasicFunctionBuilder SelectBasic() => Create().ThenBasic();
-    public static FeSequenceFunctionBuilder SelectFeSeq() => Create().ThenFeSeq();
-    public static FeDictionaryFunctionBuilder SelectFeDict() => Create().ThenFeDict();
-
-    public BasicFunctionBuilder ThenBasic() => new(this);
-    public FeSequenceFunctionBuilder ThenFeSeq() => new(this);
-    public FeDictionaryFunctionBuilder ThenFeDict() => new(this);
-
     internal void AddCommand(string command)
     {
         if (!string.IsNullOrWhiteSpace(command))
