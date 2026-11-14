@@ -1,6 +1,8 @@
 // Copyright © TW-YTFeathered (https://github.com/TW-YTFeathered)
 // SeanOne™ - A Professional Project and Brand.
 
+using System;
+
 namespace SeanOne.Alchemy.Builder
 {
     /// <summary>
@@ -25,15 +27,13 @@ namespace SeanOne.Alchemy.Builder
             _dsls = dsls;
         }
 
+        public AlchemyResult Execute(object obj) =>
+            Alchemy.Transform(obj, _dsls);
+
         /// <summary>
-        /// Runs the DSL instruction and returns the formatted result.
+        /// Runs the DSL instruction.
         /// </summary>
-        /// <remarks>
-        /// <para><b>Note:</b> For compatibility with legacy code, this method only processes 
-        /// the first instruction in the pipeline. If the executable contains multiple instructions 
-        /// (e.g., built with AlchemyConversionBuilder - Beta only), use RunAsConvert (Beta) 
-        /// instead to execute the full pipeline.</para>
-        /// </remarks>
+        [Obsolete("Run is deprecated as it only executes the first DSL instruction. Use Execute() to execute the full pipeline instead.")]
         public string Run(object obj)
         {
             return Alchemy.Format(obj, _dsls[0]);
@@ -60,6 +60,7 @@ namespace SeanOne.Alchemy.Builder
         /// <param name="func">The DSL function builder instance.</param>
         /// <param name="obj">The object to be formatted.</param>
         /// <returns>The formatted result string.</returns>
+        [Obsolete("BuildRun for IAlchemyFunction is deprecated alongside legacy builders. Use modern AlchemyBuilder methods instead.")]
         public static string BuildRun<TParam>(this IAlchemyFunction<TParam> func, object obj)
             => func.Build().Run(obj);
 
@@ -70,6 +71,7 @@ namespace SeanOne.Alchemy.Builder
         /// <typeparam name="TParam">The type of parameter used in the DSL function.</typeparam>
         /// <param name="func">The DSL function builder instance.</param>
         /// <returns>The DSL string representing the configured formatting rules.</returns>
+        [Obsolete("BuildToString for IAlchemyFunction is deprecated alongside legacy builders. Use modern AlchemyBuilder methods instead.")]
         public static string BuildToString<TParam>(this IAlchemyFunction<TParam> func)
             => func.Build().ToString();
     }
