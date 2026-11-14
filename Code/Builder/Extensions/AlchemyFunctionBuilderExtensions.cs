@@ -15,5 +15,7 @@ public static class AlchemyFunctionBuilderExtensions
         public BasicFunctionBuilder ThenBasic() => fb.Step().ThenBasic();
         public FeDictionaryFunctionBuilder ThenFeDict() => fb.Step().ThenFeDict();
         public FeSequenceFunctionBuilder ThenFeSeq() => fb.Step().ThenFeSeq();
+        public CnvFunctionBuilder ThenCnv() => fb.Step().ThenCnv();
+        public ArrFunctionBuilder ThenArr() => fb.Step().ThenArr();
     }
 }

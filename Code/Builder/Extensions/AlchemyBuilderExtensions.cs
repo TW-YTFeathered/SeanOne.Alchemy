@@ -10,5 +10,7 @@ public static class AlchemyBuilderExtensions
         public BasicFunctionBuilder ThenBasic() => new(pb);
         public FeDictionaryFunctionBuilder ThenFeDict() => new(pb);
         public FeSequenceFunctionBuilder ThenFeSeq() => new(pb);
+        public CnvFunctionBuilder ThenCnv() => new(pb);
+        public ArrFunctionBuilder ThenArr() => new(pb);
     }
 }

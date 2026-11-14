@@ -14,6 +14,7 @@ public abstract class AlchemyFunctionBuilder<TSelf, TParam>(AlchemyBuilder pb, s
     protected readonly AlchemyBuilder ParentBuilder = pb ?? throw new ArgumentNullException(nameof(pb));
     protected readonly StringBuilder Sb = new(cp + " ");
     private bool _isStepped;
+    private bool _hasParams;
 
     protected abstract string GetParamString(TParam param);
 
@@ -28,6 +29,7 @@ public abstract class AlchemyFunctionBuilder<TSelf, TParam>(AlchemyBuilder pb, s
         Sb.AppendParam(paramStr);
         Sb.AppendQuoted(escapedValue);
 
+        _hasParams = true;
         return (TSelf)this;
     }
 
@@ -35,7 +37,8 @@ public abstract class AlchemyFunctionBuilder<TSelf, TParam>(AlchemyBuilder pb, s
     {
         if (!_isStepped)
         {
-            ParentBuilder.AddCommand(Sb.ToString().TrimEnd());
+            if (_hasParams)
+                ParentBuilder.AddCommand(Sb.ToString().TrimEnd());
             _isStepped = true;
         }
         return ParentBuilder;

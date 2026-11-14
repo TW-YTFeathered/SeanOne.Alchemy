@@ -24,4 +24,6 @@ public class AlchemyBuilder
     public static BasicFunctionBuilder SelectBasic() => Create().ThenBasic();
     public static FeSequenceFunctionBuilder SelectFeSeq() => Create().ThenFeSeq();
     public static FeDictionaryFunctionBuilder SelectFeDict() => Create().ThenFeDict();
+    public static CnvFunctionBuilder SelectCnv() => Create().ThenCnv();
+    public static ArrFunctionBuilder SelectArr() => Create().ThenArr();
 }

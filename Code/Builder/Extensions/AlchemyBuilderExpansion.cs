@@ -45,4 +45,29 @@ static class AlchemyBuilderExpansion
         FeDictParam.FeOpt => FeParams.FeOpt,
         _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
     };
+
+    public static string ToCnvParamString(this CnvParam param) => param switch
+    {
+        CnvParam.Temp => CnvParams.Temp,
+        CnvParam.Length => CnvParams.Length,
+        CnvParam.Weight => CnvParams.Weight,
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
+
+    public static string ToArrParamString(this ArrParam param) => param switch
+    {
+        ArrParam.Sort => ArrParams.Sort,
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
+
+    public static string ToSortAlgorithmString(this SortAlgorithm param) => param switch
+    {
+        SortAlgorithm.InsertionAsc => "is",
+        SortAlgorithm.InsertionDesc => "isd",
+        SortAlgorithm.ArraySortAsc => "as",
+        SortAlgorithm.ArraySortDesc => "asd",
+        SortAlgorithm.LinqAsc => "ls",
+        SortAlgorithm.LinqDesc => "lsd",
+        _ => throw new ArgumentOutOfRangeException(nameof(param), param, null),
+    };
 }
