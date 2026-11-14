@@ -2,6 +2,7 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using SeanOne.Alchemy.Definitions;
+using System;
 using System.Text;
 
 namespace SeanOne.Alchemy.Builder
@@ -9,6 +10,7 @@ namespace SeanOne.Alchemy.Builder
     /// <summary>
     /// Implementation of <c>ISequenceAlchemyFunction</c> using <c>FeSeqParam</c>.
     /// </summary>
+    [Obsolete("FeSequenceFunc is deprecated and will be removed in a future version. Access it via AlchemyBuilder.SelectFeSeq() instead.")]
     public class FeSequenceFunc : ISequenceAlchemyFunction<FeSeqParam>
     {
         // 暫存的字串
@@ -28,6 +30,7 @@ namespace SeanOne.Alchemy.Builder
         /// <param name="param">The DSL parameter to configure.</param>
         /// <param name="value">The value associated with the parameter.</param>
         /// <returns>The current DSL function instance for chaining.</returns>
+        [Obsolete("This method is part of the legacy builder API. Use modern AlchemyBuilder fluent methods instead.")]
         public IAlchemyFunction<FeSeqParam> With(FeSeqParam param, string value)
         {
             // 轉譯 value 後，依序加入參數及其值
@@ -53,6 +56,7 @@ namespace SeanOne.Alchemy.Builder
     /// Implementation of <c>IDictionaryAlchemyFunction</c> using <c>FeDictParam</c>.
     /// Handles dictionary-specific DSL parameters and formatting logic.
     /// </summary>
+    [Obsolete("FeDictionaryFunc is deprecated and will be removed in a future version. Access it via AlchemyBuilder.SelectFeDict() instead.")]
     public class FeDictionaryFunc : IDictionaryAlchemyFunction<FeDictParam>
     {
         // 暫存的字串
@@ -72,6 +76,7 @@ namespace SeanOne.Alchemy.Builder
         /// <param name="param">The DSL parameter to configure.</param>
         /// <param name="value">The value associated with the parameter.</param>
         /// <returns>The current DSL function instance for chaining.</returns>
+        [Obsolete("This method is part of the legacy builder API. Use modern AlchemyBuilder fluent methods instead.")]
         public IAlchemyFunction<FeDictParam> With(FeDictParam param, string value)
         {
             // 轉譯 value 後，依序加入參數及其值

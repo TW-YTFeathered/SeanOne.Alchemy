@@ -2,6 +2,7 @@
 // SeanOne™ - A Professional Project and Brand.
 
 using SeanOne.Alchemy.Definitions;
+using System;
 using System.Text;
 
 namespace SeanOne.Alchemy.Builder
@@ -10,6 +11,7 @@ namespace SeanOne.Alchemy.Builder
     /// Implementation of <c>IBasicAlchemyFunction</c> using <c>BasicParam</c>.
     /// Handles basic DSL parameters and formatting logic.
     /// </summary>
+    [Obsolete("BasicFunc is deprecated and will be removed in a future version. Access it via AlchemyBuilder.SelectBasic() instead.")]
     public class BasicFunc : IBasicAlchemyFunction<BasicParam>
     {
         // 暫存的字串
@@ -29,6 +31,7 @@ namespace SeanOne.Alchemy.Builder
         /// <param name="param">The DSL parameter to configure.</param>
         /// <param name="value">The value associated with the parameter.</param>
         /// <returns>The current DSL function instance for chaining.</returns>
+        [Obsolete("This method is part of the legacy builder API. Use modern AlchemyBuilder fluent methods instead.")]
         public IAlchemyFunction<BasicParam> With(BasicParam param, string value)
         {
             // 轉譯 value 後，依序加入參數及其值
