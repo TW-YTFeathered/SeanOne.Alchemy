@@ -66,7 +66,9 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 |-----------|----------|
 | `ArgumentException` | The input object does not implement `IList`. |
 | `ArgumentException` | An unknown sorting algorithm key is used (e.g., `/sort:bubble`). |
-| `InvalidOperationException` | The collection contains elements that do not implement `IComparable` and thus cannot be compared. |
+| `ArgumentException` | Insertion sort (`/sort:is…`) hit elements that do not implement `IComparable` (`At least one object must implement IComparable.`). |
+| `InvalidOperationException` | `Array.Sort` / LINQ sort (`/sort:as…`, `/sort:ls…`) hit elements that cannot be compared (`Failed to compare two elements in the array.`). |
+| `NotSupportedException` | The collection rejects in-place writes (`Collection is read-only.`), e.g. sorting a `ReadOnlyCollection<T>`. The original collection is still left untouched. |
 
 ### Formatting as a Fallback
 
@@ -115,7 +117,7 @@ When extracting data from an `AlchemyResult`, some methods have strict type requ
 
 - DSL parameters are written with a leading `/` and a `:` separator, e.g., `/tostring:F2`. In error messages, parameter names are shown **without** the leading `/` for brevity.
 - `Alchemy.FormatAsync` and `Alchemy.TransformAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
-- Passing `null` as one of the instruction strings in `Alchemy.Transform(obj, params string[])` throws `NullReferenceException`. Empty or whitespace-only entries are ignored instead of raised.
+- In `Transform(obj, params string[])`: `null` → `NullReferenceException`; empty entry → inherits the previous function name, or `MissingMethodException` if there is none. A single empty instruction → `ArgumentNullException`.
 - `cnv` and `arr` without their parameters (`/temp`, `/length`, `/weight`, `/sort`) are no-ops: `Alchemy.Transform` still returns a deep clone of the input.
 - `null` elements inside a collection are formatted as empty strings – they **do not** cause exceptions.
 - `Alchemy.Format` does **not** modify the input object (no cloning). Only `Alchemy.Transform` performs deep cloning.
