@@ -99,6 +99,8 @@ var ms = new List<int> { 1000, 2000 };
 Alchemy.Transform(ms, "cnv /length:M->KM");                            // List<int> { 1, 2 }
 ```
 
+> ℹ️ **Collections:** the element type is preserved – `T[]` stays `T[]`, `List<T>` stays `List<T>`. Other sequences are returned as `List<T>` (e.g. `HashSet<int>` → `List<int>`). Only when the element type cannot be determined does the result become a `List<object>`, with each element converted to its own runtime type (e.g. a non-generic `ArrayList`).
+
 ## Important Notes
 
 - Length values **cannot be negative** – passing a negative number throws `ArgumentException`.

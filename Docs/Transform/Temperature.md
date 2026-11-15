@@ -98,6 +98,8 @@ var ints = new List<int> { 0, 100 };
 Alchemy.Transform(ints, "cnv /temp:C->K");                        // List<int> { 273, 373 }
 ```
 
+> ℹ️ **Collections:** the element type is preserved – `T[]` stays `T[]`, `List<T>` stays `List<T>`. Other sequences are returned as `List<T>` (e.g. `HashSet<int>` → `List<int>`). Only when the element type cannot be determined does the result become a `List<object>`, with each element converted to its own runtime type (e.g. a non-generic `ArrayList`).
+
 ## Important Notes
 
 - Temperature values **below absolute zero (0 K)** throw `ArgumentException`.
