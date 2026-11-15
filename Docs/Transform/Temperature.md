@@ -18,6 +18,21 @@ cnv /temp:sourceTotarget
 
 Parameter value is **case‑insensitive** – `C->F`, `c->f`, `CtoF` all work the same.
 
+`source` and `target` must be **different** units; same-unit pairs such as `F->F` and `FtoF` are invalid.
+
+## Same-Unit Conversions
+
+Only conversions between different units are registered. A same-unit pair is not an identity conversion and does not exist in either syntax:
+
+| Instruction | Result |
+|-------------|--------|
+| `cnv /temp:F->F` | `ArgumentException` — `Unknown conversion instruction: F->F` |
+| `cnv /temp:FtoF` | `ArgumentException` — `Unknown conversion instruction: FtoF` |
+
+To leave a value unchanged, omit `/temp` entirely.
+
+> 💡 The Fluent API's `WithTemp(TempUnit.F, TempUnit.F)` detects equal units and emits no `/temp` parameter; it also performs no identity conversion. See [Fluent API](../FluentAPI.md#unit-conversions).
+
 ## Supported Units
 
 | Unit Code | Meaning |
@@ -92,6 +107,7 @@ Alchemy.Transform(ints, "cnv /temp:C->K");                        // List<int> {
 ## Error Cases
 
 - Unknown unit code (e.g., `/temp:X->Y`) → `ArgumentException`.
+- Same source and target unit (e.g., `/temp:F->F` or `/temp:FtoF`) → `ArgumentException`; the pair is not registered.
 - Value below absolute zero → `ArgumentException`.
 - Non‑numeric collection element → `InvalidOperationException`.
 - See [ErrorHandling.md](../ErrorHandling.md) for details.

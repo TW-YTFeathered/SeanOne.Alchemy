@@ -18,6 +18,21 @@ cnv /length:sourceTotarget
 
 Parameter value is **case‑insensitive** – `CmToM`, `cmtom`, `CMTOM` all work the same.
 
+`source` and `target` must be **different** units; same-unit pairs such as `M->M` and `MtoM` are invalid.
+
+## Same-Unit Conversions
+
+Only conversions between different units are registered. A same-unit pair is not an identity conversion and does not exist in either syntax:
+
+| Instruction | Result |
+|-------------|--------|
+| `cnv /length:M->M` | `ArgumentException` — `Unknown conversion instruction: M->M` |
+| `cnv /length:MtoM` | `ArgumentException` — `Unknown conversion instruction: MtoM` |
+
+To leave a value unchanged, omit `/length` entirely.
+
+> 💡 The Fluent API's `WithLength(LengthUnit.M, LengthUnit.M)` detects equal units and emits no `/length` parameter; it also performs no identity conversion. See [Fluent API](../FluentAPI.md#unit-conversions).
+
 ## Supported Units
 
 | Unit | Code | Description |
@@ -93,6 +108,7 @@ Alchemy.Transform(ms, "cnv /length:M->KM");                            // List<i
 ## Error Cases
 
 - Unknown unit code (e.g., `/length:X->Y`) → `ArgumentException`.
+- Same source and target unit (e.g., `/length:M->M` or `/length:MtoM`) → `ArgumentException`; the pair is not registered.
 - Negative value → `ArgumentException`.
 - Non‑numeric collection element → `InvalidOperationException`.
 - See [ErrorHandling.md](../ErrorHandling.md) for details.

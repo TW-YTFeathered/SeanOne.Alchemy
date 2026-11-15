@@ -18,6 +18,21 @@ cnv /weight:sourceTotarget
 
 Parameter value is **case‑insensitive** – `KgToG`, `kgtog`, `KGTOG` all work the same.
 
+`source` and `target` must be **different** units; same-unit pairs such as `Kg->Kg` and `KgtoKg` are invalid.
+
+## Same-Unit Conversions
+
+Only conversions between different units are registered. A same-unit pair is not an identity conversion and does not exist in either syntax:
+
+| Instruction | Result |
+|-------------|--------|
+| `cnv /weight:Kg->Kg` | `ArgumentException` — `Unknown conversion instruction: Kg->Kg` |
+| `cnv /weight:KgtoKg` | `ArgumentException` — `Unknown conversion instruction: KgtoKg` |
+
+To leave a value unchanged, omit `/weight` entirely.
+
+> 💡 The Fluent API's `WithWeight(WeightUnit.Kg, WeightUnit.Kg)` detects equal units and emits no `/weight` parameter; it also performs no identity conversion. See [Fluent API](../FluentAPI.md#unit-conversions).
+
 ## Supported Units
 
 | Unit | Code | Description |
@@ -94,6 +109,7 @@ Alchemy.Transform(kgs, "cnv /weight:Kg->G");                           // List<i
 ## Error Cases
 
 - Unknown unit code (e.g., `/weight:X->Y`) → `ArgumentException`.
+- Same source and target unit (e.g., `/weight:Kg->Kg` or `/weight:KgtoKg`) → `ArgumentException`; the pair is not registered.
 - Negative value → `ArgumentException`.
 - Non‑numeric collection element → `InvalidOperationException`.
 - See [ErrorHandling.md](../ErrorHandling.md) for details.
