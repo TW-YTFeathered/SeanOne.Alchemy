@@ -1,7 +1,7 @@
 # Error Handling
 
-This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Transform`, and `AlchemyResult`, and how to resolve them.  
-**Note: This document covers exceptions for `Alchemy.Format`, `Alchemy.Transform`, and `AlchemyResult`.**
+This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Transform`, `AlchemyResult`, and the Fluent API builders, and how to resolve them.  
+**Note: This document covers exceptions for `Alchemy.Format`, `Alchemy.Transform`, `AlchemyResult`, and `AlchemyBuilder` / `AlchemyExecutable`.**
 
 ## `Alchemy.Format` Exceptions
 
@@ -50,8 +50,11 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 | Exception | Common Scenarios |
 |-----------|------------------|
 | `ArgumentException` | Unknown unit code (e.g., `/temp:X->Y`). <br> Negative value for length or weight. <br> Temperature below absolute zero (0 K). <br> Unable to determine element type of the list (non-generic collections without clear type). |
+| `ArgumentException` | Same source and target unit (e.g., `/temp:F->F`, `/temp:FtoF`, `/length:M->M`, `/length:MtoM`, `/weight:Kg->Kg`, or `/weight:KgtoKg`). These pairs are not registered; same-unit conversion is not an identity conversion. |
 | `InvalidOperationException` | A collection element is `null` and cannot be converted. <br> An element cannot be cast to a numeric type (`double`). <br> The conversion result overflows the target element type (e.g., converting a huge `double` to `int`). |
 | `OverflowException` | A single-value conversion result exceeds the range of the input type (e.g., `Transform(1e20, "cnv /temp:C->F")` on an `int`). Collections wrap this as `InvalidOperationException` instead. |
+
+> 💡 Same-unit instructions are **not** identity conversions. The API reports `Unknown conversion instruction: ...`; omit the conversion parameter (`/temp`, `/length`, or `/weight`) to leave values unchanged. The typed Fluent helpers (`WithTemp`, `WithLength`, `WithWeight`) skip equal pairs and emit no parameter, so they do not raise this exception. See [Temperature](Transform/Temperature.md#same-unit-conversions), [Length](Transform/Length.md#same-unit-conversions), [Weight](Transform/Weight.md#same-unit-conversions), and the [Fluent API](FluentAPI.md#unit-conversions).
 
 ### Sorting (`/sort`)
 
@@ -63,6 +66,24 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 ### Formatting as a Fallback
 
 When `Transform` receives a formatting instruction (`basic`, `fe`, `foreach`, or an instruction starting with `/`), it internally routes the call to `Alchemy.Format`. In these cases, **all exceptions listed in the [Alchemy.Format Errors](#alchemyformat-errors) section** apply identically (e.g., invalid parameters, unsupported `/tostring` on strings, etc.).
+
+## Fluent API Builder Exceptions
+
+These exceptions are raised by the builder state machine before or alongside the underlying DSL execution.
+
+### InvalidOperationException
+
+| Message / Scenario | What it means | How to fix |
+|-------------------|---------------|------------|
+| `Cannot add parameters after the builder stage has been completed.` | A `With...` method was called after the builder stage was finalized by `Build()`, `Execute()`, `ToString()`, `Step()`, or `ThenXxx()`. | Add every parameter before finalizing the stage, or start a new stage with `ThenXxx()` or `AlchemyBuilder.SelectXxx()`. |
+
+### ArgumentNullException
+
+| Message / Scenario | What it means | How to fix |
+|-------------------|---------------|------------|
+| `Alchemy instruction cannot be null or empty` | An `AlchemyExecutable` contains no instructions and `Execute()` was called. This occurs when no builder stage emitted an instruction, or when the only configured conversion used equal source/target units and the typed helper emitted no parameter. | Emit at least one parameter, or avoid executing an empty pipeline. For conversion, use different source and target units. |
+
+> 💡 Builder methods such as `With...` do not validate all DSL semantics. Missing `dict-format`, invalid sort keys, and invalid unit pairs are reported when `Execute()` calls `Alchemy.Format` or `Alchemy.Transform`; see the corresponding sections above. Raw same-unit instructions such as `F->F` throw `ArgumentException`; the typed Fluent conversion helpers skip equal units and emit no parameter. See [Fluent API](FluentAPI.md).
 
 ## `AlchemyResult` Exceptions
 
