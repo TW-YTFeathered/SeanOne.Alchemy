@@ -15,15 +15,15 @@ partial class Alchemy
 
         // 溫度轉換部分
         string tempCnvIns = dslInstruction.ParamField(CnvParams.Temp);
-        copyObj = ConvertTemperature(copyObj, tempCnvIns);
+        copyObj = ConvertUnit(copyObj, tempCnvIns, AlchemyConverterUnitDict.ActionsTemperature);
 
         // 重量轉換部分
         string weightCnvIns = dslInstruction.ParamField(CnvParams.Weight);
-        copyObj = ConvertWeight(copyObj, weightCnvIns);
+        copyObj = ConvertUnit(copyObj, weightCnvIns, AlchemyConverterUnitDict.ActionsWeight);
 
         // 長度轉換部分
         string lengthCnvIns = dslInstruction.ParamField(CnvParams.Length);
-        copyObj = ConvertLength(copyObj, lengthCnvIns);
+        copyObj = ConvertUnit(copyObj, lengthCnvIns, AlchemyConverterUnitDict.ActionsLength);
 
         return AlchemyResult.Parse(copyObj);
     }
