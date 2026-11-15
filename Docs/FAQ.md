@@ -19,37 +19,12 @@ The static methods `Alchemy.Format` and `Alchemy.Transform` are thread‑safe as
 
 ## Culture and Globalization
 
-### Which culture does Alchemy use?
+Formatting and parsing use the thread's culture (`CultureInfo.CurrentCulture`), not invariant.
 
-Whatever the calling thread's culture is (`CultureInfo.CurrentCulture`). Nothing is pinned to the invariant culture – neither formatting nor parsing.
+- `de-DE`: `Alchemy.Format(1.5, "/tostring:F2")` → `"1,50"`
+- `de-DE`: `AlchemyResult.Parse("1.5").GetDouble()` → `15`; `Parse("1,234").GetInt32()` → `FormatException`
 
-**Formatting** – `/tostring`, `/key-format`, `/value-format` and the `{0}` / `{1}` substitutions inside `/dict-format` call `IFormattable.ToString(format, null)`:
-
-```csharp
-using System.Globalization;
-using SeanOne.Alchemy;
-
-CultureInfo.CurrentCulture = new CultureInfo("de-DE");
-Alchemy.Format(1.5, "/tostring:F2");      // "1,50"
-```
-
-**Extraction** – `GetXxx()` / `GetXxxList()` use `double.Parse`, `int.Parse`, `DateTime.Parse`, … so they are culture-sensitive too:
-
-```csharp
-CultureInfo.CurrentCulture = new CultureInfo("de-DE");
-AlchemyResult.Parse("1.5").GetDouble();     // 15   ('.' is a group separator in de-DE)
-AlchemyResult.Parse("1,234").GetInt32();    // FormatException
-```
-
-### What does that mean for round-tripping?
-
-A formatted value and the `GetXxx()` call that reads it back must run under the **same** culture. If a formatted number or date is stored, logged, or sent to another machine, re-parse it yourself with an explicit culture (e.g. `double.Parse(text, CultureInfo.InvariantCulture)`) instead of relying on `GetDouble()`.
-
-`GetString()` is not culture-neutral either – it returns `ToString()` of the element, and numeric/date types format that with the current culture.
-
-### How do I control it?
-
-Set `CultureInfo.CurrentCulture` (or `CultureInfo.DefaultThreadCurrentCulture`) for the calling thread before formatting/parsing. Alchemy does not read any other configuration.
+A formatted value and the `GetXxx()` that reads it back must use the same culture; for data that crosses machines, format/parse it yourself with `CultureInfo.InvariantCulture`. Control it via `CultureInfo.CurrentCulture` / `DefaultThreadCurrentCulture`.
 
 ## Performance
 
@@ -81,7 +56,7 @@ Use `/dict-format:{1}` (ignore the key placeholder).
 
 ### What happens if I sort a read‑only collection?
 
-The library clones the input first, so the read‑only original is unaffected. However, if the collection type itself cannot be cloned (e.g., some immutable collections), an exception may occur.
+The original is untouched (input is cloned), but the clone is still read‑only, so sorting throws `NotSupportedException: Collection is read-only.` Sort a mutable copy instead.
 
 ### Does temperature conversion check for absolute zero?
 
@@ -159,14 +134,9 @@ Set `/fe-opt:false` (or omit it, as `false` is the default) to use the stable, l
 
 ### What does `AlchemyResult.ToString()` return?
 
-It depends on the wrapped object:
+Wrapped `string` → that string. Anything else → `"SeanOne.Alchemy.AlchemyResult"`.
 
-- If the underlying object is a **`string`**, `.ToString()` returns that string directly.
-- For **any other type**, it returns the base `Object.ToString()` implementation, which typically yields the type name (e.g., `System.Collections.Generic.List`1[System.Int32]`).
-
-**To get the string representation of the wrapped object** (calling its `ToString()` method):
-- If you know the wrapped object is a `string` (e.g., after using `Transform` with formatting instructions), `.ToString()` is sufficient.
-- For other cases, the `.GetString()` extension method is available as a convenience – it simply calls `ToString()` on the wrapped object and is provided for symmetry with `GetStringList()`.
+For the wrapped object's own `ToString()`, use `GetString()`.
 
 ### How does deep cloning handle circular references?
 

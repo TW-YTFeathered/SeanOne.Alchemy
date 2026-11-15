@@ -100,7 +100,7 @@ var kgs = new List<int> { 1, 2 };
 Alchemy.Transform(kgs, "cnv /weight:Kg->G");                           // List<int> { 1000, 2000 }
 ```
 
-> ℹ️ **Collections:** the element type is preserved – `T[]` stays `T[]`, `List<T>` stays `List<T>`. Other sequences are returned as `List<T>` (e.g. `HashSet<int>` → `List<int>`). Only when the element type cannot be determined does the result become a `List<object>`, with each element converted to its own runtime type (e.g. a non-generic `ArrayList`).
+> ℹ️ Arrays stay arrays, `List<T>` stays `List<T>`; other sequences return `List<T>`, or `List<object>` if the element type is unknown.
 
 ## Important Notes
 

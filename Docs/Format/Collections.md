@@ -93,7 +93,7 @@ AlchemyFormatBuilder.SelectFeSeq()
 - `string` is **not** treated as an enumerable (throws `ArgumentException`).
 - For dictionaries, see [Dictionaries.md](Dictionaries.md).
 - For performance tips, see [FAQ.md](../FAQ.md) (when to use `/fe-opt`).
-- An **empty sequence** returns only `prefix + suffix` – `/begin`, `/end`, `/tostring` and the separators are never emitted.
-- `/final-pair-separator` replaces the separator that follows the **second‑to‑last** element. The last element still receives `/end` unless `/exclude-last-end:true`, so `fe /end:", " /final-pair-separator:" and "` on `[a, b, c]` returns `"a, b and c, "`.
-- Boolean flags (`/exclude-last-end`, `/fe-opt`) only accept `true` / `false`; any other value (`yes`, `1`, …) is silently treated as `false` instead of raising an error.
-- `/tostring` follows the current culture (`CultureInfo.CurrentCulture`); see [FAQ → Culture and Globalization](../FAQ.md#culture-and-globalization).
+- Empty sequence → only `prefix + suffix`.
+- `/final-pair-separator` replaces the separator after the second‑to‑last element; the last one still gets `/end` unless `/exclude-last-end:true`.
+- Non-boolean flag values (`yes`, `1`) are treated as `false`, no error.
+- `/tostring` uses the current culture ([FAQ](../FAQ.md#culture-and-globalization)).

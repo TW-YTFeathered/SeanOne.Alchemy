@@ -37,7 +37,7 @@ Throws `InvalidOperationException` when the wrapped object does not implement `I
 Returns a string representation of the wrapped object.
 
 - If the wrapped object is a `string`, that string is returned directly.
-- Otherwise, the base `object.ToString()` is used — which typically yields the **type name**, not a rendered value.
+- Otherwise it returns the `AlchemyResult` type name: `"SeanOne.Alchemy.AlchemyResult"`.
 
 > ⚠️ `ToString()` does **not** call the wrapped object's own `ToString()`. For that, use the `GetString()` extension method.
 

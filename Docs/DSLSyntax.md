@@ -86,7 +86,7 @@ Alchemy.Transform(data,
 
 This differs from merging parameters into a single instruction – each instruction is processed independently and in the order provided.
 
-> ℹ️ **Empty and null entries:** an empty or whitespace-only instruction is ignored (it is a no-op), while a `null` entry throws `NullReferenceException`. Filter out `null` entries before calling `Transform` with an array.
+> ℹ️ **Empty entries:** inherits the previous function name (no-op). With no name to inherit → `MissingMethodException`; a single empty instruction → `ArgumentNullException`. `null` → `NullReferenceException`.
 
 ### Instruction Name Auto-Completion
 

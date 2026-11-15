@@ -111,11 +111,11 @@ AlchemyFormatBuilder.SelectFeDict()
 
 ## Notes
 
-- An **empty dictionary** returns only `prefix + suffix`. The `/dict-format` check still runs first, so the parameter stays required.
-- `/final-pair-separator` replaces the separator after the **second‑to‑last** entry; the last entry still receives `/end` unless `/exclude-last-end:true`.
-- Boolean flags (`/exclude-last-end`, `/fe-opt`) only accept `true` / `false`; any other value is silently treated as `false` instead of raising an error.
-- `/key-format`, `/value-format` and the `{0}` / `{1}` substitutions follow the current culture (`CultureInfo.CurrentCulture`); see [FAQ → Culture and Globalization](../FAQ.md#culture-and-globalization).
-- Dictionary entries are `KeyValuePair` values, which never implement `IFormattable`. That is why `/tostring` is not a valid dictionary parameter – use `/key-format` and `/value-format`.
+- Empty dictionary → only `prefix + suffix` (`/dict-format` still required).
+- `/final-pair-separator` replaces the separator after the second‑to‑last entry; the last one still gets `/end` unless `/exclude-last-end:true`.
+- Non-boolean flag values are treated as `false`.
+- Formats use the current culture ([FAQ](../FAQ.md#culture-and-globalization)).
+- Entries are `KeyValuePair`, which has no `IFormattable` – use `/key-format` / `/value-format`, not `/tostring`.
 
 ## Common Errors
 

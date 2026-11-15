@@ -28,7 +28,7 @@ prefix + begin + (formatted value) + end + suffix
 
 > The same order applies to `fe` (collections/dictionaries), where `begin` and `end` are applied to each element/entry.
 
-> ℹ️ **Culture:** `/tostring` is passed to `IFormattable.ToString(format, null)`, so the output follows the **current culture** (`CultureInfo.CurrentCulture`) rather than the invariant culture. On a `de-DE` thread, `/tostring:F2` on `1.5` returns `1,50`. See [FAQ → Culture and Globalization](../FAQ.md#culture-and-globalization).
+> ℹ️ `/tostring` uses the current culture: `de-DE` → `1.5` with `F2` gives `1,50`. See [FAQ](../FAQ.md#culture-and-globalization).
 
 ## Examples
 
