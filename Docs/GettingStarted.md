@@ -80,6 +80,8 @@ Use these to convert every element of a collection into a specific type. Each me
 
 > 💡 **Tip:** Use `ToObject<T>()` when you already know the exact type (e.g., `List<double>`). It is more efficient because it avoids creating a new collection. Use `GetXxxList()` when you want to **convert** the elements to a specific type, or when you are unsure of the original collection type.
 
+> ⚠️ **Culture:** `GetXxx()` and `GetXxxList()` parse with the **current culture** (`double.Parse`, `int.Parse`, `DateTime.Parse`, …). On a `de-DE` thread, `AlchemyResult.Parse("1.5").GetDouble()` returns `15`. See [FAQ → Culture and Globalization](FAQ.md#culture-and-globalization).
+
 ## Combining Operations
 
 You can pass multiple instructions as an array:

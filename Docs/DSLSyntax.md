@@ -11,6 +11,7 @@ This document describes the common syntax rules for Alchemy DSL instructions, sh
 - The instruction starts with a function name (e.g., `basic`, `fe`, `cnv`).
 - Parameters begin with `/` followed by the parameter name and a colon `:`.
 - Parameter names are **case-sensitive**.
+- Function names are **case-sensitive** too. `Basic`, `FE` or `Cnv` are rejected with `MissingMethodException`; always use the lowercase spellings (`basic`, `fe`, `foreach`, `cnv`, `convert`, `arr`, `arrange`).
 - Values containing spaces or special characters (like `/`) must be enclosed in double quotes `" "`.
 - If the value itself needs to contain a double quote, escape it as `\"` or use the Unicode sequence `\u0022`.
 - Multiple instructions can be passed as an array; they execute sequentially.
@@ -84,6 +85,8 @@ Alchemy.Transform(data,
 ```
 
 This differs from merging parameters into a single instruction – each instruction is processed independently and in the order provided.
+
+> ℹ️ **Empty and null entries:** an empty or whitespace-only instruction is ignored (it is a no-op), while a `null` entry throws `NullReferenceException`. Filter out `null` entries before calling `Transform` with an array.
 
 ### Instruction Name Auto-Completion
 

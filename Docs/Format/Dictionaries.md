@@ -14,14 +14,16 @@ fe /dict-format:formatString /param:value ...
 |-----------|---------|-------------|
 | `/dict-format` | `/dict-format:{0} => {1}` | Format string where `{0}` is the key, `{1}` is the value. Must be provided; cannot be empty. |
 
+> Only `{0}` and `{1}` are substituted. Any other placeholder (for example `{2}`) is emitted literally.
+
 ## Optional Parameters
 
 All parameters below work with dictionaries exactly as they do with sequences (`IEnumerable`), except where noted.
 
 | Parameter | Example | Description |
 |-----------|---------|-------------|
-| `/key-format` | `/key-format:F2` | Format string applied to each key (keys must implement `IFormattable`). |
-| `/value-format` | `/value-format:yyyy-MM-dd` | Format string applied to each value (values must implement `IFormattable`). |
+| `/key-format` | `/key-format:F2` | Format string applied to each key. Only used when the key implements `IFormattable`; for other key types the format is silently ignored (no exception). |
+| `/value-format` | `/value-format:yyyy-MM-dd` | Format string applied to each value. Only used when the value implements `IFormattable`; for other value types the format is silently ignored (no exception). |
 | `/begin` | `/begin:[` | Prepended **before each dictionary entry**. |
 | `/end` | `/end:", "` | Appended **after each dictionary entry**. |
 | `/prefix` | `/prefix:{` | Added before the whole result. |
@@ -107,11 +109,20 @@ AlchemyFormatBuilder.SelectFeDict()
     .BuildRun(myDictionary);
 ```
 
+## Notes
+
+- An **empty dictionary** returns only `prefix + suffix`. The `/dict-format` check still runs first, so the parameter stays required.
+- `/final-pair-separator` replaces the separator after the **second‑to‑last** entry; the last entry still receives `/end` unless `/exclude-last-end:true`.
+- Boolean flags (`/exclude-last-end`, `/fe-opt`) only accept `true` / `false`; any other value is silently treated as `false` instead of raising an error.
+- `/key-format`, `/value-format` and the `{0}` / `{1}` substitutions follow the current culture (`CultureInfo.CurrentCulture`); see [FAQ → Culture and Globalization](../FAQ.md#culture-and-globalization).
+- Dictionary entries are `KeyValuePair` values, which never implement `IFormattable`. That is why `/tostring` is not a valid dictionary parameter – use `/key-format` and `/value-format`.
+
 ## Common Errors
 
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `'dict-format' parameter is required when processing dictionaries.` | Missing or empty `/dict-format`. | Add `/dict-format:{0}={1}` (or any format with `{0}` and `{1}`). |
-| `Invalid parameters for dictionary processing: ...` | Using a parameter not supported for dictionaries (e.g., trying to use `/tostring` directly – use `/key-format` and `/value-format` instead). | Check your parameter names against the table above. |
+| `Collection elements must implement IFormattable for 'tostring'. Found: KeyValuePair`2` | Using `/tostring` on a dictionary. Each entry is a `KeyValuePair`, which does not implement `IFormattable`. | Use `/key-format` and `/value-format` instead. |
+| `Invalid parameters for dictionary processing: ...` | Using any other parameter that is not supported for dictionaries. | Check your parameter names against the table above. |
 
 See [ErrorHandling.md](../ErrorHandling.md) for more details.

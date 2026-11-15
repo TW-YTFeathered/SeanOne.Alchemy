@@ -17,6 +17,40 @@ If you only need formatting, use `Alchemy.Format` to avoid the performance cost 
 
 The static methods `Alchemy.Format` and `Alchemy.Transform` are thread‑safe as long as the input object is not mutated concurrently. Reusable builders (`Build()`) produce instances that are not guaranteed thread‑safe; create separate instances per thread or synchronize access.
 
+## Culture and Globalization
+
+### Which culture does Alchemy use?
+
+Whatever the calling thread's culture is (`CultureInfo.CurrentCulture`). Nothing is pinned to the invariant culture – neither formatting nor parsing.
+
+**Formatting** – `/tostring`, `/key-format`, `/value-format` and the `{0}` / `{1}` substitutions inside `/dict-format` call `IFormattable.ToString(format, null)`:
+
+```csharp
+using System.Globalization;
+using SeanOne.Alchemy;
+
+CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+Alchemy.Format(1.5, "/tostring:F2");      // "1,50"
+```
+
+**Extraction** – `GetXxx()` / `GetXxxList()` use `double.Parse`, `int.Parse`, `DateTime.Parse`, … so they are culture-sensitive too:
+
+```csharp
+CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+AlchemyResult.Parse("1.5").GetDouble();     // 15   ('.' is a group separator in de-DE)
+AlchemyResult.Parse("1,234").GetInt32();    // FormatException
+```
+
+### What does that mean for round-tripping?
+
+A formatted value and the `GetXxx()` call that reads it back must run under the **same** culture. If a formatted number or date is stored, logged, or sent to another machine, re-parse it yourself with an explicit culture (e.g. `double.Parse(text, CultureInfo.InvariantCulture)`) instead of relying on `GetDouble()`.
+
+`GetString()` is not culture-neutral either – it returns `ToString()` of the element, and numeric/date types format that with the current culture.
+
+### How do I control it?
+
+Set `CultureInfo.CurrentCulture` (or `CultureInfo.DefaultThreadCurrentCulture`) for the calling thread before formatting/parsing. Alchemy does not read any other configuration.
+
 ## Performance
 
 ### When should I use `/fe-opt:true`?
@@ -78,7 +112,7 @@ This works because Transform internally checks the directive and delegates to Fo
 
 ### Is the Fluent API for conversion available?
 
-Not yet. It is under active development (targeting v3.x). See the preview in [FluentAPI.md](FluentAPI.md).
+Yes. `AlchemyBuilder.SelectCnv()` builds `cnv` instructions and `AlchemyBuilder.SelectArr()` builds `arr` instructions, so unit conversion and sorting are fully available through the Fluent API. See [Fluent API → Unit Conversions](FluentAPI.md#unit-conversions) and [Fluent API → Sorting](FluentAPI.md#sorting).
 
 ### Can I parse a DSL string and then modify it with Fluent API?
 

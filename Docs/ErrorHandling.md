@@ -89,25 +89,29 @@ These exceptions are raised by the builder state machine before or alongside the
 
 When extracting data from an `AlchemyResult`, some methods have strict type requirements that can throw exceptions if not met.
 
+> ℹ️ The whole `GetXxx()` / `GetXxxList()` family reports failures as `InvalidCastException`, including parse failures. `InvalidOperationException` is only raised by `ToList<T>()`.
+
 ### InvalidCastException
 
 | Scenario | What it means | How to fix |
 |----------|---------------|------------|
 | `Unable to cast object of type '{ActualType}' to type '{TargetType}'.` | You called `ToObject<T>()` on a wrapped object that is not actually of type `T` (or a derived type). For example, trying `ToObject<int>()` when the wrapped object is a `string`. | Use the correct type for `T`, or use a conversion method (e.g., `GetInt32()`, `GetDouble()`) if you want to parse the value. |
-| `Cannot convert {TypeName} to any enumerable type.` | You called `GetObjectList()` or any `GetXxxList()` on a wrapped object that is not an `IEnumerable` (e.g., a single `int`). | Use single-value conversion methods instead, or ensure the object is a collection before using collection methods. |
+| `Cannot convert {TypeName} to any enumerable type.` | You called a `GetXxxList()` method on a wrapped object that is not an `IEnumerable` (e.g., a single `int`). | Use a single-value conversion method instead, or ensure the object is a collection before calling `GetXxxList()`. |
+| `Expected IEnumerable, but got {TypeName}` | You called `GetObjectList()` on a wrapped object that is not an `IEnumerable`. | Use `ToObject<T>()`/`ToList<T>()` for single values or typed collections, or call `GetObjectList()` only on collections. |
+| `Failed to convert item at index {i}: '{item}'` | An element inside the collection failed to parse to the target type (e.g., `"abc"` cannot be parsed to `int`). The wrapped inner exception describes the real cause: `Item at index {i} is null and cannot be converted.` for a `null` element, or the parser error (`FormatException` / `OverflowException`). A `FormatException` usually means the text does not match the **current culture** (see [FAQ → Culture and Globalization](FAQ.md#culture-and-globalization)). | Verify the data types of your collection elements. Use `GetStringList()` if you only need string representations, or clean/normalize your data before conversion. |
 
 ### InvalidOperationException
 
 | Scenario | What it means | How to fix |
 |----------|---------------|------------|
 | `The source object of type '{TypeName}' cannot be converted to List<{T}>.` | You called `ToList<T>()` on a wrapped object that does **not** exactly implement `IEnumerable<T>`. Common cases: using `ArrayList` (non-generic), or trying to convert `List<int>` to `List<object>`. | Use the appropriate `GetXxxList()` extension method instead (e.g., `GetInt32List()`, `GetDoubleList()`, `GetStringList()`). These methods iterate and convert each element. Alternatively, use `ToObject<T>()` and manually cast/convert. |
-| `Item at index {i} is null and cannot be converted.` | You called a `GetXxxList()` method (e.g., `GetDoubleList()`) on a collection that contains a `null` element, and `null` cannot be parsed to that value type. | Either ensure the collection contains no `null` values before conversion, or handle `null` elements upstream. |
-| `Failed to convert item at index {i}: '{item}'` | An element inside the collection failed to parse to the target type (e.g., `"abc"` cannot be parsed to `int`). | Verify the data types of your collection elements. Use `GetStringList()` if you only need string representations, or clean your data before conversion. |
 
 ## Additional Notes
 
 - DSL parameters are written with a leading `/` and a `:` separator, e.g., `/tostring:F2`. In error messages, parameter names are shown **without** the leading `/` for brevity.
 - `Alchemy.FormatAsync` and `Alchemy.TransformAsync` wraps the synchronous call in `Task.Run` – it throws the same exceptions, just asynchronously.
+- Passing `null` as one of the instruction strings in `Alchemy.Transform(obj, params string[])` throws `NullReferenceException`. Empty or whitespace-only entries are ignored instead of raised.
+- `cnv` and `arr` without their parameters (`/temp`, `/length`, `/weight`, `/sort`) are no-ops: `Alchemy.Transform` still returns a deep clone of the input.
 - `null` elements inside a collection are formatted as empty strings – they **do not** cause exceptions.
 - `Alchemy.Format` does **not** modify the input object (no cloning). Only `Alchemy.Transform` performs deep cloning.
 - If you encounter an error not listed here, examine the full exception message – it often includes the exact parameter name or type that caused the problem.
