@@ -49,9 +49,13 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 
 | Exception | Common Scenarios |
 |-----------|------------------|
-| `ArgumentException` | Unknown unit code (e.g., `/temp:X->Y`). <br> Negative value for length or weight. <br> Temperature below absolute zero (0 K). <br> Unable to determine element type of the list (non-generic collections without clear type). |
+| `ArgumentException` | Unknown unit code (e.g., `/temp:X->Y`). |
+| `ArgumentException` | Negative value for length or weight. |
+| `ArgumentException` | Temperature below absolute zero (0 K). |
 | `ArgumentException` | Same source and target unit (e.g., `/temp:F->F`, `/temp:FtoF`, `/length:M->M`, `/length:MtoM`, `/weight:Kg->Kg`, or `/weight:KgtoKg`). These pairs are not registered; same-unit conversion is not an identity conversion. |
-| `InvalidOperationException` | A collection element is `null` and cannot be converted. <br> An element cannot be cast to a numeric type (`double`). <br> The conversion result overflows the target element type (e.g., converting a huge `double` to `int`). |
+| `InvalidOperationException` | A collection element is `null` and cannot be converted. |
+| `InvalidOperationException` | An element cannot be cast to a numeric type (`double`). |
+| `InvalidOperationException` | The conversion result overflows the target element type (e.g., converting a huge `double` to `int`). |
 | `OverflowException` | A single-value conversion result exceeds the range of the input type (e.g., `Transform(1e20, "cnv /temp:C->F")` on an `int`). Collections wrap this as `InvalidOperationException` instead. |
 
 > 💡 Same-unit instructions are **not** identity conversions. The API reports `Unknown conversion instruction: ...`; omit the conversion parameter (`/temp`, `/length`, or `/weight`) to leave values unchanged. The typed Fluent helpers (`WithTemp`, `WithLength`, `WithWeight`) skip equal pairs and emit no parameter, so they do not raise this exception. See [Temperature](Transform/Temperature.md#same-unit-conversions), [Length](Transform/Length.md#same-unit-conversions), [Weight](Transform/Weight.md#same-unit-conversions), and the [Fluent API](FluentAPI.md#unit-conversions).
@@ -60,7 +64,8 @@ This document lists common exceptions thrown by `Alchemy.Format`, `Alchemy.Trans
 
 | Exception | Scenario |
 |-----------|----------|
-| `ArgumentException` | The input object does not implement `IList`. <br> An unknown sorting algorithm key is used (e.g., `/sort:bubble`). |
+| `ArgumentException` | The input object does not implement `IList`. |
+| `ArgumentException` | An unknown sorting algorithm key is used (e.g., `/sort:bubble`). |
 | `InvalidOperationException` | The collection contains elements that do not implement `IComparable` and thus cannot be compared. |
 
 ### Formatting as a Fallback
